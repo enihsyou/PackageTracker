@@ -42,3 +42,8 @@
 * [ ] 扫码功能
 * [ ] 呼叫快递员功能
 * [ ] ~~待添加~~
+
+#第三方库
+* [ZXing](https://github.com/zxing/zxing) 扫描二维码
+* [OkHttp](https://github.com/square/okhttp) 发送HTTP请求
+* [Gson](https://github.com/google/gson) JSON解析
