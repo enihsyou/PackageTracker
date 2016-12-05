@@ -7,19 +7,19 @@
   android:layout_height="match_parent"
   android:fitsSystemWindows="true"
   tools:openDrawer="start">
-
-    <include
-      layout="@layout/app_bar_main"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
-
-    <android.support.design.widget.NavigationView
-      android:id="@+id/nav_view"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_gravity="start"
-      android:fitsSystemWindows="true"
-      app:headerLayout="@layout/nav_header_main"
-      app:menu="@menu/activity_main_drawer" />
+  <!--整体内容 在侧边栏背后的-->
+  <include
+    layout="@layout/app_bar_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+  <!--左侧边栏抽屉-->
+  <android.support.design.widget.NavigationView
+    android:id="@+id/nav_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    app:headerLayout="@layout/nav_header_main"
+    app:menu="@menu/activity_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
