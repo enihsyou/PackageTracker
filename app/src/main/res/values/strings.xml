@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Package Tracker</string>
-    
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string><string name="user_head">User Head</string>
+    <string name="action_settings">Settings</string><string name="user_head">User Head</string><string name="send_package">Send package</string><string name="receive_package">Receive package</string><string name="share_with_friends">Share with friends</string>
 </resources>

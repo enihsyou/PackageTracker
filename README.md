@@ -51,3 +51,4 @@
 * [Gson](https://github.com/google/gson) JSON解析
 * [jsoup](https://github.com/jhy/jsoup) HTML解析
 * [ZXing](https://github.com/zxing/zxing) 扫描二维码
+* [fab-speed-dial](https://github.com/yavski/fab-speed-dial) FAB with speed dial

@@ -2,7 +2,6 @@ package com.enihsyou.shane.packagetracker;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar mToolbar;
-    private FloatingActionButton mFab;
+    private FabSpeedDial mFab;
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
 
@@ -28,18 +28,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
         setSupportActionBar(mToolbar); //顺序错误会导致点击左上角按钮失效
         /*FAB的点击监听器*/
-        mFab.setOnClickListener(new View.OnClickListener() {
+        mFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                Snackbar.make(
+                        getCurrentFocus(), "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null)
                         .show();
+                return true; //是否被处理了
             }
         });
         /*点击左上角按钮打开抽屉*/
@@ -91,9 +93,9 @@ public class MainActivity extends AppCompatActivity
         /*处理左侧抽屉的选择*/
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.nav_sendpackage:
+            case R.id.nav_send_package:
                 // Handle the camera action
-            case R.id.nav_receivepackage:
+            case R.id.nav_receive_package:
                 break;
             case R.id.nav_settings:
                 break;
