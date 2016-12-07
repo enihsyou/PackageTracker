@@ -25,10 +25,26 @@ public class Kuaidi100Fetcher {
     private final SimpleDateFormat dateFormatter;
     private final OkHttpClient client;
 
-    public Kuaidi100Fetcher() {
+    Kuaidi100Fetcher() {
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         client = new OkHttpClient();
+    }
+
+    /**
+     * 获取封装好的结果
+     *
+     * @param number 请求单号
+     * @param type   请求公司名
+     *
+     * @return 解析结果
+     *
+     * @throws IOException 网络错误
+     */
+    public PackageTrafficSearchResult packageResult(String number, String type) throws IOException {
+        HttpUrl request = buildPackageSearchURL(number, type);
+        Response response = getJson(request);
+        return parsePackageJson(response);
     }
 
     /**
@@ -38,63 +54,17 @@ public class Kuaidi100Fetcher {
      *
      * @return 获得的Json文本
      */
-    public Response getJson(HttpUrl url) throws IOException {
+    Response getJson(HttpUrl url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         return client.newCall(request).execute();
     }
 
-    public HttpUrl buildNumberSearchURL(String number) {
-        return ENDPOINT.newBuilder()
-                .addEncodedPathSegments(SEARCH_NUMBER)
-                .addEncodedQueryParameter("text", number)
-                .build();
-    }
-
-    public HttpUrl buildPackageSearchURL(String number, String type) {
+    HttpUrl buildPackageSearchURL(String number, String type) {
         return ENDPOINT.newBuilder()
                 .addEncodedPathSegment(SEARCH_PACKAGE)
                 .addEncodedQueryParameter("type", type)
                 .addEncodedQueryParameter("postid", number)
                 .build();
-    }
-
-    /**
-     * 解析处理响应的数据，适用于kuaidi100，使用GET方法没问题
-     * 预测快递单对应的快递公司
-     *
-     * @param response 获得的响应
-     *
-     * @return 解析结果，null为失败
-     */
-    @Nullable
-    public CompanyAutoSearchResult parseCompanyJson(Response response) {
-        /*获取JSON*/
-        JsonObject jsonObject = jsonParser.parse(response.body().charStream()).getAsJsonObject();
-        /*判断结果正常*/
-        int status = response.code();
-        if (status != HttpURLConnection.HTTP_OK) return null; //请求错误
-        /*初始化变量*/
-        CompanyAutoSearchResult searchResult;//返回结果
-        searchResult = new CompanyAutoSearchResult();
-        ArrayList<CompanyEachAutoSearch> auto = new ArrayList<>();
-        /*解析结果*/
-        String num = jsonObject.get("num").getAsString(); //获取单号
-
-        JsonArray autoArray = jsonObject.getAsJsonArray("auto"); //获取公司信息列表
-        for (JsonElement element : autoArray) {
-            CompanyEachAutoSearch eachCompany = new CompanyEachAutoSearch();
-            JsonObject detail = element.getAsJsonObject();
-
-            eachCompany.setCompanyCode(detail.get("comCode").getAsString());
-            eachCompany.setNumberCount(detail.get("noCount").getAsString());
-            eachCompany.setNumberPrefix(detail.get("noPre").getAsString());
-
-            auto.add(eachCompany);
-        }
-        searchResult.setNumber(num);
-        searchResult.setCompanies(auto);
-
-        return searchResult;
     }
 
     /**
@@ -106,7 +76,7 @@ public class Kuaidi100Fetcher {
      * @return 解析结果，null为失败
      */
     @Nullable
-    public PackageTrafficSearchResult parsePackageJson(Response response) {
+    PackageTrafficSearchResult parsePackageJson(Response response) {
         /*获取JSON*/
         JsonObject jsonObject = jsonParser.parse(response.body().charStream()).getAsJsonObject();
         /*判断结果正常*/
@@ -137,6 +107,67 @@ public class Kuaidi100Fetcher {
         searchResult.setCompany(com);
         searchResult.setStatus(state);
         searchResult.setTraffics(data);
+
+        return searchResult;
+    }
+
+    /**
+     * 获取封装好的结果，用于单号自动完成
+     *
+     * @param number 请求单号
+     *
+     * @return 解析结果
+     *
+     * @throws IOException 网络错误
+     */
+    public CompanyAutoSearchResult companyResult(String number) throws IOException {
+        HttpUrl request = buildNumberSearchURL(number);
+        Response response = getJson(request);
+        return parseCompanyJson(response);
+    }
+
+    HttpUrl buildNumberSearchURL(String number) {
+        return ENDPOINT.newBuilder()
+                .addEncodedPathSegments(SEARCH_NUMBER)
+                .addEncodedQueryParameter("text", number)
+                .build();
+    }
+
+    /**
+     * 解析处理响应的数据，适用于kuaidi100，使用GET方法没问题
+     * 预测快递单对应的快递公司
+     *
+     * @param response 获得的响应
+     *
+     * @return 解析结果，null为失败
+     */
+    @Nullable
+    CompanyAutoSearchResult parseCompanyJson(Response response) {
+        /*获取JSON*/
+        JsonObject jsonObject = jsonParser.parse(response.body().charStream()).getAsJsonObject();
+        /*判断结果正常*/
+        int status = response.code();
+        if (status != HttpURLConnection.HTTP_OK) return null; //请求错误
+        /*初始化变量*/
+        CompanyAutoSearchResult searchResult;//返回结果
+        searchResult = new CompanyAutoSearchResult();
+        ArrayList<CompanyEachAutoSearch> auto = new ArrayList<>();
+        /*解析结果*/
+        String num = jsonObject.get("num").getAsString(); //获取单号
+
+        JsonArray autoArray = jsonObject.getAsJsonArray("auto"); //获取公司信息列表
+        for (JsonElement element : autoArray) {
+            CompanyEachAutoSearch eachCompany = new CompanyEachAutoSearch();
+            JsonObject detail = element.getAsJsonObject();
+
+            eachCompany.setCompanyCode(detail.get("comCode").getAsString());
+            eachCompany.setNumberCount(detail.get("noCount").getAsString());
+            eachCompany.setNumberPrefix(detail.get("noPre").getAsString());
+
+            auto.add(eachCompany);
+        }
+        searchResult.setNumber(num);
+        searchResult.setCompanies(auto);
 
         return searchResult;
     }
