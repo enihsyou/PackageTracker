@@ -36,15 +36,6 @@
               android:name="android.support.PARENT_ACTIVITY"
               android:value="com.enihsyou.shane.packagetracker.MainActivity" />
         </activity>
-        <activity
-          android:name=".PackageStateActivity"
-          android:label="@string/title_activity_package_state"
-          android:parentActivityName=".MainActivity"
-          android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value="com.enihsyou.shane.packagetracker.MainActivity" />
-        </activity>
         <activity android:name=".AddNewPackageActivity">
         </activity>
         <activity android:name=".SendNewPackageActivity">

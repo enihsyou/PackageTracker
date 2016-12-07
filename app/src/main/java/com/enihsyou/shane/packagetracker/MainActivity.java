@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,17 +25,30 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawer;
     private NavigationView mNavigationView;
 
+    private ViewPager mViewPager; //负责3个滑动页面
+    private SectionsPagerAdapter mSectionsPagerAdapter; //负责提供3个页面，保存在内存里
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mFab = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
         setSupportActionBar(mToolbar); //顺序错误会导致点击左上角按钮失效
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        /*创建3个滑动页面的适配器，并设置上去*/
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.view_page_container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        /*给TabLayout设置ViewPager*/
+        mTabLayout.setupWithViewPager(mViewPager);
         /*FAB的点击监听器*/
         mFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
@@ -70,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main_option_list, menu);
         return true;
     }
 
@@ -99,7 +114,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, PackageDetailActivity.class));
                 break;
             case R.id.nav_receive_package:
-                startActivity(new Intent(this, PackageStateActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
