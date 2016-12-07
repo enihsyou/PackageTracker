@@ -1,5 +1,7 @@
 package com.enihsyou.shane.packagetracker;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -14,8 +16,12 @@ public class PackageEachTraffic {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(String time, DateFormat formatter) {
+        try {
+            this.time = formatter.parse(time);
+        } catch (ParseException never) {
+            //won't happen
+        }
     }
 
     public String getLocation() {
