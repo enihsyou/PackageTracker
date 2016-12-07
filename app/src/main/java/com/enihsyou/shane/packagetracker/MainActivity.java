@@ -1,5 +1,6 @@
 package com.enihsyou.shane.packagetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_settings:        //noinspection SimplifiableIfStatement
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -94,10 +96,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_send_package:
-                // Handle the camera action
+                startActivity(new Intent(this, PackageDetailActivity.class));
+                break;
             case R.id.nav_receive_package:
+                startActivity(new Intent(this, PackageStateActivity.class));
                 break;
             case R.id.nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.nav_share:
                 break;
