@@ -1,4 +1,4 @@
-# 快递收发和跟踪系统
+#快递收发和跟踪系统
 
 ##项目介绍
 一个能够快速获取和跟踪快递最新进展情况的Android应用。
@@ -11,7 +11,7 @@
 
 ##详细信息
 应用采用 *MVC* 模型，分工合作完成视图、控制器和模型的构建。
-进行版本更迭记录，从`v0.0.1`开始。各自在自己的`dev`分支编写，完成后使用 **Pull Request** 提交代码到`master`分支上，经讨论后进行合并。
+进行版本更迭记录，从`v0.0.1`开始。各自在自己的`dev`分支编写，完成后经讨论合并到`master`分支上。
 
 - 包工头 @enihsyou
   * 设计实现主体架构
@@ -41,9 +41,13 @@
 * [ ] *GitHub Pages* 介绍页面
 * [ ] 扫码功能
 * [ ] 呼叫快递员功能
+* [ ] 解析内容生成界面(类似Flyme短信解析)
+* [ ] 每项项目一张卡片，背景为对应快递公司主题
+* [ ] 利用API识别快递公司，自动完成
 * [ ] ~~待添加~~
 
-#第三方库
-* [ZXing](https://github.com/zxing/zxing) 扫描二维码
+##第三方库
 * [OkHttp](https://github.com/square/okhttp) 发送HTTP请求
 * [Gson](https://github.com/google/gson) JSON解析
+* [jsoup](https://github.com/jhy/jsoup) HTML解析
+* [ZXing](https://github.com/zxing/zxing) 扫描二维码
