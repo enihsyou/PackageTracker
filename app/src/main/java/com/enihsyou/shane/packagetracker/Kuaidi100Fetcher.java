@@ -17,9 +17,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Kuaidi100Fetcher {
-    private static final HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
     private static final String SEARCH_NUMBER = "autonumber/autoComNum";
     private static final String SEARCH_PACKAGE = "query";
+
+    private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
 
     private final JsonParser jsonParser;
     private final SimpleDateFormat dateFormatter;
@@ -29,6 +30,16 @@ public class Kuaidi100Fetcher {
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         client = new OkHttpClient();
+    }
+
+    /**
+     * 在运行中修改API服务器的地址，用于测试目的
+     * 在设置面板中添加文字框选项，输入新的地址和端口号，调用此方法
+     *
+     * @param baseURL 要设置的网址
+     */
+    public void setBaseURL(String baseURL) {
+        ENDPOINT = HttpUrl.parse(baseURL);
     }
 
     /**

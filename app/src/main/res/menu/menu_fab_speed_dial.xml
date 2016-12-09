@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_call"
+        android:id="@+id/action_chop_hands"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/send_package" />
+        android:title="@string/buy_buy_buy" />
     <item
-        android:id="@+id/action_text"
+        android:id="@+id/action_receive_package"
         android:icon="@android:drawable/ic_delete"
         android:title="@string/receive_package" />
     <item
-        android:id="@+id/action_email"
+        android:id="@+id/action_send_package"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="待定" />
+        android:title="@string/send_package" />
 </menu>

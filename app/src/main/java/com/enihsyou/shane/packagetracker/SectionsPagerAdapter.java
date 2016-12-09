@@ -32,11 +32,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "SECTION 1";
+                return "全部";
             case 1:
-                return "SECTION 2";
+                return "在途中";
             case 2:
-                return "SECTION 3";
+                return "已签收";
         }
         return null;
     }

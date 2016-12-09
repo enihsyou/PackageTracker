@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 
         setSupportActionBar(mToolbar); //顺序错误会导致点击左上角按钮失效
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) supportActionBar.setDisplayHomeAsUpEnabled(true);
 
         /*创建3个滑动页面的适配器，并设置上去*/
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -85,23 +87,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_option_list, menu);
+        getMenuInflater().inflate(R.menu.menu_main_search, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /*右上角的选项栏*/
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_settings:        //noinspection SimplifiableIfStatement
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
