@@ -6,10 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,30 +48,45 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                new FetchTask(s.toString()).execute();
+                new FetchCompanyTask(s.toString()).execute();
             }
         });
-
+        mNumberEdit.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    new FetchPackageTask(mNumberEdit.getText().toString(),
+                            mSpinner.getSelectedItem().toString()).execute();
+                    return true;
+                }
+                return false;
+            }
+        });
         mSpinner.setAdapter(spinnerAdapter);
+        mConform.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FetchPackageTask(mNumberEdit.getText().toString(),
+                        mSpinner.getSelectedItem().toString()).execute();
+            }
+        });
     }
 
-    private class FetchTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
+    private class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
         private String queryNumber;
         private Kuaidi100Fetcher fetcher;
 
-        public FetchTask(String queryNumber) {
+        FetchCompanyTask(String queryNumber) {
             this.queryNumber = queryNumber;
             fetcher = new Kuaidi100Fetcher();
         }
 
         @Override
         protected CompanyAutoSearchResult doInBackground(String... params) {
-            if (queryNumber != null) {
+            if (!"".equals(queryNumber)) {
                 try {
                     return fetcher.companyResult(queryNumber);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                } catch (IOException ignored) {}// FIXME: 2016/12/9 错误提示
             }
             return null;
         }
@@ -81,6 +96,41 @@ public class AddNewPackageActivity extends AppCompatActivity {
             Log.i(TAG, "onPostExecute: " + companyAutoSearchResult.getCompanies().size());
             spinnerAdapter.clear();
             spinnerAdapter.addAll(companyAutoSearchResult.getCompanies());
+        }
+    }
+
+    private class FetchPackageTask
+            extends AsyncTask<String, Void, PackageTrafficSearchResult> {
+        private String queryNumber;
+        private String queryCompany;
+        private Kuaidi100Fetcher fetcher;
+
+
+        FetchPackageTask(String queryNumber, String queryCompany) {
+            this.queryNumber = queryNumber;
+            this.queryCompany = queryCompany;
+            fetcher = new Kuaidi100Fetcher();
+        }
+
+        @Override
+        protected PackageTrafficSearchResult doInBackground(String... params) {
+            if (!"".equals(queryNumber) && !"".equals(queryCompany)) {
+                try {
+                    return fetcher.packageResult(queryNumber, queryCompany);
+                } catch (IOException ignored) {}// FIXME: 2016/12/9 错误提示
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(PackageTrafficSearchResult packageTrafficSearchResult) {
+            Log.i(TAG,
+                    "onPostExecute: Result size: " + packageTrafficSearchResult
+                            .getTraffics()
+                            .size());
+            for (PackageEachTraffic eachTraffic : packageTrafficSearchResult.getTraffics()) {
+                Log.i(TAG, "onPostExecute: Result: " + eachTraffic.getContext());
+            }
         }
     }
 }
