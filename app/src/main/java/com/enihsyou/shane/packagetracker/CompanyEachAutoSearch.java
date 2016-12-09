@@ -31,4 +31,9 @@ public class CompanyEachAutoSearch {
     public void setNumberCount(String numberCount) {
         this.numberCount = numberCount;
     }
+
+    @Override
+    public String toString() {
+        return companyCode;
+    }
 }

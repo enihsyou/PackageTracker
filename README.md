@@ -57,4 +57,4 @@
 * [ToggleExpandLayout](https://github.com/fenjuly/ToggleExpandLayout) Toggle Expand Layout
 * [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh) Ultra Pull To Refresh
 * [AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Android Swipe Layout
-* [MaterialTextField](https://github.com/florent37/MaterialTextField) MaterialTextField
+* ~~[MaterialTextField](https://github.com/florent37/MaterialTextField) MaterialTextField~~

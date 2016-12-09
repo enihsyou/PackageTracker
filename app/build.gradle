@@ -38,6 +38,5 @@ dependencies {
     compile 'io.github.yavski:fab-speed-dial:1.0.6'
     testCompile 'junit:junit:4.12'
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
-    compile 'com.github.florent37:materialtextfield:1.0.5'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
 }

@@ -5,11 +5,11 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/buy_buy_buy" />
     <item
-        android:id="@+id/action_receive_package"
-        android:icon="@android:drawable/ic_delete"
-        android:title="@string/receive_package" />
-    <item
         android:id="@+id/action_send_package"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/send_package" />
+    <item
+        android:id="@+id/action_receive_package"
+        android:icon="@android:drawable/ic_delete"
+        android:title="@string/receive_package" />
 </menu>

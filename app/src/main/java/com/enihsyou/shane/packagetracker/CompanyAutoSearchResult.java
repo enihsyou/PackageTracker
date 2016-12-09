@@ -21,4 +21,9 @@ public class CompanyAutoSearchResult {
     public void setCompanies(List<CompanyEachAutoSearch> companies) {
         this.companies = companies;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "@" + number;
+    }
 }

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.enihsyou.shane.packagetracker">
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -37,9 +39,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enihsyou.shane.packagetracker.MainActivity" />
         </activity>
-        <activity android:name=".AddNewPackageActivity">
+        <activity
+            android:name=".AddNewPackageActivity"
+            android:label="@string/title_activity_add_new"
+            android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".SendNewPackageActivity">
+        <activity
+            android:name=".SendNewPackageActivity"
+            android:label="@string/title_activity_send_new"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

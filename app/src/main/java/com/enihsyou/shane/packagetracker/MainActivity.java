@@ -55,10 +55,20 @@ public class MainActivity extends AppCompatActivity
         mFab.setMenuListener(new SimpleMenuListenerAdapter() {
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
-                Snackbar.make(
-                        getCurrentFocus(), "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        .show();
+                switch (menuItem.getItemId()) {
+                    case R.id.action_send_package:
+                        break;
+                    case R.id.action_receive_package:
+                        startActivity(new Intent(MainActivity.this, AddNewPackageActivity.class));
+                        break;
+                    case R.id.action_chop_hands:
+                        break;
+                    default:
+                        Snackbar.make(getCurrentFocus(),
+                                "Replace with your own action", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null)
+                                .show();
+                }
                 return true; //是否被处理了
             }
         });
