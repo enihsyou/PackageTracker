@@ -34,6 +34,6 @@ public class CompanyEachAutoSearch {
 
     @Override
     public String toString() {
-        return companyCode;
+        return Enum.valueOf(CompanyCodeToString.class, companyCode).toString();
     }
 }

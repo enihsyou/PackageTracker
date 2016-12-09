@@ -29,16 +29,12 @@ public class AddNewPackageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_package);
-
+        /*视图赋值*/
         mNumberEdit = (EditText) findViewById(R.id.package_number_input);
         mSpinner = (Spinner) findViewById(R.id.company_spinner);
         mConform = (Button) findViewById(R.id.button_conform);
         mTakePicture = (Button) findViewById(R.id.button_take_picture);
-
-        spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,
-                spinnerItems);
-
+        /*设置输入框的动作监听器*/
         mNumberEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -62,7 +58,17 @@ public class AddNewPackageActivity extends AppCompatActivity {
                 return false;
             }
         });
+        /*设置下拉选项框*/
+        //添加一个临时填充物，用顺丰显示
+        CompanyEachAutoSearch e = new CompanyEachAutoSearch();
+        e.setCompanyCode(CompanyCodeToString.shunfeng.toString());
+        spinnerItems.add(e);
+        //添加视图适配器
+        spinnerAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item,
+                spinnerItems);
         mSpinner.setAdapter(spinnerAdapter);
+        /*设置确认按钮的监听器*/
         mConform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,8 +99,9 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
-            Log.i(TAG, "onPostExecute: " + companyAutoSearchResult.getCompanies().size());
-            spinnerAdapter.clear();
+            if (companyAutoSearchResult == null) return; //如果获取失败
+
+            spinnerAdapter.clear(); //先清除，再添加
             spinnerAdapter.addAll(companyAutoSearchResult.getCompanies());
         }
     }
@@ -124,10 +131,8 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(PackageTrafficSearchResult packageTrafficSearchResult) {
-            Log.i(TAG,
-                    "onPostExecute: Result size: " + packageTrafficSearchResult
-                            .getTraffics()
-                            .size());
+            if (packageTrafficSearchResult == null) return; //如果获取失败
+
             for (PackageEachTraffic eachTraffic : packageTrafficSearchResult.getTraffics()) {
                 Log.i(TAG, "onPostExecute: Result: " + eachTraffic.getContext());
             }
