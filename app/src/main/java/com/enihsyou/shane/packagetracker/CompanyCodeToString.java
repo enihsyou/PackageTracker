@@ -1,8 +1,8 @@
 package com.enihsyou.shane.packagetracker;
 
 public enum CompanyCodeToString {
-    dhl("DHL"),
     shunfeng("顺丰"),
+    dhl("DHL"),
     wanjiawuliu("万家物流"),
     emsguoji("EMS国际件"),
     ganzhongnengda("能达速递"),
@@ -71,16 +71,17 @@ public enum CompanyCodeToString {
     longbanwuliu("龙邦快运"),
     zhongtong("中通"),
     chuanxiwuliu("传喜物流"),
-    ems("EMS");
+    ems("EMS"),
+    none("无匹配");
 
-    private String name;
+    private String company;
 
-    CompanyCodeToString(String name) {
-        this.name = name;
+    CompanyCodeToString(String company) {
+        this.company = company;
     }
 
     @Override
     public String toString() {
-        return name;
+        return company;
     }
 }

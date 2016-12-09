@@ -13,6 +13,7 @@ import android.widget.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddNewPackageActivity extends AppCompatActivity {
     private static final String TAG = "AddNewPackageActivity";
@@ -59,10 +60,12 @@ public class AddNewPackageActivity extends AppCompatActivity {
             }
         });
         /*设置下拉选项框*/
-        //添加一个临时填充物，用顺丰显示
-        CompanyEachAutoSearch e = new CompanyEachAutoSearch();
-        e.setCompanyCode(CompanyCodeToString.shunfeng.toString());
-        spinnerItems.add(e);
+        //添加所有快递公司列表到下拉框
+        for (CompanyCodeToString codeToString : CompanyCodeToString.values()) {
+            CompanyEachAutoSearch e = new CompanyEachAutoSearch();
+            e.setCompanyCode(codeToString.name());
+            spinnerItems.add(e);
+        }
         //添加视图适配器
         spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item,
@@ -102,7 +105,13 @@ public class AddNewPackageActivity extends AppCompatActivity {
             if (companyAutoSearchResult == null) return; //如果获取失败
 
             spinnerAdapter.clear(); //先清除，再添加
-            spinnerAdapter.addAll(companyAutoSearchResult.getCompanies());
+            List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
+            if (companies.isEmpty()) { //如果没有匹配，添加一个空的
+                CompanyEachAutoSearch tempResult = new CompanyEachAutoSearch();
+                tempResult.setCompanyCode("none");
+                spinnerAdapter.add(tempResult);
+            }
+            spinnerAdapter.addAll(companies);
         }
     }
 

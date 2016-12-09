@@ -34,6 +34,12 @@ public class CompanyEachAutoSearch {
 
     @Override
     public String toString() {
-        return Enum.valueOf(CompanyCodeToString.class, companyCode).toString();
+        String name;
+        try {
+            name = Enum.valueOf(CompanyCodeToString.class, companyCode).toString();
+        } catch (IllegalArgumentException e) {
+            name = companyCode;
+        }
+        return name;
     }
 }
