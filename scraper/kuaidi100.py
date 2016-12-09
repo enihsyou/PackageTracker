@@ -34,6 +34,6 @@ def get_links(soup: Tag):
 
 if __name__ == "__main__":
     par = get_links(get_soup(get_html(url)))
-    with open("code.txt", "w") as file:
+    with open("code.txt", "w", encoding="utf-8") as file:
         for key, value in par.items():
             file.write("{} {}\n".format(key, value))
