@@ -80,6 +80,14 @@ public enum CompanyCodeToString {
         this.company = company;
     }
 
+    /**
+     * 使用valueof()方法可以从code获得汉字名字
+     * 比如valueof("shunfeng") => "顺丰"
+     * <p>
+     * 使用toString()方法可以从Enum中获得汉字名字
+     *
+     * @return 汉字名字
+     */
     @Override
     public String toString() {
         return company;
