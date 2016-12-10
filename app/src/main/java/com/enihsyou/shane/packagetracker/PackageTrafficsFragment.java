@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.model.DummyContent;
 import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
+import com.enihsyou.shane.packagetracker.model.Packages;
 
 /**
  * 展示所有跟踪中的包裹的列表
@@ -41,7 +41,7 @@ public class PackageTrafficsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-
+            // get arguments
         }
     }
 
@@ -57,7 +57,7 @@ public class PackageTrafficsFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new PackageTrafficsRecyclerViewAdapter(DummyContent.ITEMS,
+            recyclerView.setAdapter(new PackageTrafficsRecyclerViewAdapter(Packages.getPackages(getActivity()),
                     mListener));
         }
         return view;

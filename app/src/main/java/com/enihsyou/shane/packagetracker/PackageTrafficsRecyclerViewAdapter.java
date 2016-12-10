@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.enihsyou.shane.packagetracker.PackageTrafficsFragment.OnListFragmentInteractionListener;
 import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
+import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ import java.util.List;
 public class PackageTrafficsRecyclerViewAdapter
         extends RecyclerView.Adapter<PackageTrafficsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<PackageTrafficSearchResult> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public PackageTrafficsRecyclerViewAdapter(List<DummyItem> items,
+    public PackageTrafficsRecyclerViewAdapter(List<PackageTrafficSearchResult> items,
             OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
@@ -31,27 +32,33 @@ public class PackageTrafficsRecyclerViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_packagetraffics, parent, false);
+                .inflate(R.layout.traffic_header, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+    public void onBindViewHolder(ViewHolder holder,
+            int position) {
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
     }
+
+    // @Override
+    // public void onBindViewHolder(final ViewHolder holder, int position) {
+    //     holder.mItem = mValues.get(position);
+    //     holder.mIdView.setText(mValues.get(position));
+    //     holder.mContentView.setText(mValues.get(position).content);
+    //
+    //     holder.mViewRoot.setOnClickListener(new View.OnClickListener() {
+    //         @Override
+    //         public void onClick(View v) {
+    //             if (null != mListener) {
+    //                 // Notify the active callbacks interface (the activity, if the
+    //                 // fragment is attached to one) that an item has been selected.
+    //                 mListener.onListFragmentInteraction(holder.mItem);
+    //             }
+    //         }
+    //     });
+    // }
 
     @Override
     public int getItemCount() {
@@ -59,14 +66,14 @@ public class PackageTrafficsRecyclerViewAdapter
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
+        public final View mViewRoot;
         public final TextView mIdView;
         public final TextView mContentView;
         public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
+            mViewRoot = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
         }

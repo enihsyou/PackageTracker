@@ -1,6 +1,8 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,5 +30,19 @@ public class Packages {
 
     public static void removeTraffic(PackageTrafficSearchResult result) {
         getPackages().remove(result);
+    }
+
+    public static View getCard(int position,
+            LinearLayout cardContainer) {
+        PackageTrafficSearchResult searchResult = getOne(position);
+        return Kuaidi100Fetcher.generateCard(searchResult, cardContainer);
+    }
+
+    public static PackageTrafficSearchResult getOne(int position) {
+        try {
+            return getPackages().get(position);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 }

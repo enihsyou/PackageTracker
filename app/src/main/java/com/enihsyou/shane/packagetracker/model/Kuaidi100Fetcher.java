@@ -1,13 +1,9 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,6 +33,44 @@ public class Kuaidi100Fetcher {
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         client = new OkHttpClient();
+    }
+
+    /**
+     * 从packageTrafficSearchResult中获取信息，生成一张卡片，添加到cardContainer上，如果成功 关闭键盘
+     *
+     * @param searchResult  提取信息的对象
+     * @param trafficHeader 插入卡片的容器
+     *
+     * @return 带有信息的卡片
+     */
+    public static TrafficCardView generateCard(PackageTrafficSearchResult searchResult,
+            LinearLayout trafficHeader) {
+        /*下面创建快递信息卡片*/
+
+        // 获得卡片部件，之后的每个小部件都添加到这张卡片里面
+        TrafficCardView detailContainer =
+                (TrafficCardView) trafficHeader.findViewById(R.id.detail_container);
+
+        setUpDetailCardHeader(searchResult, detailContainer);
+        setUPDetailCardBody(searchResult, detailContainer);
+        return detailContainer;
+    }
+
+    public static TrafficCardView setUpDetailCardHeader(PackageTrafficSearchResult searchResult,
+            TrafficCardView detailCard) {
+        // 设置CardView各个部件
+        detailCard.setCompanyName(CompanyCodeToString
+                .valueOf(searchResult.getCompany())
+                .toString());
+        detailCard.setPackageNumber(searchResult.getNumber());
+        // detailCard.setCompanyHead(null);
+        return detailCard;
+    }
+
+    public static TrafficCardView setUPDetailCardBody(PackageTrafficSearchResult searchResult,
+            TrafficCardView detailContainer) {
+        detailContainer.addTraffics(searchResult.getTraffics());
+        return detailContainer;
     }
 
     /**
@@ -188,55 +222,5 @@ public class Kuaidi100Fetcher {
         searchResult.setCompanies(auto);
 
         return searchResult;
-    }
-
-    /**
-     * 从packageTrafficSearchResult中获取信息，生成一张卡片，添加到cardContainer上，如果成功 关闭键盘
-     *
-     * @param packageTrafficSearchResult 提取信息的对象
-     * @param cardContainer              插入卡片的容器
-     * @param layoutInflater             LayoutInflater
-     *
-     * @return 带有信息的卡片
-     */
-    public View generateCard(PackageTrafficSearchResult packageTrafficSearchResult,
-            LinearLayout cardContainer, LayoutInflater layoutInflater) {
-        /*下面创建快递信息卡片*/
-        // 卡片的根布局
-        View detailCard = layoutInflater
-                .inflate(R.layout.card_package, cardContainer, false);
-        // 获得卡片部件，之后的每个小部件都添加到这张卡片里面
-        CardView detailContainer = (CardView) detailCard.findViewById(R.id.detail_container);
-        // 获得卡片里面的详细跟踪信息的展示布局，之后的每个详细跟踪信息都添加到这里面
-        LinearLayout eachDetailContainer =
-                (LinearLayout) detailContainer.findViewById(R.id.each_detail_container);
-        // 获得各个部件
-        ImageView companyHead =
-                (ImageView) detailContainer.findViewById(R.id.company_head_card_view);
-        TextView packageNumber =
-                (TextView) detailContainer.findViewById(R.id.package_number_card_view);
-        TextView companyName =
-                (TextView) detailContainer.findViewById(R.id.company_name_card_view);
-        // 设置CardView各个部件
-        packageNumber.setText(packageTrafficSearchResult.getNumber());
-        companyName.setText(CompanyCodeToString
-                .valueOf(packageTrafficSearchResult.getCompany())
-                .toString());
-        /*创建每一条信息的显示*/
-        for (PackageEachTraffic eachTraffic : packageTrafficSearchResult.getTraffics()) {
-            // 详细跟踪信息的根布局
-            View trafficLayout = layoutInflater
-                    .inflate(R.layout.traffic_detail, eachDetailContainer, false);
-
-            TextView detailDatetime =
-                    (TextView) trafficLayout.findViewById(R.id.detail_datetime);
-            TextView detailContext = (TextView) trafficLayout.findViewById(R.id.detail_context);
-            /*文字框赋值*/
-            detailDatetime.setText(eachTraffic.getTimeString());
-            detailContext.setText(eachTraffic.getContext());
-
-            eachDetailContainer.addView(trafficLayout);
-        }
-        return detailCard;
     }
 }

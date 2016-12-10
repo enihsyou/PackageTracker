@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <!--卡片主体-->
-    <android.support.v7.widget.CardView
+    <com.enihsyou.shane.packagetracker.view.TrafficCardView
         android:id="@+id/detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -63,5 +63,5 @@
 
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </com.enihsyou.shane.packagetracker.view.TrafficCardView>
 </LinearLayout>

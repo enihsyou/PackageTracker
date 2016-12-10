@@ -17,10 +17,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        if (position == 0) return PackageTrafficsFragment.newInstance();
-        return PlaceholderFragment.newInstance(position + 1);
+        switch (position) {
+            case 0:
+                return PackageTrafficsFragment.newInstance();
+            case 1:
+            case 2:
+            default:
+                return PlaceholderFragment.newInstance(position + 1);
+        }
     }
 
     @Override
