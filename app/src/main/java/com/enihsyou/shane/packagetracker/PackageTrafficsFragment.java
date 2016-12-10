@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.dummy.DummyContent;
-import com.enihsyou.shane.packagetracker.dummy.DummyContent.DummyItem;
+import com.enihsyou.shane.packagetracker.model.DummyContent;
+import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
 
 /**
  * 展示所有跟踪中的包裹的列表

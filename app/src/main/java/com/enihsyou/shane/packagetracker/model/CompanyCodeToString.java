@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.model;
 
 public enum CompanyCodeToString {
     shunfeng("顺丰"),

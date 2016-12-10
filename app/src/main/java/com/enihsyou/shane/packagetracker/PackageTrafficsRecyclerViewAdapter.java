@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.enihsyou.shane.packagetracker.PackageTrafficsFragment.OnListFragmentInteractionListener;
-import com.enihsyou.shane.packagetracker.dummy.DummyContent.DummyItem;
+import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
 
 import java.util.List;
 

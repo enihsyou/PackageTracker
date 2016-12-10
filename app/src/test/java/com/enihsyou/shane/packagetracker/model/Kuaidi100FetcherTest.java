@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.model;
 
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;

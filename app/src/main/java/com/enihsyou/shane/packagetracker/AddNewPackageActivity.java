@@ -12,22 +12,39 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.enihsyou.shane.packagetracker.model.CompanyCodeToString;
+import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
+import com.enihsyou.shane.packagetracker.model.FetchCompanyTask;
+import com.enihsyou.shane.packagetracker.model.FetchPackageTask;
 
 import java.util.ArrayList;
 
 public class AddNewPackageActivity extends AppCompatActivity {
     private static final String TAG = "AddNewPackageActivity";
-
-    LinearLayout mCardContainer;
-    TextInputLayout mNumberEditWrapper;
-    EditText mNumberEdit;
-    Spinner mSpinner;
-    Button mConform;
-    Button mTakePicture;
-
     ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter;
-
+    private LinearLayout mCardContainer;
+    private TextInputLayout mNumberEditWrapper;
+    private EditText mNumberEdit;
+    private Spinner mSpinner;
+    private Button mConform;
+    private Button mTakePicture;
     private ArrayList<CompanyEachAutoSearch> spinnerItems = new ArrayList<>();
+
+    public LinearLayout getCardContainer() {
+        return mCardContainer;
+    }
+
+    public Spinner getSpinner() {
+        return mSpinner;
+    }
+
+    public TextInputLayout getNumberEditWrapper() {
+        return mNumberEditWrapper;
+    }
+
+    public ArrayAdapter<CompanyEachAutoSearch> getSpinnerAdapter() {
+        return spinnerAdapter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +114,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
         });
     }
 
-    void hideKeyboard() {
+    public void hideKeyboard() {
         View view = getCurrentFocus();
         if (view == null) return;
         InputMethodManager mInputMethodManager =

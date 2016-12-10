@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.model;
 
 /**
  * 从API获取的由快递单号推测的快递公司信息

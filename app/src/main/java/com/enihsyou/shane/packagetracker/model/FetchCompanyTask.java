@@ -1,22 +1,24 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.model;
 
 import android.os.AsyncTask;
+import android.widget.ArrayAdapter;
+import com.enihsyou.shane.packagetracker.AddNewPackageActivity;
 
 import java.io.IOException;
 import java.util.List;
 
-class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
+public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
     private AddNewPackageActivity mAddNewPackageActivity;
     private Kuaidi100Fetcher fetcher;
 
-    FetchCompanyTask(AddNewPackageActivity addNewPackageActivity) {
+    public FetchCompanyTask(AddNewPackageActivity addNewPackageActivity) {
         mAddNewPackageActivity = addNewPackageActivity;
         fetcher = new Kuaidi100Fetcher();
     }
 
     @Override
     protected CompanyAutoSearchResult doInBackground(String... params) {
-        if (params.length!=1) return null;
+        if (params.length != 1) return null;
 
         String queryNumber = params[0];
         if (!"".equals(queryNumber)) {
@@ -31,13 +33,17 @@ class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> 
     protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
         if (companyAutoSearchResult == null) return; // 如果获取失败
 
-        mAddNewPackageActivity.spinnerAdapter.clear(); //先清除，再添加
+        ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter =
+                mAddNewPackageActivity.getSpinnerAdapter();
+
+        spinnerAdapter.clear(); //先清除，再添加
         List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
         if (companies.isEmpty()) { //如果没有匹配，添加一个空的
             CompanyEachAutoSearch tempResult = new CompanyEachAutoSearch();
             tempResult.setCompanyCode("none");
-            mAddNewPackageActivity.spinnerAdapter.add(tempResult);
+            spinnerAdapter.add(tempResult);
+        } else {
+            spinnerAdapter.addAll(companies);
         }
-        else mAddNewPackageActivity.spinnerAdapter.addAll(companies);
     }
 }

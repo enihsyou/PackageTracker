@@ -1,6 +1,7 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.model;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CompanyAutoSearchResult {
     private String number;
@@ -24,6 +25,6 @@ public class CompanyAutoSearchResult {
 
     @Override
     public String toString() {
-        return super.toString() + "@" + number;
+        return String.format(Locale.getDefault(), "单号: %s，%d个结果", number, companies.size());
     }
 }

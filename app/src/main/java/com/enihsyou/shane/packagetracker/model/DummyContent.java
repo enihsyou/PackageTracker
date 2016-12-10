@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.dummy;
+package com.enihsyou.shane.packagetracker.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
