@@ -14,7 +14,6 @@ import com.enihsyou.shane.packagetracker.model.PackageEachTraffic;
 import java.util.List;
 
 public class TrafficCardView extends CardView {
-    private static final String TAG = "TrafficCardView";
     private final LayoutInflater mInflater;
     private ImageView mCompanyHead;
     private TextView mPackageNumber;
@@ -36,6 +35,37 @@ public class TrafficCardView extends CardView {
         mInflater = LayoutInflater.from(context);
     }
 
+    public ImageView getCompanyHead() {
+        return mCompanyHead;
+    }
+
+    public void setCompanyHead(Drawable drawable) {
+        mCompanyHead.setImageDrawable(drawable);
+    }
+
+    public TextView getPackageNumber() {
+        return mPackageNumber;
+    }
+
+    public void setPackageNumber(String packageNumber) {
+        mPackageNumber.setText(packageNumber);
+    }
+
+    public TextView getCompanyName() {
+        return mCompanyName;
+    }
+
+    /**
+     * @param companyName 公司名字，传入已经转义过的字符串
+     */
+    public void setCompanyName(String companyName) {
+        mCompanyName.setText(companyName);
+    }
+
+    public LinearLayout getDetailContainer() {
+        return mDetailContainer;
+    }
+
     /**
      * 在完成创建视图之后，再findViewByID，不然会有空指针错误
      */
@@ -52,21 +82,9 @@ public class TrafficCardView extends CardView {
         mDetailContainer = (LinearLayout) findViewById(R.id.each_detail_container);
     }
 
-    /**
-     * @param companyName 公司名字，传入已经转义过的字符串
-     */
-    public void setCompanyName(String companyName) {
-        mCompanyName.setText(companyName);
-    }
-
-    public void setPackageNumber(String packageNumber) {
-        mPackageNumber.setText(packageNumber);
-    }
-
     public void addTraffics(List<PackageEachTraffic> traffics) {
-        for (PackageEachTraffic eachTraffic : traffics) {
-            // 详细跟踪信息的根布局
-            TrafficCardDetailLayout trafficLayout =
+        for (PackageEachTraffic eachTraffic : traffics) { // 循环添加每条信息
+            TrafficCardDetailLayout trafficLayout = // 每一条详细跟踪信息的根布局
                     (TrafficCardDetailLayout) mInflater.inflate(R.layout.traffic_body,
                             mDetailContainer,
                             false);
@@ -77,9 +95,5 @@ public class TrafficCardView extends CardView {
 
             mDetailContainer.addView(trafficLayout);
         }
-    }
-
-    public void setCompanyHead(Drawable drawable) {
-        mCompanyHead.setImageDrawable(drawable);
     }
 }

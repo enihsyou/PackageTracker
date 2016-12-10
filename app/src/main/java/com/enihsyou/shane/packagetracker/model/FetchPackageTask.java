@@ -40,25 +40,28 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
             /*设置输入框检查器*/
             mActivity.getNumberEditWrapper().setError(mActivity
                     .getResources().getString(R.string.wrong_package_number));
-
             return;
         }
         /*先收起键盘*/
         mActivity.hideKeyboard();
+        /*移除之前的输入错误提示*/
+        mActivity.getNumberEditWrapper().setErrorEnabled(false);
 
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        // 新建的卡片将添加到下面这个容器里面
+        // 新建的两张卡片将添加到下面这个容器里面
         LinearLayout attachRoot = mActivity.getCardContainer();
+
         if (attachRoot.getChildAt(1) == null) { //如果之前没有添加过卡片
             Log.d(TAG, "onPostExecute: position1 is null, add new card");
         } else {
             attachRoot.removeViewAt(1); //之前添加过一个了，现在清除掉
-            Log.e(TAG, "onPostExecute: 之前添加过一个卡片了，先移除，再添加");
+            Log.d(TAG, "onPostExecute: 之前添加过一个卡片了，先移除，再添加");
         }
-        // 卡片的根布局，存放上面一个输入卡片和下面一个显示结果的卡片
-        LinearLayout trafficHeader = (LinearLayout) inflater.inflate(R.layout.traffic_header,
-                mActivity.getCardContainer(), false);
-        /*创建一张卡片*/
+
+        // 上面一个输入内容的卡片 下面一个显示结果的卡片
+        LinearLayout trafficHeader = (LinearLayout) LayoutInflater
+                .from(mActivity)
+                .inflate(R.layout.traffic_header, mActivity.getCardContainer(), false);
+        /*创建下面的结果显示卡片*/
         Kuaidi100Fetcher.generateCard(searchResult, trafficHeader);
 
         Log.d(TAG, String.format("onPostExecute: 成功解析快递信息 %s,有%d条记录",
@@ -66,7 +69,8 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
                 searchResult.getTraffics().size()));
         /*将卡片添加到适合的位置*/
         attachRoot.addView(trafficHeader);
-
+        /*将结果添加到跟踪列表*/
+        Packages.addTraffic(searchResult);
     }
 
 }

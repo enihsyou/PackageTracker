@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.enihsyou.shane.packagetracker.model.DummyContent;
+import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_send_package:
-                startActivity(new Intent(this, PackageDetailActivity.class));
+                startActivity(new Intent(this, AddNewPackageActivity.class));
                 break;
             case R.id.nav_receive_package:
                 break;
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(PackageTrafficSearchResult item) {
 
     }
 }

@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
 
 public class TrafficCardDetailLayout extends LinearLayout {
-    private static final String TAG = "TrafficCardDetailLayout";
     private TextView mDetailDatetime;
     private TextView mDetailContext;
 

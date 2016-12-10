@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
+import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 
 /**
@@ -18,6 +18,7 @@ import com.enihsyou.shane.packagetracker.model.Packages;
  */
 public class PackageTrafficsFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
+    private PackageTrafficsRecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,12 +58,18 @@ public class PackageTrafficsFragment extends Fragment {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new PackageTrafficsRecyclerViewAdapter(Packages.getPackages(getActivity()),
-                    mListener));
+            mAdapter = new PackageTrafficsRecyclerViewAdapter(Packages.getPackages(getActivity()),
+                    mListener);
+            recyclerView.setAdapter(mAdapter);
         }
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -93,6 +100,6 @@ public class PackageTrafficsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(PackageTrafficSearchResult item);
     }
 }

@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.enihsyou.shane.packagetracker.PackageTrafficsFragment.OnListFragmentInteractionListener;
 import com.enihsyou.shane.packagetracker.model.DummyContent.DummyItem;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
@@ -18,7 +16,7 @@ import java.util.List;
  * TODO: Replace the implementation with code for your data type.
  */
 public class PackageTrafficsRecyclerViewAdapter
-        extends RecyclerView.Adapter<PackageTrafficsRecyclerViewAdapter.ViewHolder> {
+        extends RecyclerView.Adapter<PackageViewHolder> {
 
     private final List<PackageTrafficSearchResult> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -30,57 +28,33 @@ public class PackageTrafficsRecyclerViewAdapter
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+    public PackageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater
+                .from(parent.getContext())
                 .inflate(R.layout.traffic_header, parent, false);
-        return new ViewHolder(view);
+        return new PackageViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder,
-            int position) {
+    public void onBindViewHolder(final PackageViewHolder holder, int position) {
+        PackageTrafficSearchResult item = mValues.get(position);
+        holder.bindItem(item);
 
+        holder.getViewRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.onListFragmentInteraction(holder.getItem());
+                }
+            }
+        });
     }
-
-    // @Override
-    // public void onBindViewHolder(final ViewHolder holder, int position) {
-    //     holder.mItem = mValues.get(position);
-    //     holder.mIdView.setText(mValues.get(position));
-    //     holder.mContentView.setText(mValues.get(position).content);
-    //
-    //     holder.mViewRoot.setOnClickListener(new View.OnClickListener() {
-    //         @Override
-    //         public void onClick(View v) {
-    //             if (null != mListener) {
-    //                 // Notify the active callbacks interface (the activity, if the
-    //                 // fragment is attached to one) that an item has been selected.
-    //                 mListener.onListFragmentInteraction(holder.mItem);
-    //             }
-    //         }
-    //     });
-    // }
 
     @Override
     public int getItemCount() {
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mViewRoot;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
-
-        public ViewHolder(View view) {
-            super(view);
-            mViewRoot = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
-    }
 }

@@ -12,6 +12,7 @@ public class Packages {
 
     private Packages() {
         packages = new ArrayList<>();
+        packages.add(new PackageTrafficSearchResult());
     }
 
     public static List<PackageTrafficSearchResult> getPackages(Context context) {
