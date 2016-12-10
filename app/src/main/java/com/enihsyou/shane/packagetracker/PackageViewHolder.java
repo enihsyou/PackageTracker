@@ -36,7 +36,7 @@ public class PackageViewHolder extends RecyclerView.ViewHolder {
 
     public PackageViewHolder(View view) {
         super(view);
-        TrafficCardView cardView = (TrafficCardView) view.findViewById(R.id.detail_container);
+        TrafficCardView cardView = (TrafficCardView) view.findViewById(R.id.header_detail_container);
         mViewRoot = cardView;
         mCompanyName = cardView.getCompanyName();
         mPackageNumber = cardView.getPackageNumber();

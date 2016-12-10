@@ -1,7 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class Packages {
         getPackages().remove(result);
     }
 
-    public static View getCard(int position,
+    public static LinearLayout getCard(int position,
             LinearLayout cardContainer) {
         PackageTrafficSearchResult searchResult = getOne(position);
         return Kuaidi100Fetcher.generateCard(searchResult, cardContainer);

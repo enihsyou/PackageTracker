@@ -60,7 +60,7 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
         // 上面一个输入内容的卡片 下面一个显示结果的卡片
         LinearLayout trafficHeader = (LinearLayout) LayoutInflater
                 .from(mActivity)
-                .inflate(R.layout.traffic_header, mActivity.getCardContainer(), false);
+                .inflate(R.layout.traffic_header_card, mActivity.getCardContainer(), false);
         /*创建下面的结果显示卡片*/
         Kuaidi100Fetcher.generateCard(searchResult, trafficHeader);
 

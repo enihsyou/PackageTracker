@@ -43,16 +43,16 @@ public class Kuaidi100Fetcher {
      *
      * @return 带有信息的卡片
      */
-    public static TrafficCardView generateCard(PackageTrafficSearchResult searchResult,
+    public static LinearLayout generateCard(PackageTrafficSearchResult searchResult,
             LinearLayout trafficHeader) {
         /*下面创建快递信息卡片*/
         // 获得卡片部件，之后的每个小部件都添加到这张卡片里面，这卡片有两部分:头部信息和主体信息
-        TrafficCardView detailContainer = (TrafficCardView) trafficHeader.findViewById(R.id.detail_container);
+        TrafficCardView detailContainer = (TrafficCardView) trafficHeader.findViewById(R.id.header_detail_container);
         /*设置头部*/
         setUpDetailCardHeader(searchResult, detailContainer);
         /*设置主体*/
         setUPDetailCardBody(searchResult, detailContainer);
-        return detailContainer;
+        return trafficHeader;
     }
 
     public static TrafficCardView setUpDetailCardHeader(PackageTrafficSearchResult searchResult,

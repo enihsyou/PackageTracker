@@ -3,12 +3,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_card_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <!--卡片主体-->
     <com.enihsyou.shane.packagetracker.view.TrafficCardView
-        android:id="@+id/detail_container"
+        android:id="@+id/header_detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -55,7 +56,7 @@
             </RelativeLayout>
             <!--包含详细快递信息-->
             <LinearLayout
-                android:id="@+id/each_detail_container"
+                android:id="@+id/header_each_detail_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

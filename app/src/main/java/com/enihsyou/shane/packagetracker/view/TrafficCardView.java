@@ -79,7 +79,7 @@ public class TrafficCardView extends CardView {
         mCompanyHead = (ImageView) findViewById(R.id.company_head_card_view);
         mPackageNumber = (TextView) findViewById(R.id.package_number_card_view);
         mCompanyName = (TextView) findViewById(R.id.company_name_card_view);
-        mDetailContainer = (LinearLayout) findViewById(R.id.each_detail_container);
+        mDetailContainer = (LinearLayout) findViewById(R.id.header_each_detail_container);
     }
 
     public void addTraffics(List<PackageEachTraffic> traffics) {

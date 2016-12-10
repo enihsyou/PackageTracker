@@ -31,7 +31,7 @@ public class PackageTrafficsRecyclerViewAdapter
     public PackageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.traffic_header, parent, false);
+                .inflate(R.layout.traffic_header_card, parent, false);
         return new PackageViewHolder(view);
     }
 

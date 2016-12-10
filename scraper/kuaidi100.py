@@ -19,9 +19,10 @@ def get_links(soup: Tag):
     lists = soup.find_all("div", class_="com-list")
     par = {}
     for each_list in lists:  # type: Tag
-        for item in each_list.find_all("a"):
+        founds = each_list.find_all("a")
+        founds.pop(0)  # <a data-code="default">智能识别</a>
+        for item in founds:
             if not item.has_attr("data-code"): continue
-            if item["data-code"] == "default": continue
 
             code = item["data-code"]
             code_text = item.text

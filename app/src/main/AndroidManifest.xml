@@ -32,9 +32,15 @@
         </activity>
         <activity
             android:name=".PackageDetailActivity"
-            android:label="@string/title_activity_scrolling"
+            android:label="@string/title_activity_detail"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.enihsyou.shane.packagetracker.MainActivity" />
@@ -49,6 +55,9 @@
             android:label="@string/title_activity_send_new"
             android:parentActivityName=".MainActivity">
         </activity>
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".PackageDetailActivity" />
     </application>
 
 </manifest>
