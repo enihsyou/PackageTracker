@@ -5,12 +5,18 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:orientation="horizontal">
-
+    <!--左边显示日期时间-->
     <TextView
         android:id="@+id/detail_datetime"
         android:layout_width="70sp"
         android:layout_height="wrap_content"
         tools:text="Time" />
+    <!--中间一个分隔符-->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/separator" />
+    <!--右边显示跟踪信息-->
     <TextView
         android:id="@+id/detail_context"
         android:layout_width="0dp"

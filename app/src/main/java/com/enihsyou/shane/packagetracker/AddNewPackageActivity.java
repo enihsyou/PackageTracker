@@ -1,15 +1,18 @@
 package com.enihsyou.shane.packagetracker;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import java.io.IOException;
@@ -31,12 +34,14 @@ public class AddNewPackageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_package);
+
         /*视图赋值*/
         mCardContainer = (LinearLayout) findViewById(R.id.new_card_container);
         mNumberEdit = (EditText) findViewById(R.id.package_number_input);
         mSpinner = (Spinner) findViewById(R.id.company_spinner);
         mConform = (Button) findViewById(R.id.button_conform);
         mTakePicture = (Button) findViewById(R.id.button_take_picture);
+
         /*设置输入框的动作监听器*/
         mNumberEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -47,20 +52,28 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: 在单号框输入字符 " + s.toString());
                 new FetchCompanyTask(s.toString()).execute();
             }
         });
         mNumberEdit.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Log.d(TAG, "onEditorAction: 点击键盘确认键");
+                    InputMethodManager imm =
+                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),
+                            InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
                     new FetchPackageTask(mNumberEdit.getText().toString(),
-                            mSpinner.getSelectedItem().toString()).execute();
+                            ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode()).execute();
                     return true;
                 }
                 return false;
             }
         });
+
         /*设置下拉选项框*/
         //添加所有快递公司列表到下拉框
         for (CompanyCodeToString codeToString : CompanyCodeToString.values()) {
@@ -70,13 +83,18 @@ public class AddNewPackageActivity extends AppCompatActivity {
         }
         //添加视图适配器
         spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.spinner_dropdown_item,
                 spinnerItems);
         mSpinner.setAdapter(spinnerAdapter);
+
         /*设置确认按钮的监听器*/
         mConform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: 按下面板确认按钮");
+                InputMethodManager imm =
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
                 new FetchPackageTask(mNumberEdit.getText().toString(),
                         ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode()).execute();
             }
