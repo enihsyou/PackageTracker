@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation"
-        app:contentPadding="15dp">
+        app:contentPadding="8dp">
         <!--卡片里面一个垂直的线性布局，放置上下两部分，上面是单号之类的，下面是快递记录-->
         <LinearLayout
             android:layout_width="match_parent"
