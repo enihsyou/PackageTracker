@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--提供滚动功能-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,34 +24,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:orientation="vertical">
                 <!--上面，一个输入框，一个预测快递公司的下拉框-->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/package_number_input"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp">
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/package_number_input_wrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:hint="@string/package_number"
-                        android:imeOptions="actionSearch"
-                        android:inputType="textPhonetic"
-                        android:maxLength="20"
-                        android:maxLines="1" />
+                        app:errorEnabled="true">
+                        <EditText
+                            android:id="@+id/package_number_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="@string/package_number"
+                            android:imeOptions="actionSearch"
+                            android:inputType="textPhonetic"
+                            android:maxLength="20"
+                            android:maxLines="1" />
+                    </android.support.design.widget.TextInputLayout>
                     <Spinner
                         android:id="@+id/company_spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp" />
+                        android:layout_alignParentEnd="true"/>
+
                 </RelativeLayout>
                 <!--下面，一个拍二维码的按钮和一个确认按钮-->
                 <LinearLayout

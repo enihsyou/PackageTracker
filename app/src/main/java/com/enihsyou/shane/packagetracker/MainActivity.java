@@ -15,11 +15,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.enihsyou.shane.packagetracker.dummy.DummyContent;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        PackageTrafficsFragment.OnListFragmentInteractionListener {
 
     private Toolbar mToolbar;
     private FabSpeedDial mFab;
@@ -121,5 +123,10 @@ public class MainActivity extends AppCompatActivity
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }

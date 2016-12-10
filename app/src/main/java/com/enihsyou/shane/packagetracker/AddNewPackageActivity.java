@@ -3,6 +3,7 @@ package com.enihsyou.shane.packagetracker;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -22,6 +23,7 @@ import java.util.List;
 public class AddNewPackageActivity extends AppCompatActivity {
     private static final String TAG = "AddNewPackageActivity";
     private LinearLayout mCardContainer;
+    private TextInputLayout mNumberEditWrapper;
     private EditText mNumberEdit;
     private Spinner mSpinner;
     private Button mConform;
@@ -29,14 +31,20 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
     private ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter;
     private ArrayList<CompanyEachAutoSearch> spinnerItems = new ArrayList<>();
+    private InputMethodManager mInputMethodManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_package);
 
+        /*设置键盘*/
+        mInputMethodManager =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
         /*视图赋值*/
         mCardContainer = (LinearLayout) findViewById(R.id.new_card_container);
+        mNumberEditWrapper = (TextInputLayout) findViewById(R.id.package_number_input_wrapper);
         mNumberEdit = (EditText) findViewById(R.id.package_number_input);
         mSpinner = (Spinner) findViewById(R.id.company_spinner);
         mConform = (Button) findViewById(R.id.button_conform);
@@ -61,10 +69,6 @@ public class AddNewPackageActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.d(TAG, "onEditorAction: 点击键盘确认键");
-                    InputMethodManager imm =
-                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(),
-                            InputMethodManager.RESULT_UNCHANGED_SHOWN);
 
                     new FetchPackageTask(mNumberEdit.getText().toString(),
                             ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode()).execute();
@@ -92,9 +96,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: 按下面板确认按钮");
-                InputMethodManager imm =
-                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
                 new FetchPackageTask(mNumberEdit.getText().toString(),
                         ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode()).execute();
             }
@@ -122,7 +124,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
-            if (companyAutoSearchResult == null) return; //如果获取失败
+            if (companyAutoSearchResult == null) return; // 如果获取失败
 
             spinnerAdapter.clear(); //先清除，再添加
             List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
@@ -160,16 +162,22 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(PackageTrafficSearchResult packageTrafficSearchResult) {
-            if (packageTrafficSearchResult == null) return; //如果获取失败
+            if (packageTrafficSearchResult == null) { // 如果获取不到正确的结果
+                /*设置输入框检查器*/
+                mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
 
+                return;
+            }
+            /*先收起键盘*/
+            mInputMethodManager.hideSoftInputFromWindow(mNumberEdit.getWindowToken(),
+                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
 
+            /*下面创建快递信息卡片*/
             // 用XML创建视图
             LayoutInflater layoutInflater = LayoutInflater.from(AddNewPackageActivity.this);
             // 卡片的根布局
             View detailCard = layoutInflater
                     .inflate(R.layout.card_package, mCardContainer, false);
-            // 详细跟踪信息的根布局
-
             // 获得卡片部件，之后的每个小部件都添加到这张卡片里面
             CardView detailContainer = (CardView) detailCard.findViewById(R.id.detail_container);
             // 获得卡片里面的详细跟踪信息的展示布局，之后的每个详细跟踪信息都添加到这里面
@@ -188,13 +196,17 @@ public class AddNewPackageActivity extends AppCompatActivity {
                     .valueOf(packageTrafficSearchResult.getCompany())
                     .toString());
             for (PackageEachTraffic eachTraffic : packageTrafficSearchResult.getTraffics()) {
+                // 详细跟踪信息的根布局
                 View trafficLayout = layoutInflater
                         .inflate(R.layout.traffic_detail, eachDetailContainer, false);
+
                 TextView detailDatetime =
                         (TextView) trafficLayout.findViewById(R.id.detail_datetime);
                 TextView detailContext = (TextView) trafficLayout.findViewById(R.id.detail_context);
+                /*文字框赋值*/
                 detailDatetime.setText(eachTraffic.getTimeString());
                 detailContext.setText(eachTraffic.getContext());
+
                 eachDetailContainer.addView(trafficLayout);
             }
 

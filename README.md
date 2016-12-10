@@ -34,7 +34,7 @@
 
 ##TODO
 * [x] 快递信息API
-* [ ] 在主页上添加 添加快递单按钮
+* [x] 在主页上添加 添加快递单按钮 -- 以FAB+Menu的形式实现
 * [ ] 用户登录功能
 * [ ] 后台跟踪快递信息
 * [ ] 绘制应用图标
@@ -43,16 +43,16 @@
 * [ ] 呼叫快递员功能
 * [ ] 解析内容生成界面(类似Flyme短信解析)
 * [ ] 每项项目一张卡片，背景为对应快递公司主题
-* [ ] 利用API识别快递公司，自动完成
+* [x] 利用API识别快递公司，自动完成 -- 使用[快递100](http://www.kuaidi100.com/)的API
 * [ ] ~~待添加~~
 
-##第三方库
+##Thanks
 * [OkHttp](https://github.com/square/okhttp) 发送HTTP请求
 * [Gson](https://github.com/google/gson) JSON解析
-* [jsoup](https://github.com/jhy/jsoup) HTML解析
 * [ZXing](https://github.com/zxing/zxing) 扫描二维码
 * [fab-speed-dial](https://github.com/yavski/fab-speed-dial) FAB with speed dial
-* [recyclerview-animators](https://github.com/wasabeef/recyclerview-animators) RecyclerView Animators
-* [ToggleExpandLayout](https://github.com/fenjuly/ToggleExpandLayout) Toggle Expand Layout
-* [android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh) Ultra Pull To Refresh
-* [AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Android Swipe Layout
+* ~~[jsoup](https://github.com/jhy/jsoup) HTML解析~~
+* ~~[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators) RecyclerView Animators~~
+* ~~[ToggleExpandLayout](https://github.com/fenjuly/ToggleExpandLayout) Toggle Expand Layout~~
+* ~~[android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh) Ultra Pull To Refresh~~
+* ~~[AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Android Swipe Layout~~
