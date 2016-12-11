@@ -1,7 +1,9 @@
 package com.enihsyou.shane.packagetracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -12,8 +14,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
-import com.enihsyou.shane.packagetracker.model.CompanyCodeToString;
 import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
+import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
 import com.enihsyou.shane.packagetracker.model.FetchCompanyTask;
 import com.enihsyou.shane.packagetracker.model.FetchPackageTask;
 
@@ -90,7 +92,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         /*设置下拉选项框*/
         //添加所有快递公司列表到下拉框
-        for (CompanyCodeToString codeToString : CompanyCodeToString.values()) {
+        for (EnumCompanyCodeString codeToString : EnumCompanyCodeString.values()) {
             CompanyEachAutoSearch e = new CompanyEachAutoSearch();
             e.setCompanyCode(codeToString.name());
             spinnerItems.add(e);
@@ -110,6 +112,17 @@ public class AddNewPackageActivity extends AppCompatActivity {
                 new FetchPackageTask(AddNewPackageActivity.this)
                         .execute(mNumberEdit.getText().toString(),
                                 ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
+            }
+        });
+
+        /*拍照按钮*/
+        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        boolean canTakePhoto = captureImage.resolveActivity(getPackageManager()) != null;
+        mTakePicture.setEnabled(canTakePhoto);
+        mTakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(captureImage, 0);
             }
         });
     }

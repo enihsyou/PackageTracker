@@ -36,7 +36,7 @@ public class CompanyEachAutoSearch {
     public String toString() {
         String name;
         try {
-            name = Enum.valueOf(CompanyCodeToString.class, companyCode).toString();
+            name = Enum.valueOf(EnumCompanyCodeString.class, companyCode).toString();
         } catch (IllegalArgumentException e) {
             name = companyCode;
         }

@@ -2,27 +2,31 @@ package com.enihsyou.shane.packagetracker;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.model.Kuaidi100Fetcher;
+import com.enihsyou.shane.packagetracker.model.PackageEachTraffic;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 
 import java.util.List;
 
-public class PackageDetailActivity extends AppCompatActivity {
-
+public class TrackDetailActivity extends AppCompatActivity {
+    private static final String TAG = "TrackDetailActivity";
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
     private NestedScrollView mScrollView;
+    private PackageTrafficSearchResult mTraffic;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,32 @@ public class PackageDetailActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (phoneNumber != null) {
+                    // int permissionCheck =
+                    //         ContextCompat.checkSelfPermission(TrackDetailActivity.this,
+                    //                 Manifest.permission.CALL_PHONE);
+                    // if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    //     makePhoneCall();
+                    // } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    //     if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
+                    //         Toast
+                    //                 .makeText(TrackDetailActivity.this,
+                    //                         "Need to call phone",
+                    //                         Toast.LENGTH_SHORT)
+                    //                 .show();
+                    //     } else {
+                    //         requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 1);
+                    //     }
+                    // }
+                    makePhoneCall();
+                }
+            }
+
+            private void makePhoneCall() {
+                Intent makePhoneCall = new Intent(Intent.ACTION_DIAL);
+                makePhoneCall.setData(Uri.parse("tel:" + phoneNumber));
+                Log.d(TAG, "makePhoneCall: Dial "+ phoneNumber);
+                startActivity(makePhoneCall);
             }
         });
         ActionBar supportActionBar = getSupportActionBar();
@@ -49,6 +77,9 @@ public class PackageDetailActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             doMySearch(query);
+        } else {
+            String packageNumber = intent.getStringExtra("package_number");
+            doMySearch(packageNumber);
         }
     }
 
@@ -57,10 +88,23 @@ public class PackageDetailActivity extends AppCompatActivity {
         for (PackageTrafficSearchResult aPackage : packages) {
             // if (aPackage.getNumber().startsWith(query)) {}
             if (aPackage.getNumber().equals(query)) {
+                mTraffic = aPackage;
                 LinearLayout linearLayout = (LinearLayout) LayoutInflater
                         .from(this)
                         .inflate(R.layout.traffic_header_card, mScrollView, false);
                 mScrollView.addView(Kuaidi100Fetcher.generateCard(aPackage, linearLayout));
+
+                setPhoneNumber();
+            }
+        }
+    }
+
+    private void setPhoneNumber() {
+        for (PackageEachTraffic traffic : mTraffic.getTraffics()) {
+            String phone = traffic.getPhone();
+            if (phone != null) {
+                phoneNumber = phone;
+                break;
             }
         }
     }

@@ -152,6 +152,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(PackageTrafficSearchResult item) {
-
+        Intent intent = new Intent(this, TrackDetailActivity.class);
+        intent.putExtra("package_number", item.getNumber());
+        startActivity(intent);
     }
 }

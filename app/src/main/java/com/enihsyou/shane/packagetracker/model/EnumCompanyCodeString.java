@@ -1,6 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
-public enum CompanyCodeToString {
+public enum EnumCompanyCodeString {
     shunfeng("顺丰"),
     dhl("DHL"),
     wanjiawuliu("万家物流"),
@@ -76,7 +76,7 @@ public enum CompanyCodeToString {
 
     private String company;
 
-    CompanyCodeToString(String company) {
+    EnumCompanyCodeString(String company) {
         this.company = company;
     }
 
@@ -85,7 +85,7 @@ public enum CompanyCodeToString {
      * 比如<code>valueOf("shunfeng")</code> => <code>"顺丰"</code>
      * <p>
      * 使用toString()方法可以从Enum对象中获得汉字名字
-     * 比如<code>CompanyCodeToString.shunfeng</code> => <code>"顺丰"</code>
+     * 比如<code>EnumCompanyCodeString.shunfeng</code> => <code>"顺丰"</code>
      *
      * @return 汉字名字
      */

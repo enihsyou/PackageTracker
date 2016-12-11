@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.enihsyou.shane.packagetracker.PackageDetailActivity"
+    tools:context="com.enihsyou.shane.packagetracker.TrackDetailActivity"
     tools:showIn="@layout/activity_package_detail">
 
 </android.support.v4.widget.NestedScrollView>

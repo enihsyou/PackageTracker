@@ -11,7 +11,7 @@ public class PackageTrafficSearchResult {
     private List<PackageEachTraffic> traffics;
 
     PackageTrafficSearchResult() {
-        company = "testCompanyNumber";
+        company = "testCompanyCode";
         number = "1234567890";
         status = 0;
         traffics = new ArrayList<>();
@@ -30,7 +30,7 @@ public class PackageTrafficSearchResult {
     public String getCompanyString() {
         String name;
         try {
-            name = Enum.valueOf(CompanyCodeToString.class, company).toString();
+            name = Enum.valueOf(EnumCompanyCodeString.class, company).toString();
         } catch (IllegalArgumentException e) {
             name = company;
         }
@@ -51,6 +51,16 @@ public class PackageTrafficSearchResult {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getStatusString() {
+        String name;
+        try {
+            name = EnumStatusString.getStatus(status);
+        } catch (IllegalArgumentException e) {
+            name = String.valueOf(status);
+        }
+        return name;
     }
 
     public void setCompany(String company) {

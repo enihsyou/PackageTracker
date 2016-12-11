@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 一件包裹的一条运送信息
@@ -12,10 +14,23 @@ import java.util.Locale;
 public class PackageEachTraffic {
     private static SimpleDateFormat dateFormat =
             new SimpleDateFormat("yy-MM-dd\nkk:mm:ss", Locale.getDefault());
-
+    private static Pattern regxPhone = Pattern.compile("电话.*?(1\\d{10})");
     private Date time;
     private String location;
     private String context;
+    private String phone;
+
+    public String getPhone() {
+        if (phone == null) parsePhone();
+        return phone;
+    }
+
+    private void parsePhone() {
+        if (context != null) {
+            Matcher matcher = regxPhone.matcher(context);
+            if (matcher.find()) phone = matcher.group(1);
+        }
+    }
 
     public Date getTime() {
         return time;
