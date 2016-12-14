@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.enihsyou.shane.packagetracker.R;
 
 /**
  * A placeholder fragment containing a simple view.

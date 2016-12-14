@@ -1,5 +1,8 @@
 package com.enihsyou.shane.packagetracker.model;
 
+/**
+ * 从JSON的快件状态数字转成文字
+ */
 public enum EnumStatusString {
     s0("在途"),
     s1("揽件"),

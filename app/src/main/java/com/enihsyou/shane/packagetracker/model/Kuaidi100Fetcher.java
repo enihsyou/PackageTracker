@@ -4,14 +4,8 @@ import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import com.google.gson.*;
+import okhttp3.*;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,14 +16,18 @@ import java.util.Locale;
 public class Kuaidi100Fetcher {
     private static final String SEARCH_NUMBER = "autonumber/autoComNum";
     private static final String SEARCH_PACKAGE = "query";
+    private static final String SEARCH_NETWORK = "network/www/searchapi.do";
+    private static final String SEARCH_COURIER = "courier";
 
     private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
 
+    private final Gson gson;
     private final JsonParser jsonParser;
     private final SimpleDateFormat dateFormatter;
     private final OkHttpClient client;
 
     Kuaidi100Fetcher() {
+        gson = new GsonBuilder().create();
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         client = new OkHttpClient();
@@ -47,7 +45,8 @@ public class Kuaidi100Fetcher {
             LinearLayout trafficHeader) {
         /*下面创建快递信息卡片*/
         // 获得卡片部件，之后的每个小部件都添加到这张卡片里面，这卡片有两部分:头部信息和主体信息
-        TrafficCardView detailContainer = (TrafficCardView) trafficHeader.findViewById(R.id.header_detail_container);
+        TrafficCardView detailContainer =
+                (TrafficCardView) trafficHeader.findViewById(R.id.header_detail_container);
         /*设置头部*/
         setUpDetailCardHeader(searchResult, detailContainer);
         /*设置主体*/
@@ -96,6 +95,26 @@ public class Kuaidi100Fetcher {
         return parsePackageJson(response);
     }
 
+    HttpUrl buildNumberSearchURL(String number) {
+        return ENDPOINT.newBuilder()
+                .addPathSegments(SEARCH_NUMBER)
+                .addEncodedQueryParameter("text", number)
+                .build();
+    }
+
+    HttpUrl buildPackageSearchURL(String number, String type) {
+        return ENDPOINT.newBuilder()
+                .addPathSegment(SEARCH_PACKAGE)
+                .addEncodedQueryParameter("type", type)
+                .addEncodedQueryParameter("postid", number)
+                .build();
+    }
+
+    HttpUrl buildNetworkSearchURL() {
+        return ENDPOINT.newBuilder()
+                .addPathSegments(SEARCH_NETWORK)
+                .build();
+    }
     /**
      * 获得json
      *
@@ -106,14 +125,6 @@ public class Kuaidi100Fetcher {
     Response getJson(HttpUrl url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         return client.newCall(request).execute();
-    }
-
-    HttpUrl buildPackageSearchURL(String number, String type) {
-        return ENDPOINT.newBuilder()
-                .addEncodedPathSegment(SEARCH_PACKAGE)
-                .addEncodedQueryParameter("type", type)
-                .addEncodedQueryParameter("postid", number)
-                .build();
     }
 
     /**
@@ -156,7 +167,6 @@ public class Kuaidi100Fetcher {
         searchResult.setCompany(com);
         searchResult.setStatus(state);
         searchResult.setTraffics(data);
-
         return searchResult;
     }
 
@@ -175,12 +185,7 @@ public class Kuaidi100Fetcher {
         return parseCompanyJson(response);
     }
 
-    HttpUrl buildNumberSearchURL(String number) {
-        return ENDPOINT.newBuilder()
-                .addEncodedPathSegments(SEARCH_NUMBER)
-                .addEncodedQueryParameter("text", number)
-                .build();
-    }
+
 
     /**
      * 解析处理响应的数据，适用于kuaidi100，使用GET方法没问题
@@ -219,5 +224,36 @@ public class Kuaidi100Fetcher {
         searchResult.setCompanies(auto);
 
         return searchResult;
+    }
+
+    public NetworkSearchResult networkResult(String area,
+            String keyword,
+            String offset,
+            String size) throws IOException {
+        HttpUrl request = buildNetworkSearchURL();
+        RequestBody requestBody = new FormBody.Builder()
+                .addEncoded("area", area)
+                .addEncoded("keyword", keyword)
+                .addEncoded("method", "searchnetwork")
+                .addEncoded("offset", offset)
+                .addEncoded("size", size)
+                .build();
+        Response response = getJson(request, requestBody);
+        parseNetworkJson(response);
+        return new NetworkSearchResult();
+    }
+
+
+
+    Response getJson(HttpUrl url, RequestBody body) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .post(body).build();
+        return client.newCall(request).execute();
+    }
+
+    NetworkSearchResult parseNetworkJson(Response response) {
+        return gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
     }
 }

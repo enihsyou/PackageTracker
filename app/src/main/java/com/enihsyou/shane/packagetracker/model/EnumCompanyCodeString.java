@@ -2,6 +2,12 @@ package com.enihsyou.shane.packagetracker.model;
 
 public enum EnumCompanyCodeString {
     shunfeng("顺丰"),
+    jd("京东"),
+    yunda("韵达"),
+    shentong("申通"),
+    yuantong("圆通"),
+    zhongtong("中通"),
+    ems("EMS"),
     dhl("DHL"),
     wanjiawuliu("万家物流"),
     emsguoji("EMS国际件"),
@@ -21,8 +27,6 @@ public enum EnumCompanyCodeString {
     mexico("墨西哥邮政"),
     xinfengwuliu("信丰物流"),
     quanyikuaidi("全一快递"),
-    yunda("韵达"),
-    shentong("申通"),
     minghangkuaidi("民航快递"),
     ocs("OCS"),
     aramex("Aramex"),
@@ -40,13 +44,11 @@ public enum EnumCompanyCodeString {
     japanposten("日本邮政"),
     wanxiangwuliu("万象物流"),
     lianbangkuaidi("联邦快递"),
-    yuantong("圆通"),
     rrs("日日顺物流"),
     shenghuiwuliu("盛辉物流"),
     usps("USPS"),
     ztky("中铁物流"),
     zhongyouwuliu("中邮物流"),
-    jd("京东"),
     youzhengguonei("邮政国内"),
     kuaijiesudi("快捷速递"),
     portugalctt("葡萄牙邮政"),
@@ -69,10 +71,7 @@ public enum EnumCompanyCodeString {
     jinguangsudikuaijian("京广快递"),
     rufengda("如风达"),
     longbanwuliu("龙邦快运"),
-    zhongtong("中通"),
-    chuanxiwuliu("传喜物流"),
-    ems("EMS"),
-    none("无匹配");
+    chuanxiwuliu("传喜物流");
 
     private String company;
 

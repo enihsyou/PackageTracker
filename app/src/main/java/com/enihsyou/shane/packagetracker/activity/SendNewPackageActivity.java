@@ -1,7 +1,8 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import com.enihsyou.shane.packagetracker.R;
 
 public class SendNewPackageActivity extends AppCompatActivity {
 

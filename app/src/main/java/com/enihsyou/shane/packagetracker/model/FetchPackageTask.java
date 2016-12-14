@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
-import com.enihsyou.shane.packagetracker.AddNewPackageActivity;
+import com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity;
 import com.enihsyou.shane.packagetracker.R;
 
 import java.io.IOException;

@@ -78,6 +78,8 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_detail">Track Detail</string>
     <string name="title_activity_package_state">PackageStateActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string><string name="buy_buy_buy">BUY! BUY! BUY!</string><string name="package_number">Package number</string><string name="button_take_picture">Take Picture</string><string name="button_conform">Conform</string><string name="title_activity_add_new">Add New Package Activity</string><string name="title_activity_send_new">Send New Package Activity</string><string name="company_logo">company logo</string><string name="separator">separator</string>
-    <string name="wrong_package_number">Invalid package number</string><string name="search_hint">Search package</string>
+    <string name="section_format">Hello World from section: %1$d</string><string name="buy_buy_buy">BUY! BUY! BUY!</string><string name="package_number">Package number</string><string name="button_take_picture">Take Picture</string><string name="button_conform">Conform</string><string name="title_activity_add_new">Add New Package Track</string><string name="title_activity_send_new">Send New Package Activity</string><string name="company_logo">company logo</string><string name="separator">separator</string>
+    <string name="wrong_package_number">Invalid package number</string>
+    <string name="empty_package_number">Empty package number</string>
+    <string name="search_hint">Search package</string><string name="find_network">Find network</string>
 </resources>

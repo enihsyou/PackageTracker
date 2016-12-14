@@ -1,10 +1,12 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.PackageTrafficsFragment.OnListFragmentInteractionListener;
+import com.enihsyou.shane.packagetracker.holder.PackageViewHolder;
+import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment.OnListFragmentInteractionListener;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 
 import java.util.List;

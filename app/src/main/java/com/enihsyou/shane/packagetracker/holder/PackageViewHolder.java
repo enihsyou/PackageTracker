@@ -1,9 +1,10 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 

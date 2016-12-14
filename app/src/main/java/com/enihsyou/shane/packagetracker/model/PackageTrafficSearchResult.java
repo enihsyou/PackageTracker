@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * 搜索 快递跟踪进度 的结果
+ */
 public class PackageTrafficSearchResult {
     private String company;
     private String number;

@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

@@ -1,8 +1,10 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment;
+import com.enihsyou.shane.packagetracker.fragment.PlaceholderFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

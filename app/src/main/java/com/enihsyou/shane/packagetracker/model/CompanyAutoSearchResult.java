@@ -3,6 +3,9 @@ package com.enihsyou.shane.packagetracker.model;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * 输入框输入快递单号时的自动完成提示结果
+ */
 public class CompanyAutoSearchResult {
     private String number;
     private List<CompanyEachAutoSearch> companies;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.enihsyou.shane.packagetracker.AddNewPackageActivity">
+    tools:context="com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity">
     <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
     <LinearLayout
         android:id="@+id/new_card_container"

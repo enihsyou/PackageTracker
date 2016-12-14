@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
 import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
 import com.enihsyou.shane.packagetracker.model.FetchCompanyTask;
@@ -108,7 +109,9 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: 按下面板确认按钮");
-
+                if (mNumberEdit.getText().toString().equals("")){
+                   mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
+                }
                 new FetchPackageTask(AddNewPackageActivity.this)
                         .execute(mNumberEdit.getText().toString(),
                                 ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());

@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -18,7 +18,9 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.adapter.SectionsPagerAdapter;
+import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
@@ -108,23 +110,6 @@ public class MainActivity extends AppCompatActivity
         mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        mSearchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return true;
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.enihsyou.shane.packagetracker.MainActivity">
+    tools:context="com.enihsyou.shane.packagetracker.activity.MainActivity">
 
     <!--上部的应用标题栏-->
     <android.support.design.widget.AppBarLayout

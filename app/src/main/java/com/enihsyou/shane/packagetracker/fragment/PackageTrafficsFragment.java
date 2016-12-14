@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.enihsyou.shane.packagetracker.adapter.PackageTrafficsRecyclerViewAdapter;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 

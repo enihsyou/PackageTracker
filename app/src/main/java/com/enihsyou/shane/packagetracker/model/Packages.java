@@ -6,6 +6,9 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 保存用户添加的跟踪列表
+ */
 public class Packages {
     private static List<PackageTrafficSearchResult> packages;
 

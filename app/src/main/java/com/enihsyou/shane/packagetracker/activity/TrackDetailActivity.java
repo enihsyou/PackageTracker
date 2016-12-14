@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker;
+package com.enihsyou.shane.packagetracker.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.PackageEachTraffic;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
@@ -42,23 +44,9 @@ public class TrackDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (phoneNumber != null) {
-                    // int permissionCheck =
-                    //         ContextCompat.checkSelfPermission(TrackDetailActivity.this,
-                    //                 Manifest.permission.CALL_PHONE);
-                    // if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    //     makePhoneCall();
-                    // } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    //     if (shouldShowRequestPermissionRationale(Manifest.permission.CALL_PHONE)) {
-                    //         Toast
-                    //                 .makeText(TrackDetailActivity.this,
-                    //                         "Need to call phone",
-                    //                         Toast.LENGTH_SHORT)
-                    //                 .show();
-                    //     } else {
-                    //         requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 1);
-                    //     }
-                    // }
                     makePhoneCall();
+                }else{
+                    Toast.makeText(TrackDetailActivity.this, "没有找到电话号码", Toast.LENGTH_SHORT).show();
                 }
             }
 

@@ -2,7 +2,7 @@ package com.enihsyou.shane.packagetracker.model;
 
 import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
-import com.enihsyou.shane.packagetracker.AddNewPackageActivity;
+import com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +40,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
         List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
         if (companies.isEmpty()) { //如果没有匹配，添加一个空的
             CompanyEachAutoSearch tempResult = new CompanyEachAutoSearch();
-            tempResult.setCompanyCode("none");
+            tempResult.setCompanyCode("无匹配44");
             spinnerAdapter.add(tempResult);
         } else {
             spinnerAdapter.addAll(companies);
