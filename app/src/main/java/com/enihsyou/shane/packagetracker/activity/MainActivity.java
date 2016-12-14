@@ -2,6 +2,8 @@ package com.enihsyou.shane.packagetracker.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,8 +18,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.adapter.SectionsPagerAdapter;
 import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment;
@@ -25,9 +29,12 @@ import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        PackageTrafficsFragment.OnListFragmentInteractionListener {
+    implements NavigationView.OnNavigationItemSelectedListener,
+    PackageTrafficsFragment.OnListFragmentInteractionListener {
+    private static final String TAG = "MainActivity";
 
     private Toolbar mToolbar;
     private FabSpeedDial mFab;
@@ -65,28 +72,44 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.action_send_package:
-                        break;
                     case R.id.action_receive_package:
                         startActivity(new Intent(MainActivity.this, AddNewPackageActivity.class));
                         break;
+                    case R.id.action_send_package:
+                        startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
+                        break;
+                    case R.id.action_network_search:
+                        startActivity(new Intent(MainActivity.this, NetworkSearchActivity.class));
+                        break;
                     case R.id.action_chop_hands:
+                        Intent taobao = new Intent(Intent.ACTION_VIEW);
+                        taobao.setClassName("com.taobao.taobao", "com.taobao.tao.welcome.Welcome");
+                        /*检查是否安装了淘宝*/
+                        List<ResolveInfo> activities =
+                            getPackageManager().queryIntentActivities(taobao, PackageManager.GET_ACTIVITIES);
+                        Log.i(TAG, "onMenuItemSelected: 找到 " + activities + " 启动淘宝App");
+                        if (activities.size() > 0) {
+                            startActivity(taobao);
+                        } else {
+                            /*如果没有安装*/
+                            Toast.makeText(MainActivity.this, "no taobao", Toast.LENGTH_SHORT).show();// TODO: 2016/12/14 如果没有安装 打开网页吧···
+                        }
                         break;
                     default:
                         Snackbar.make(getCurrentFocus(),
-                                "Replace with your own action", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null)
-                                .show();
+                            "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show();
                 }
                 return true; //是否被处理了
             }
         });
         /*点击左上角按钮打开抽屉*/
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                mDrawer,
-                mToolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+            mDrawer,
+            mToolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -119,10 +142,14 @@ public class MainActivity extends AppCompatActivity
         /*处理左侧抽屉的选择*/
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.nav_send_package:
+            case R.id.nav_receive_package:
                 startActivity(new Intent(this, AddNewPackageActivity.class));
                 break;
-            case R.id.nav_receive_package:
+            case R.id.nav_send_package:
+                startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
+                break;
+            case R.id.nav_find_network:
+                startActivity(new Intent(MainActivity.this, NetworkSearchActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

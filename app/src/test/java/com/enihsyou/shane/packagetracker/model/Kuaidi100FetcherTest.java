@@ -15,7 +15,7 @@ public class Kuaidi100FetcherTest {
     @Test
     public void buildNetworkSearchURL() throws Exception {
         String excepted = "https://www.kuaidi100.com/network/www/searchapi.do";
-        String actual = fetcher.buildNetworkSearchURL().toString();
+        String actual = fetcher.buildNetworkSearchUrl().toString();
         assertEquals("Test network search URL", excepted, actual);
     }
 
@@ -79,7 +79,7 @@ public class Kuaidi100FetcherTest {
         NetworkSearchResult searchResult =
             fetcher.parseNetworkJson(
                 fetcher.getJson(
-                    fetcher.buildNetworkSearchURL(), requestBody));
+                    fetcher.buildNetworkSearchUrl(), requestBody));
         assertThat(searchResult, new IsInstanceOf(NetworkSearchResult.class));
     }
 }

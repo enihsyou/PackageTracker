@@ -54,7 +54,7 @@ public class Kuaidi100Fetcher {
         return trafficHeader;
     }
 
-    public static TrafficCardView setUpDetailCardHeader(PackageTrafficSearchResult searchResult,
+    private static TrafficCardView setUpDetailCardHeader(PackageTrafficSearchResult searchResult,
         TrafficCardView detailContainer) {
         // 设置CardView各个部件
         detailContainer.setCompanyName(searchResult.getCompanyString());
@@ -63,20 +63,66 @@ public class Kuaidi100Fetcher {
         return detailContainer;
     }
 
-    public static TrafficCardView setUPDetailCardBody(PackageTrafficSearchResult searchResult,
+    private static TrafficCardView setUPDetailCardBody(PackageTrafficSearchResult searchResult,
         TrafficCardView detailContainer) {
         detailContainer.addTraffics(searchResult.getTraffics());
         return detailContainer;
     }
 
     /**
-     * 在运行中修改API服务器的地址，用于测试目的
-     * 在设置面板中添加文字框选项，输入新的地址和端口号，调用此方法
+     * 获取网点信息
      *
-     * @param baseURL 要设置的网址
+     * @param area    地区
+     * @param keyword 搜索关键词
+     * @param offset  偏移量，用于翻页
+     * @param size    获取大小
+     *
+     * @return 解析结果
+     *
+     * @throws IOException 网络错误
      */
-    public void setBaseURL(String baseURL) {
-        ENDPOINT = HttpUrl.parse(baseURL);
+    public NetworkSearchResult networkResult(String area, String keyword, String offset, String size)
+        throws IOException {
+        HttpUrl request = buildNetworkSearchUrl();
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("area", area)
+            .addEncoded("keyword", keyword)
+            .addEncoded("method", "searchnetwork")
+            .addEncoded("offset", offset)
+            .addEncoded("size", size)
+            .build();
+        Response response = getJson(request, requestBody);
+        return parseNetworkJson(response);
+    }
+
+    HttpUrl buildNetworkSearchUrl() {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(SEARCH_NETWORK)
+            .build();
+    }
+
+    /**
+     * 获得json POST
+     *
+     * @param url 传递过来的URL路径
+     *
+     * @return 获得的Json文本
+     */
+    Response getJson(HttpUrl url, RequestBody body) throws IOException {
+        Request request = new Request.Builder()
+            .url(url)
+            .addHeader("content-type", "application/x-www-form-urlencoded")
+            .post(body).build();
+        return client.newCall(request).execute();
+    }
+
+    NetworkSearchResult parseNetworkJson(Response response) {
+        NetworkSearchResult result =
+            gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
+        for (NetworkNetListResult listResult : result.getNetLists()) {
+            listResult.cleanHtml();
+        }
+        return result;
     }
 
     /**
@@ -104,7 +150,7 @@ public class Kuaidi100Fetcher {
     }
 
     /**
-     * 获得json
+     * 获得json GET
      *
      * @param url 传递过来的URL路径
      *
@@ -219,40 +265,37 @@ public class Kuaidi100Fetcher {
         return searchResult;
     }
 
-    public NetworkSearchResult networkResult(String area, String keyword, String offset, String size)
-        throws IOException {
-        HttpUrl request = buildNetworkSearchURL();
+
+    /**
+     * 获取输入地区的城市列表
+     *
+     * @param cityCode 城市代码
+     *
+     * @return 解析结果
+     *
+     * @throws IOException 网络错误
+     */
+    public NetworkCityResult[] networkCityResult(String cityCode) throws IOException {
+        HttpUrl request = buildNetworkSearchUrl();
         RequestBody requestBody = new FormBody.Builder()
-            .addEncoded("area", area)
-            .addEncoded("keyword", keyword)
-            .addEncoded("method", "searchnetwork")
-            .addEncoded("offset", offset)
-            .addEncoded("size", size)
+            .addEncoded("method", "getcounty")
+            .addEncoded("city", cityCode)
             .build();
         Response response = getJson(request, requestBody);
-        return parseNetworkJson(response);
+        return parseNetworkCityJson(response);
     }
 
-    HttpUrl buildNetworkSearchURL() {
-        return ENDPOINT.newBuilder()
-            .addPathSegments(SEARCH_NETWORK)
-            .build();
+    NetworkCityResult[] parseNetworkCityJson(Response response) {
+        return gson.fromJson(response.body().charStream(), NetworkCityResult[].class);
     }
 
-    Response getJson(HttpUrl url, RequestBody body) throws IOException {
-        Request request = new Request.Builder()
-            .url(url)
-            .addHeader("content-type", "application/x-www-form-urlencoded")
-            .post(body).build();
-        return client.newCall(request).execute();
-    }
-
-    NetworkSearchResult parseNetworkJson(Response response) {
-        NetworkSearchResult result =
-            gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
-        for (NetworkNetListResult listResult : result.getNetLists()) {
-            listResult.cleanHtml();
-        }
-        return result;
+    /**
+     * 在运行中修改API服务器的地址，用于测试目的
+     * 在设置面板中添加文字框选项，输入新的地址和端口号，调用此方法
+     *
+     * @param baseURL 要设置的网址
+     */
+    public void setBaseURL(String baseURL) {
+        ENDPOINT = HttpUrl.parse(baseURL);
     }
 }

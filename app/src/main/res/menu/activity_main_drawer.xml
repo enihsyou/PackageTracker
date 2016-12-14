@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/group_function">
         <item
+            android:id="@+id/nav_receive_package"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/receive_package" />
+        <item
           android:id="@+id/nav_send_package"
           android:icon="@drawable/ic_menu_camera"
           android:title="@string/send_package" />
         <item
-          android:id="@+id/nav_receive_package"
-          android:icon="@drawable/ic_menu_gallery"
-          android:title="@string/receive_package" />
+            android:id="@+id/nav_find_network"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/find_network" />
     </group>
     <group android:id="@+id/group_setting">
         <item
