@@ -2,18 +2,21 @@ package com.enihsyou.shane.packagetracker.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.regex.Pattern;
+
 /**
  * 每个网点详细的查询结果
  */
 public class NetworkNetListResult {
+    private static transient Pattern HtmlTag = Pattern.compile("</?font.*?>");
     @SerializedName("id")
-    private int id;
+    private long id;
     @SerializedName("companyNumber")
     private String companyNumber; //快递公司代码
     @SerializedName("companyName")
     private String companyName; //快递公司名字
     @SerializedName("name")
-    private String name; //服务站名字 // TODO: 2016/12/14 JsonAdapter
+    private String name; //服务站名字
     @SerializedName("linkman")
     private String linkMan; //工作人员名字
     @SerializedName("address")
@@ -24,14 +27,22 @@ public class NetworkNetListResult {
     private String refuseArea; //不派送范围
     @SerializedName("detailText")
     private String detailText; //详细介绍
-    @SerializedName("telephone")
+    @SerializedName("telOne")
     private String telephone; //一个电话
 
-    public int getId() {
+    /**
+     * 清除API附带的HTML代码
+     */
+    public void cleanHtml() {
+        this.name = HtmlTag.matcher(this.name).replaceAll("");
+        this.detailText = HtmlTag.matcher(this.detailText).replaceAll("");
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

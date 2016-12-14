@@ -1,5 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,25 +11,12 @@ import static org.junit.Assert.*;
 public class Kuaidi100FetcherTest {
     private Kuaidi100Fetcher fetcher;
 
-    @Test
-    public void networkResult() throws Exception {
-        fetcher.networkResult("上海-上海市", "", "0", "8");
-    }
 
     @Test
     public void buildNetworkSearchURL() throws Exception {
         String excepted = "https://www.kuaidi100.com/network/www/searchapi.do";
         String actual = fetcher.buildNetworkSearchURL().toString();
         assertEquals("Test network search URL", excepted, actual);
-    }
-
-    @Test
-    public void parseNetworkJson() throws Exception {
-        NetworkSearchResult searchResult =
-            fetcher.parseNetworkJson(
-                fetcher.getJson(
-                    fetcher.buildNetworkSearchURL()));
-        assertThat(searchResult, new IsInstanceOf(NetworkSearchResult.class));
     }
 
     @Before
@@ -76,5 +65,21 @@ public class Kuaidi100FetcherTest {
                 fetcher.getJson(
                     fetcher.buildPackageSearchURL("56052205828", "yuantong")));
         assertNull(searchResult);
+    }
+
+    @Test
+    public void parseNetworkJson() throws Exception {
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("area", "上海 - 上海市")
+            .addEncoded("keyword", "")
+            .addEncoded("method", "searchnetwork")
+            .addEncoded("offset", "0")
+            .addEncoded("size", "8")
+            .build();
+        NetworkSearchResult searchResult =
+            fetcher.parseNetworkJson(
+                fetcher.getJson(
+                    fetcher.buildNetworkSearchURL(), requestBody));
+        assertThat(searchResult, new IsInstanceOf(NetworkSearchResult.class));
     }
 }

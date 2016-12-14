@@ -7,7 +7,7 @@
     <item
         android:id="@+id/action_network_search"
         android:icon="@android:drawable/ic_menu_call"
-        android:title="@string/find_network"
+        android:title="@string/find_network" />
     <item
         android:id="@+id/action_send_package"
         android:icon="@android:drawable/ic_menu_add"

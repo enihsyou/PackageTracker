@@ -42,11 +42,11 @@ public class Kuaidi100Fetcher {
      * @return 带有信息的卡片
      */
     public static LinearLayout generateCard(PackageTrafficSearchResult searchResult,
-            LinearLayout trafficHeader) {
+        LinearLayout trafficHeader) {
         /*下面创建快递信息卡片*/
         // 获得卡片部件，之后的每个小部件都添加到这张卡片里面，这卡片有两部分:头部信息和主体信息
         TrafficCardView detailContainer =
-                (TrafficCardView) trafficHeader.findViewById(R.id.header_detail_container);
+            (TrafficCardView) trafficHeader.findViewById(R.id.header_detail_container);
         /*设置头部*/
         setUpDetailCardHeader(searchResult, detailContainer);
         /*设置主体*/
@@ -55,7 +55,7 @@ public class Kuaidi100Fetcher {
     }
 
     public static TrafficCardView setUpDetailCardHeader(PackageTrafficSearchResult searchResult,
-            TrafficCardView detailContainer) {
+        TrafficCardView detailContainer) {
         // 设置CardView各个部件
         detailContainer.setCompanyName(searchResult.getCompanyString());
         detailContainer.setPackageNumber(searchResult.getNumber());
@@ -64,7 +64,7 @@ public class Kuaidi100Fetcher {
     }
 
     public static TrafficCardView setUPDetailCardBody(PackageTrafficSearchResult searchResult,
-            TrafficCardView detailContainer) {
+        TrafficCardView detailContainer) {
         detailContainer.addTraffics(searchResult.getTraffics());
         return detailContainer;
     }
@@ -95,26 +95,14 @@ public class Kuaidi100Fetcher {
         return parsePackageJson(response);
     }
 
-    HttpUrl buildNumberSearchURL(String number) {
-        return ENDPOINT.newBuilder()
-                .addPathSegments(SEARCH_NUMBER)
-                .addEncodedQueryParameter("text", number)
-                .build();
-    }
-
     HttpUrl buildPackageSearchURL(String number, String type) {
         return ENDPOINT.newBuilder()
-                .addPathSegment(SEARCH_PACKAGE)
-                .addEncodedQueryParameter("type", type)
-                .addEncodedQueryParameter("postid", number)
-                .build();
+            .addPathSegment(SEARCH_PACKAGE)
+            .addEncodedQueryParameter("type", type)
+            .addEncodedQueryParameter("postid", number)
+            .build();
     }
 
-    HttpUrl buildNetworkSearchURL() {
-        return ENDPOINT.newBuilder()
-                .addPathSegments(SEARCH_NETWORK)
-                .build();
-    }
     /**
      * 获得json
      *
@@ -185,7 +173,12 @@ public class Kuaidi100Fetcher {
         return parseCompanyJson(response);
     }
 
-
+    HttpUrl buildNumberSearchURL(String number) {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(SEARCH_NUMBER)
+            .addEncodedQueryParameter("text", number)
+            .build();
+    }
 
     /**
      * 解析处理响应的数据，适用于kuaidi100，使用GET方法没问题
@@ -226,34 +219,40 @@ public class Kuaidi100Fetcher {
         return searchResult;
     }
 
-    public NetworkSearchResult networkResult(String area,
-            String keyword,
-            String offset,
-            String size) throws IOException {
+    public NetworkSearchResult networkResult(String area, String keyword, String offset, String size)
+        throws IOException {
         HttpUrl request = buildNetworkSearchURL();
         RequestBody requestBody = new FormBody.Builder()
-                .addEncoded("area", area)
-                .addEncoded("keyword", keyword)
-                .addEncoded("method", "searchnetwork")
-                .addEncoded("offset", offset)
-                .addEncoded("size", size)
-                .build();
+            .addEncoded("area", area)
+            .addEncoded("keyword", keyword)
+            .addEncoded("method", "searchnetwork")
+            .addEncoded("offset", offset)
+            .addEncoded("size", size)
+            .build();
         Response response = getJson(request, requestBody);
-        parseNetworkJson(response);
-        return new NetworkSearchResult();
+        return parseNetworkJson(response);
     }
 
-
+    HttpUrl buildNetworkSearchURL() {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(SEARCH_NETWORK)
+            .build();
+    }
 
     Response getJson(HttpUrl url, RequestBody body) throws IOException {
         Request request = new Request.Builder()
-                .url(url)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
-                .post(body).build();
+            .url(url)
+            .addHeader("content-type", "application/x-www-form-urlencoded")
+            .post(body).build();
         return client.newCall(request).execute();
     }
 
     NetworkSearchResult parseNetworkJson(Response response) {
-        return gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
+        NetworkSearchResult result =
+            gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
+        for (NetworkNetListResult listResult : result.getNetLists()) {
+            listResult.cleanHtml();
+        }
+        return result;
     }
 }

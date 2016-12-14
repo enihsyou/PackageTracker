@@ -59,7 +59,7 @@ public class PackageTrafficSearchResult {
     public String getStatusString() {
         String name;
         try {
-            name = EnumStatusString.getStatus(status);
+            name = EnumStatusString.values()[status].toString();
         } catch (IllegalArgumentException e) {
             name = String.valueOf(status);
         }
