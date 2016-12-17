@@ -75,7 +75,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/button_conform" />
+                        android:text="@string/button_confirm" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
