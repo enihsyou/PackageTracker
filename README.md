@@ -40,7 +40,7 @@
 * [ ] 绘制应用图标
 * [ ] *GitHub Pages* 介绍页面
 * [ ] 扫码功能
-* [ ] 呼叫快递员功能
+* [x] 呼叫快递员功能
 * [ ] 解析内容生成界面(类似Flyme短信解析)
 * [ ] 每项项目一张卡片，背景为对应快递公司主题
 * [x] 利用API识别快递公司，自动完成 -- 使用[快递100](http://www.kuaidi100.com/)的API
@@ -51,8 +51,8 @@
 * [Gson](https://github.com/google/gson) JSON解析
 * [ZXing](https://github.com/zxing/zxing) 扫描二维码
 * [fab-speed-dial](https://github.com/yavski/fab-speed-dial) FAB with speed dial
-* ~~[jsoup](https://github.com/jhy/jsoup) HTML解析~~
-* ~~[recyclerview-animators](https://github.com/wasabeef/recyclerview-animators) RecyclerView Animators~~
+* [jsoup](https://github.com/jhy/jsoup) HTML解析
+* [TapTargetView](https://github.com/KeepSafe/TapTargetView) 新手教程 引导界面
 * ~~[ToggleExpandLayout](https://github.com/fenjuly/ToggleExpandLayout) Toggle Expand Layout~~
 * ~~[android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh) Ultra Pull To Refresh~~
 * ~~[AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Android Swipe Layout~~
