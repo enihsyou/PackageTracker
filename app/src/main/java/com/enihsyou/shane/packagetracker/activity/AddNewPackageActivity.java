@@ -59,7 +59,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
         mNumberEditWrapper = (TextInputLayout) findViewById(R.id.package_number_input_wrapper);
         mNumberEdit = mNumberEditWrapper.getEditText();
         mSpinner = (Spinner) findViewById(R.id.company_spinner);
-        mConform = (Button) findViewById(R.id.button_conform);
+        mConform = (Button) findViewById(R.id.button_confirm);
         mTakePicture = (Button) findViewById(R.id.button_take_picture);
 
         /*设置输入框的动作监听器*/

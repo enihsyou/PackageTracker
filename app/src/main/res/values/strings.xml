@@ -1,16 +1,20 @@
 <resources>
-  <string name="app_name">Package Tracker</string>
+    <string name="app_name">Package Tracker</string>
 
-  <string name="navigation_drawer_open">Open navigation drawer</string>
-  <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
-  <string name="action_settings">Settings</string><string name="user_head">User Head</string><string name="send_package">Send package</string><string name="receive_package">Receive package</string><string name="share_with_friends">Share with friends</string>
-  <string name="title_activity_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="user_head">User Head</string>
+    <string name="send_package">Send package</string>
+    <string name="receive_package">Receive package</string>
+    <string name="share_with_friends">Share with friends</string>
+    <string name="title_activity_settings">Settings</string>
 
-  <!-- Strings related to Settings -->
+    <!-- Strings related to Settings -->
 
-  <!-- Example General settings -->
-  <string name="pref_header_general">General</string>
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
 
   <string name="pref_title_social_recommendations">Enable social recommendations</string>
   <string name="pref_description_social_recommendations">Recommendations for people to contact based on your message history</string>
@@ -30,8 +34,8 @@
         <item>-1</item>
   </string-array>
 
-  <!-- Example settings for Data & Sync -->
-  <string name="pref_header_data_sync">Data &amp; sync</string>
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
 
   <string name="pref_title_sync_frequency">Sync frequency</string>
   <string-array name="pref_sync_frequency_titles">
@@ -67,8 +71,8 @@
 
   <string name="pref_title_system_sync_settings">System sync settings</string>
 
-  <!-- Example settings for Notifications -->
-  <string name="pref_header_notifications">Notifications</string>
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
 
   <string name="pref_title_new_message_notifications">New message notifications</string>
 
@@ -81,7 +85,7 @@
   <string name="buy_buy_buy">BUY! BUY! BUY!</string>
   <string name="package_number">Package number</string>
   <string name="button_take_picture">Take Picture</string>
-  <string name="button_confirm">Confirm</string>
+  <string name="button_add">Add</string>
   <string name="title_activity_add_new">Add New Package Track</string>
   <string name="title_activity_send_new">Send New Package Activity</string>
   <string name="company_logo">company logo</string>
@@ -128,5 +132,5 @@
     <item>浙江</item>
     <item>黑龙江</item>
     <item>内蒙古</item>
-  </string-array>
+  </string-array><string name="button_confirm">Confirm</string>
 </resources>

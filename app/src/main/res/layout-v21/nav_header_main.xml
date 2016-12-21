@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/user_head"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        app:srcCompat="@android:drawable/sym_def_app_icon"
+        android:elevation="0dp" />
 
     <!--用户名-->
     <TextView
@@ -30,6 +31,7 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="Username here"
+        android:textDirection="inherit"
         android:textStyle="normal|bold" />
 
     <!--邮箱地址-->

@@ -37,7 +37,6 @@
                         android:id="@+id/package_number_input_wrapper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
                         app:errorEnabled="true">
                         <EditText
                             android:id="@+id/package_number_input"
@@ -70,12 +69,12 @@
                         android:layout_weight="1"
                         android:text="@string/button_take_picture" />
                     <Button
-                        android:id="@+id/button_conform"
+                        android:id="@+id/button_confirm"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/button_confirm" />
+                        android:text="@string/button_add" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
