@@ -1,5 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.R;
@@ -95,7 +96,8 @@ public class Kuaidi100Fetcher {
         return parseNetworkJson(response);
     }
 
-    HttpUrl buildNetworkSearchUrl() {
+    @NonNull
+    private HttpUrl buildNetworkSearchUrl() {
         return ENDPOINT.newBuilder()
             .addPathSegments(SEARCH_NETWORK)
             .build();
@@ -108,7 +110,7 @@ public class Kuaidi100Fetcher {
      *
      * @return 获得的Json文本
      */
-    Response getJson(HttpUrl url, RequestBody body) throws IOException {
+    private Response getJson(HttpUrl url, RequestBody body) throws IOException {
         Request request = new Request.Builder()
             .url(url)
             .addHeader("content-type", "application/x-www-form-urlencoded")
@@ -116,7 +118,7 @@ public class Kuaidi100Fetcher {
         return client.newCall(request).execute();
     }
 
-    NetworkSearchResult parseNetworkJson(Response response) {
+    private NetworkSearchResult parseNetworkJson(Response response) {
         NetworkSearchResult result =
             gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
         for (NetworkNetListResult listResult : result.getNetLists()) {
@@ -141,7 +143,8 @@ public class Kuaidi100Fetcher {
         return parsePackageJson(response);
     }
 
-    HttpUrl buildPackageSearchURL(String number, String type) {
+    @NonNull
+    private HttpUrl buildPackageSearchURL(String number, String type) {
         return ENDPOINT.newBuilder()
             .addPathSegment(SEARCH_PACKAGE)
             .addEncodedQueryParameter("type", type)
@@ -156,7 +159,7 @@ public class Kuaidi100Fetcher {
      *
      * @return 获得的Json文本
      */
-    Response getJson(HttpUrl url) throws IOException {
+    private Response getJson(HttpUrl url) throws IOException {
         Request request = new Request.Builder().url(url).build();
         return client.newCall(request).execute();
     }
@@ -170,7 +173,7 @@ public class Kuaidi100Fetcher {
      * @return 解析结果，null为失败
      */
     @Nullable
-    PackageTrafficSearchResult parsePackageJson(Response response) {
+    private PackageTrafficSearchResult parsePackageJson(Response response) {
         /*获取JSON*/
         JsonObject jsonObject = jsonParser.parse(response.body().charStream()).getAsJsonObject();
         /*判断结果正常*/
@@ -219,7 +222,8 @@ public class Kuaidi100Fetcher {
         return parseCompanyJson(response);
     }
 
-    HttpUrl buildNumberSearchURL(String number) {
+    @NonNull
+    private HttpUrl buildNumberSearchURL(String number) {
         return ENDPOINT.newBuilder()
             .addPathSegments(SEARCH_NUMBER)
             .addEncodedQueryParameter("text", number)
@@ -235,7 +239,7 @@ public class Kuaidi100Fetcher {
      * @return 解析结果，null为失败
      */
     @Nullable
-    CompanyAutoSearchResult parseCompanyJson(Response response) {
+    private CompanyAutoSearchResult parseCompanyJson(Response response) {
         /*获取JSON*/
         JsonObject jsonObject = jsonParser.parse(response.body().charStream()).getAsJsonObject();
         /*判断结果正常*/
@@ -285,7 +289,7 @@ public class Kuaidi100Fetcher {
         return parseNetworkCityJson(response);
     }
 
-    NetworkCityResult[] parseNetworkCityJson(Response response) {
+    private NetworkCityResult[] parseNetworkCityJson(Response response) {
         return gson.fromJson(response.body().charStream(), NetworkCityResult[].class);
     }
 
