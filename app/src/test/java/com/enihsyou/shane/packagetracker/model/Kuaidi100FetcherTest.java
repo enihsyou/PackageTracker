@@ -1,5 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,9 +1,10 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.helper;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.model.*;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.*;
 import okhttp3.*;
@@ -27,7 +28,7 @@ public class Kuaidi100Fetcher {
     private final SimpleDateFormat dateFormatter;
     private final OkHttpClient client;
 
-    Kuaidi100Fetcher() {
+    public Kuaidi100Fetcher() {
         gson = new GsonBuilder().create();
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());

@@ -2,6 +2,7 @@ package com.enihsyou.shane.packagetracker.model;
 
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 
 import java.util.ArrayList;
 import java.util.List;

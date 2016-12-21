@@ -13,7 +13,7 @@ public class PackageTrafficSearchResult {
     private int status;
     private List<PackageEachTraffic> traffics;
 
-    PackageTrafficSearchResult() {
+    public PackageTrafficSearchResult() {
         company = "testCompanyCode";
         number = "1234567890";
         status = 0;

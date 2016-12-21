@@ -1,6 +1,7 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.helper;
 
 import android.support.annotation.NonNull;
+import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.HttpUrl;
@@ -20,6 +21,14 @@ public class GoogleFetcher {
         this.client = new OkHttpClient();
     }
 
+    /**
+     * @param lat latitude 纬度
+     * @param lng longitude 经度
+     *
+     * @return 解析结果
+     *
+     * @throws IOException 网络错误
+     */
     public CurrentLocationResult locationResult(String lat, String lng) throws IOException {
         HttpUrl request = buildLocationUrl(lat, lng);
         Response response = getJson(request);

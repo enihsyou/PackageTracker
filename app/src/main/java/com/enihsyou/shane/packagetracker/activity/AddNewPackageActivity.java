@@ -17,8 +17,8 @@ import android.widget.*;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
 import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
-import com.enihsyou.shane.packagetracker.model.FetchCompanyTask;
-import com.enihsyou.shane.packagetracker.model.FetchPackageTask;
+import com.enihsyou.shane.packagetracker.network.FetchCompanyTask;
+import com.enihsyou.shane.packagetracker.network.FetchPackageTask;
 
 import java.util.ArrayList;
 

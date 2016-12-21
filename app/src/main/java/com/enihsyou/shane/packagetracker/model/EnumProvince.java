@@ -1,6 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.util.SparseArray;
+import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 
 import java.io.IOException;
 

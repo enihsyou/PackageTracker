@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.helper.LocationGetter;
+import com.enihsyou.shane.packagetracker.network.FetchLocationTask;
 
 import java.util.Locale;
 
@@ -28,6 +29,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_new_package);
         if (resolvePermission()) getLocation();
+        new FetchLocationTask(this).execute(mLocation.getLatitude(), mLocation.getLongitude());
     }
 
     private boolean resolvePermission() {

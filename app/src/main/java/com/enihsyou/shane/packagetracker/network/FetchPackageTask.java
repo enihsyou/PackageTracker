@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity;
 import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
+import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
+import com.enihsyou.shane.packagetracker.model.Packages;
 
 import java.io.IOException;
 

@@ -1,24 +1,27 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.network;
 
 import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
 import com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity;
+import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
+import com.enihsyou.shane.packagetracker.model.CompanyAutoSearchResult;
+import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
 
 import java.io.IOException;
 import java.util.List;
 
 public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
-    private AddNewPackageActivity mAddNewPackageActivity;
+    private AddNewPackageActivity mActivity;
     private Kuaidi100Fetcher fetcher;
 
     public FetchCompanyTask(AddNewPackageActivity addNewPackageActivity) {
-        mAddNewPackageActivity = addNewPackageActivity;
+        mActivity = addNewPackageActivity;
         fetcher = new Kuaidi100Fetcher();
     }
 
     @Override
     protected CompanyAutoSearchResult doInBackground(String... params) {
-        if (params.length != 1) return null;
+        if (params.length != 1) throw new IllegalArgumentException("参数有一个");
 
         String queryNumber = params[0];
         if (!"".equals(queryNumber)) {
@@ -34,7 +37,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
         if (companyAutoSearchResult == null) return; // 如果获取失败
 
         ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter =
-                mAddNewPackageActivity.getSpinnerAdapter();
+            mActivity.getSpinnerAdapter();
 
         spinnerAdapter.clear(); //先清除，再添加
         List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
