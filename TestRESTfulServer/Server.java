@@ -10,6 +10,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Sleaf on 2016/12/22 0022.
@@ -50,10 +52,10 @@ public class Server
         if (!file.isFile())
         {
             file.createNewFile();
+            BufferedWriter bw = Files.newBufferedWriter(file.toPath());
+            bw.write('0');
+            bw.close();
         }
-        BufferedWriter bw = Files.newBufferedWriter(file.toPath());
-        bw.write('0');
-        bw.close();
         return true;
     }
 }
@@ -64,6 +66,7 @@ class UserServer implements Runnable
     BufferedReader in;
     OutputStream out;
     UserData data;
+    UserData data2back = new UserData();
 
     UserServer(Socket Client)
     {
@@ -77,14 +80,14 @@ class UserServer implements Runnable
         {
             in = new BufferedReader(new InputStreamReader(Client.getInputStream()));
             out = Client.getOutputStream();
-            data = json.getData(in.readLine());
+            data = json.getData(String.valueOf(in.readLine()));
             switch (data.getHead())
             {
                 case 1:
-                    new SignUp(data);
+                    new SignUp();
                     break;
                 case 2:
-                    new SignIn(data);
+                    new SignIn();
                     break;
                 default:
                     break;
@@ -98,20 +101,11 @@ class UserServer implements Runnable
 
     class SignUp
     {
-        UserData data2back = new UserData();
-        String tmp;
         int TotalNumber;
 
-        SignUp(UserData data) throws Exception
+        SignUp() throws Exception
         {
-            this.data2back = data;
-            this.isSuccessful();
-            out.write(Byte.valueOf(json.formJson(data2back)));//boolean
-            out.flush();
-        }
-
-        void isSuccessful() throws Exception
-        {
+            data2back = data;
             BufferedWriter bw;
             try
             {
@@ -129,48 +123,79 @@ class UserServer implements Runnable
                     data2back.setId(TotalNumber);
                     bw = Files.newBufferedWriter(Server.UserTotalNumber.toPath());
                     bw.write(String.valueOf(TotalNumber++));
-
                     if (Server.isFileExist(Server.UserTotalNumber))
                     {
-                        bw = Files.newBufferedWriter(Paths.get(Server.userdatapath +String.format("\\User-%08d.txt",data2back.getId()) ));
+                        bw = Files.newBufferedWriter(Paths.get(Server.userdatapath + String.format("\\User-%08d.txt", data2back.getId())));
                         bw.write(json.formJson(data2back));
                     }
-                    data2back.setSuccessful(true);
+                    bw = Files.newBufferedWriter(Server.UserList.toPath());
+                    bw.write(data2back.getUsermail() + "---id=<" + data2back.getId() + ">\n\r");
                 }
             } catch (IOException e)
             {
                 System.out.println(e);
-                ;
             }
+            data2back.setSuccessful(true);
+            out.write(Byte.valueOf(json.formJson(data2back)));//boolean
+            out.flush();
         }
 
-        boolean isExist(String usermail) throws IOException
-        {
-            if (!Server.UserList.isFile())
-            {
-                Server.UserList.createNewFile();
-                return false;
-            }
-            Scanner find = new Scanner(Server.UserList);
-            while ((tmp = find.nextLine()) != null)
-            {
-                if (tmp.equals(usermail))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+
     }
 
     class SignIn
     {
-        UserData data;
-
-        SignIn(UserData data)
+        SignIn() throws Exception
         {
-            this.data = data;
+            if (isExist(data.getUsermail()))
+            {
+                data2back = json.getData(readfile());
+                if (data.getPassword().equals(data2back.getPassword()))
+                {
+                    data2back.setSuccessful(true);
+                }
+                else data2back = data;
+            }
+            out.write(Byte.valueOf(json.formJson(data2back)));
+            out.flush();
         }
+
+        String readfile() throws IOException
+        {
+            String tmp;
+            int id = -1;
+            Scanner find = new Scanner(Server.UserList);
+            outer:
+            while ((tmp = find.nextLine()) != null)
+            {
+                Matcher matcher = Pattern.compile(data.getUsermail() + "---id=<(.+?)>").matcher(tmp);
+                while (matcher.find())
+                {
+                    id =Integer.valueOf(matcher.group(1));
+                    break outer;
+                }
+            }
+            return Files.newBufferedReader(Paths.get(Server.userdatapath + String.format("\\User-%08d.txt", id))).readLine();
+        }
+    }
+
+    boolean isExist(String usermail) throws IOException
+    {
+        String tmp;
+        if (!Server.UserList.isFile())
+        {
+            Server.UserList.createNewFile();
+            return false;
+        }
+        Scanner find = new Scanner(Server.UserList);
+        while ((tmp = find.nextLine()) != null)
+        {
+            if (tmp.equals(usermail))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -208,15 +233,18 @@ class json
         json.put("password", data.getPassword());
         json.put("issuccessful", data.issuccessful());
         json.put("remarks", data.getRemarks());
-        JSONArray packageList = new JSONArray();
-        for (int i = 0; i < data.getPackageList().size(); i++)
+        if(data.getPackageList()!=null)
         {
-            JSONObject tmpPackage = new JSONObject();
-            tmpPackage.put("package_id", data.getPackageList().get(i).getId());
-            tmpPackage.put("package_info", data.getPackageList().get(i).getInfo());
-            packageList.put(tmpPackage);
+            JSONArray packageList = new JSONArray();
+            for (int i = 0; i < data.getPackageList().size(); i++)
+            {
+                JSONObject tmpPackage = new JSONObject();
+                tmpPackage.put("package_id", data.getPackageList().get(i).getId());
+                tmpPackage.put("package_info", data.getPackageList().get(i).getInfo());
+                packageList.put(tmpPackage);
+            }
+            json.put("packageList", packageList);
         }
-        json.put("packageList", packageList);
         return json.toString();
     }
 }
