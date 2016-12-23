@@ -43,7 +43,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
         List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();
         if (companies.isEmpty()) { //如果没有匹配，添加一个空的
             CompanyEachAutoSearch tempResult = new CompanyEachAutoSearch();
-            tempResult.setCompanyCode("无匹配44");
+            tempResult.setCompanyCode("无匹配");
             spinnerAdapter.add(tempResult);
         } else {
             spinnerAdapter.addAll(companies);

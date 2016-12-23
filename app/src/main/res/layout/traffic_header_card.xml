@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--包裹信息卡片-->
+<?xml version="1.0" encoding="utf-8"?><!--包裹信息卡片-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,25 +24,26 @@
             <!--单号部分-->
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp">
+                android:layout_height="wrap_content">
                 <!--快递公司图标-->
                 <ImageView
                     android:id="@+id/company_head_card_view"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/ic_info_black_24dp"
-                    android:contentDescription="@string/company_logo" />
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/company_logo"
+                    app:srcCompat="@drawable/ic_info_black_24dp" />
                 <!--单号-->
                 <TextView
                     android:id="@+id/package_number_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/company_head_card_view"
+                    android:layout_toRightOf="@+id/company_head_card_view"
                     android:height="30dp"
                     android:textSize="25sp"
-                    tools:text="TextView" />
+                    tools:text="快递单号" />
                 <!--快递公司名字-->
                 <TextView
                     android:id="@+id/company_name_card_view"
@@ -51,16 +51,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/package_number_card_view"
                     android:layout_toEndOf="@+id/company_head_card_view"
+                    android:layout_toRightOf="@+id/company_head_card_view"
                     android:height="20dp"
-                    tools:text="TextView" />
+                    tools:text="快递公司" />
             </RelativeLayout>
             <!--包含详细快递信息-->
             <LinearLayout
                 android:id="@+id/header_each_detail_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="4dp">
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
 
             </LinearLayout>
         </LinearLayout>

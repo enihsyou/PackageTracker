@@ -3,10 +3,11 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/spinner_text"
     style="?android:attr/spinnerDropDownItemStyle"
-    android:gravity="center_vertical|end"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dropdownListPreferredItemHeight"
-    android:ellipsize="marquee"
     android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:ellipsize="marquee"
+    android:gravity="center_vertical|end"
     android:maxLines="1" />
 

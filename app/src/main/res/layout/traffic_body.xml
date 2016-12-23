@@ -3,24 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:orientation="horizontal">
     <!--左边显示日期时间-->
     <TextView
         android:id="@+id/detail_datetime"
-        android:layout_width="70sp"
+        android:layout_width="56sp"
+        android:layout_gravity="center_vertical"
         android:layout_height="wrap_content"
-        tools:text="Time" />
+        tools:text="16-11-30\n14:52:06" />
     <!--中间一个分隔符-->
     <ImageView
+        android:id="@+id/detail_state_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/node_path_normal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center_vertical"
         android:contentDescription="@string/separator" />
     <!--右边显示跟踪信息-->
     <TextView
         android:id="@+id/detail_context"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        tools:text="Context" />
+        android:layout_gravity="center_vertical"
+        tools:text="[浙江金华金东区低田乡公司]进行派件扫描；派送业务员：苑洋洋；联系电话：17737533040" />
 </com.enihsyou.shane.packagetracker.view.TrafficCardDetailLayout>

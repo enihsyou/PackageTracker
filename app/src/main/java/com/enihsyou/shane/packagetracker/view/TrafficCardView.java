@@ -2,6 +2,7 @@ package com.enihsyou.shane.packagetracker.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -85,15 +86,16 @@ public class TrafficCardView extends CardView {
     public void addTraffics(List<PackageEachTraffic> traffics) {
         for (PackageEachTraffic eachTraffic : traffics) { // 循环添加每条信息
             TrafficCardDetailLayout trafficLayout = // 每一条详细跟踪信息的根布局
-                    (TrafficCardDetailLayout) mInflater.inflate(R.layout.traffic_body,
-                            mDetailContainer,
-                            false);
+                (TrafficCardDetailLayout) mInflater.inflate(R.layout.traffic_body,
+                    mDetailContainer,
+                    false);
 
             /*文字框赋值*/
             trafficLayout.setDatetime(eachTraffic.getTimeString());
             trafficLayout.setDetailContext(eachTraffic.getContext());
-
             mDetailContainer.addView(trafficLayout);
         }
+        /*设置图片*/
+        ((TrafficCardDetailLayout) mDetailContainer.getChildAt(0)).setStateImage(ContextCompat.getDrawable(getContext(), R.drawable.node_path_current));
     }
 }

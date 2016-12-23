@@ -29,6 +29,7 @@
                 android:orientation="vertical">
                 <!--上面寄件地址-->
                 <TextView
+                    style="?android:subtitleTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/send_address" />
@@ -57,6 +58,7 @@
                 </LinearLayout>
                 <!--下面收件地址-->
                 <TextView
+                    style="?android:subtitleTextAppearance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/receive_address" />

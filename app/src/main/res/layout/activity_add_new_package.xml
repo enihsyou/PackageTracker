@@ -23,25 +23,24 @@
             <!--由上下两部分组成-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:orientation="vertical">
                 <!--上面，一个输入框，一个预测快递公司的下拉框-->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/package_number_input_wrapper"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="88dp"
                         app:errorEnabled="true">
-                        <EditText
+                        <android.support.design.widget.TextInputEditText
                             android:id="@+id/package_number_input"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:hint="@string/package_number"
                             android:imeOptions="actionSearch"
                             android:inputType="textPhonetic"
@@ -52,8 +51,8 @@
                         android:id="@+id/company_spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true" />
-
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
                 <!--下面，一个拍二维码的按钮和一个确认按钮-->
                 <LinearLayout
