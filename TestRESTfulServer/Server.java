@@ -1,0 +1,346 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.*;
+
+/**
+ * Created by Sleaf on 2016/12/22 0022.
+ * 发送到服务器的数据仅接受第一行
+ * 每次发送数据必须带head信息，如果是获取类的必须带用户名和密码。
+ * 发回的数据包含的类别详见userdata类。
+ * ……
+ */
+
+
+public class Server
+{
+    static String userdatapath = ".\\UserData";
+    static File UserList = new File(userdatapath + "\\UserList.txt");
+    static File UserTotalNumber = new File(userdatapath + "\\UserTotalNumber.txt");
+
+    public static void main(String[] args)
+    {
+        ServerSocket SSocket;
+        Socket Client;
+        ExecutorService UserServerPool = Executors.newCachedThreadPool();
+        try
+        {
+            SSocket = new ServerSocket(6666);
+            while (true)
+            {
+                Client = SSocket.accept();
+                UserServerPool.execute(new UserServer(Client));
+            }
+        } catch (IOException e)
+        {
+            System.out.println(e);
+        }
+    }
+
+    static boolean isFileExist(File file) throws IOException
+    {
+        if (!file.isFile())
+        {
+            file.createNewFile();
+        }
+        BufferedWriter bw = Files.newBufferedWriter(file.toPath());
+        bw.write('0');
+        bw.close();
+        return true;
+    }
+}
+
+class UserServer implements Runnable
+{
+    Socket Client;
+    BufferedReader in;
+    OutputStream out;
+    UserData data;
+
+    UserServer(Socket Client)
+    {
+        this.Client = Client;
+        System.out.println(LocalDate.now().toString() + " ---> " + LocalTime.now() + "\t用户接入：" + Client.getInetAddress());
+    }
+
+    public void run()
+    {
+        try
+        {
+            in = new BufferedReader(new InputStreamReader(Client.getInputStream()));
+            out = Client.getOutputStream();
+            data = json.getData(in.readLine());
+            switch (data.getHead())
+            {
+                case 1:
+                    new SignUp(data);
+                    break;
+                case 2:
+                    new SignIn(data);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e)
+        {
+            System.out.println(e);
+        }
+
+    }
+
+    class SignUp
+    {
+        UserData data2back = new UserData();
+        String tmp;
+        int TotalNumber;
+
+        SignUp(UserData data) throws Exception
+        {
+            this.data2back = data;
+            this.isSuccessful();
+            out.write(Byte.valueOf(json.formJson(data2back)));//boolean
+            out.flush();
+        }
+
+        void isSuccessful() throws Exception
+        {
+            BufferedWriter bw;
+            try
+            {
+                if (isExist(data.getUsermail()))
+                {
+                    return;
+                }
+                else
+                {
+                    if (Server.isFileExist(Server.UserTotalNumber))
+                    {
+                        Scanner sin = new Scanner(Server.UserTotalNumber);
+                        TotalNumber = sin.nextInt();
+                    }
+                    data2back.setId(TotalNumber);
+                    bw = Files.newBufferedWriter(Server.UserTotalNumber.toPath());
+                    bw.write(String.valueOf(TotalNumber++));
+
+                    if (Server.isFileExist(Server.UserTotalNumber))
+                    {
+                        bw = Files.newBufferedWriter(Paths.get(Server.userdatapath +String.format("\\User-%08d.txt",data2back.getId()) ));
+                        bw.write(json.formJson(data2back));
+                    }
+                    data2back.setSuccessful(true);
+                }
+            } catch (IOException e)
+            {
+                System.out.println(e);
+                ;
+            }
+        }
+
+        boolean isExist(String usermail) throws IOException
+        {
+            if (!Server.UserList.isFile())
+            {
+                Server.UserList.createNewFile();
+                return false;
+            }
+            Scanner find = new Scanner(Server.UserList);
+            while ((tmp = find.nextLine()) != null)
+            {
+                if (tmp.equals(usermail))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class SignIn
+    {
+        UserData data;
+
+        SignIn(UserData data)
+        {
+            this.data = data;
+        }
+    }
+}
+
+
+class json
+{
+    static UserData getData(String jsonString)
+    {
+        UserData Data = new UserData();
+        try
+        {
+            JSONObject personObject = new JSONObject(jsonString);
+            Data.setHead(personObject.getInt("head"));//用来识别请求类型
+            Data.setId(personObject.getInt("id"));//用户id
+            Data.setUsername(personObject.getString("username"));//用户昵称
+            Data.setUsermail(personObject.getString("usermail"));//用户昵称
+            Data.setPassword(personObject.getString("password"));//用户密码
+            Data.setSuccessful(personObject.getBoolean("issuccessful"));//备注
+            Data.setRemarks(personObject.getString("remarks"));//备注
+            Data.addPackage(personObject.getString("package_id"), personObject.getString("package_info"));//快递单号及快递信息（json）
+        } catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        return Data;
+    }
+
+    static String formJson(UserData data) throws Exception
+    {
+        JSONObject json = new JSONObject();
+        json.put("head", data.getHead());
+        json.put("id", data.getId());
+        json.put("username", data.getUsername());
+        json.put("usermail", data.getUsermail());
+        json.put("password", data.getPassword());
+        json.put("issuccessful", data.issuccessful());
+        json.put("remarks", data.getRemarks());
+        JSONArray packageList = new JSONArray();
+        for (int i = 0; i < data.getPackageList().size(); i++)
+        {
+            JSONObject tmpPackage = new JSONObject();
+            tmpPackage.put("package_id", data.getPackageList().get(i).getId());
+            tmpPackage.put("package_info", data.getPackageList().get(i).getInfo());
+            packageList.put(tmpPackage);
+        }
+        json.put("packageList", packageList);
+        return json.toString();
+    }
+}
+
+class UserData
+{
+    private int head;
+    private int id;
+    private String username;
+    private String usermail;
+    private String password;
+    private String remarks;
+    private boolean issuccessful;
+    private ArrayList<KUAIDI> packageList;
+
+    public boolean issuccessful()
+    {
+        return issuccessful;
+    }
+
+    public void setSuccessful(boolean successful)
+    {
+        issuccessful = successful;
+    }
+
+    public int getHead()
+    {
+        return head;
+    }
+
+    public void setHead(int head)
+    {
+        this.head = head;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public String getUsermail()
+    {
+        return usermail;
+    }
+
+    public void setUsermail(String usermail)
+    {
+        this.usermail = usermail;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
+    public ArrayList<KUAIDI> getPackageList()
+    {
+        return packageList;
+    }
+
+    public void addPackage(String id, String info)
+    {
+        this.packageList.add(new KUAIDI(id, info));
+    }
+
+    public String getRemarks()
+    {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks)
+    {
+        this.remarks = remarks;
+    }
+}
+
+class KUAIDI
+{
+    String id;
+    String info;
+
+    public KUAIDI(String id, String info)
+    {
+        this.id = id;
+        this.info = info;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public String getInfo()
+    {
+        return info;
+    }
+
+    public void setInfo(String info)
+    {
+        this.info = info;
+    }
+}
