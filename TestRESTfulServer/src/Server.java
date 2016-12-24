@@ -1,4 +1,5 @@
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -80,7 +81,7 @@ class UserServer implements Runnable
         {
             in = new BufferedReader(new InputStreamReader(Client.getInputStream()));
             out = Client.getOutputStream();
-            data = json.getData(String.valueOf(in.readLine()));
+            data = json.getData(in.readLine());
             switch (data.getHead())
             {
                 case 1:
@@ -94,7 +95,7 @@ class UserServer implements Runnable
             }
         } catch (Exception e)
         {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
     }
@@ -131,9 +132,10 @@ class UserServer implements Runnable
                     bw = Files.newBufferedWriter(Server.UserList.toPath());
                     bw.write(data2back.getUsermail() + "---id=<" + data2back.getId() + ">\n\r");
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
-                System.out.println(e);
+                e.printStackTrace();
             }
             data2back.setSuccessful(true);
             out.write(Byte.valueOf(json.formJson(data2back)));//boolean
@@ -218,7 +220,7 @@ class json
             Data.addPackage(personObject.getString("package_id"), personObject.getString("package_info"));//快递单号及快递信息（json）
         } catch (Exception e)
         {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return Data;
     }
