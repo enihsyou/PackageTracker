@@ -29,13 +29,13 @@ import java.util.regex.Pattern;
  * ……
  */
 
-
+// TODO: 2016/12/24 0024 编写使用说明
+// TODO: 2016/12/24 0024 添加邮件的方法
 public class Server
 {
     static String userdatapath = "./UserData";
     static File UserList = new File(userdatapath, "UserList.txt");
     static File UserTotalNumber = new File(userdatapath, "UserTotalNumber.txt");
-
     public static void main(String[] args)
     {
         ServerSocket SSocket;
