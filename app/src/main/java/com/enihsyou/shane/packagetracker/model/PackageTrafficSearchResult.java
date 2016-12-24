@@ -1,6 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -8,16 +9,42 @@ import java.util.Locale;
  * 搜索 快递跟踪进度 的结果
  */
 public class PackageTrafficSearchResult {
-    private String company;
-    private String number;
-    private int status;
+    private String company; //公司代号
+    private String number; //快递单号
+    private int status; //快递状态
     private List<PackageEachTraffic> traffics;
+    private Date lastTime; //最后动态时间
 
     public PackageTrafficSearchResult() {
         company = "testCompanyCode";
         number = "1234567890";
         status = 0;
         traffics = new ArrayList<>();
+        lastTime = null;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public Date getLastTime() {
+        refreshLastSeenTime();
+        return lastTime;
+    }
+
+    private void refreshLastSeenTime() {
+        /*更新最后时间*/
+        if (lastTime == null) {
+            lastTime = traffics.get(traffics.size() - 1).getTime();
+        } else {
+            PackageEachTraffic traffic = traffics.get(traffics.size() - 1);
+            Date trafficTime = traffic.getTime();
+            if (trafficTime.after(lastTime)) lastTime = trafficTime;
+        }
     }
 
     public String getCompanyCode() {
@@ -27,7 +54,11 @@ public class PackageTrafficSearchResult {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), "单号: %s，公司: %s，状态: %d",
-                getNumber(), getCompanyString(), getStatus());
+            getNumber(), getCompanyString(), getStatus());
+    }
+
+    public String getNumber() {
+        return number;
     }
 
     public String getCompanyString() {
@@ -40,20 +71,16 @@ public class PackageTrafficSearchResult {
         return name;
     }
 
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getStatusString() {
@@ -66,15 +93,12 @@ public class PackageTrafficSearchResult {
         return name;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
     public List<PackageEachTraffic> getTraffics() {
         return traffics;
     }
 
     public void setTraffics(List<PackageEachTraffic> traffics) {
         this.traffics = traffics;
+        refreshLastSeenTime();
     }
 }

@@ -88,7 +88,7 @@
   <string name="button_add">Add</string>
   <string name="title_activity_add_new">Add New Package Track</string>
   <string name="title_activity_send_new">Send New Package Activity</string>
-  <string name="company_logo">company logo</string>
+  <string name="company_logo">Company logo</string>
   <string name="separator">separator</string>
   <string name="wrong_package_number">Invalid package number</string>
   <string name="empty_package_number">Empty package number</string>
@@ -133,4 +133,5 @@
     <item>黑龙江</item>
     <item>内蒙古</item>
   </string-array><string name="button_confirm">Confirm</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

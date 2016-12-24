@@ -293,14 +293,4 @@ public class Kuaidi100Fetcher {
     private NetworkCityResult[] parseNetworkCityJson(Response response) {
         return gson.fromJson(response.body().charStream(), NetworkCityResult[].class);
     }
-
-    /**
-     * 在运行中修改API服务器的地址，用于测试目的
-     * 在设置面板中添加文字框选项，输入新的地址和端口号，调用此方法
-     *
-     * @param baseURL 要设置的网址
-     */
-    public void setBaseURL(String baseURL) {
-        ENDPOINT = HttpUrl.parse(baseURL);
-    }
 }

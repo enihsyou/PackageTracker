@@ -1,37 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?><!--提供滚动功能-->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity">
-    <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
-    <LinearLayout
-        android:id="@+id/new_card_container"
+    android:fitsSystemWindows="true"
+    tools:context="com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+    <!--提供滚动功能-->
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-        <!--添加追踪信息用的卡片-->
-        <android.support.v7.widget.CardView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity">
+    <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
+        <LinearLayout
+            android:id="@+id/new_card_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!--由上下两部分组成-->
-            <LinearLayout
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+        <!--添加追踪信息用的卡片-->
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:focusableInTouchMode="true"
-                android:orientation="vertical">
-                <!--上面寄件地址-->
-                <TextView
+                android:layout_height="wrap_content">
+            <!--由上下两部分组成-->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/send_address" />
+                    android:layout_margin="8dp"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical">
+                <!--上面寄件地址-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/send_address" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -55,11 +77,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
                 </LinearLayout>
-                <!--下面收件地址-->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/receive_address" />
+                    <!--下面收件地址-->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/receive_address" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -97,12 +119,12 @@
                             android:maxLength="20"
                             android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
-                <!--最下面两个按钮-->
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    <!--最下面两个按钮-->
+                    <LinearLayout
+                        style="?android:attr/buttonBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
                     <Button
                         android:id="@+id/button_take_picture"
                         style="?android:attr/buttonBarButtonStyle"
@@ -120,6 +142,18 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
-        <!--下面 由程序添加搜索结果-->
+            <!--下面 由程序添加搜索结果-->
+
     </LinearLayout>
-</ScrollView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_send_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_my_location" />
+
+</android.support.design.widget.CoordinatorLayout>

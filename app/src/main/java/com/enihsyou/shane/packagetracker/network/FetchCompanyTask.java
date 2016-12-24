@@ -36,8 +36,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
     protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
         if (companyAutoSearchResult == null) return; // 如果获取失败
 
-        ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter =
-            mActivity.getSpinnerAdapter();
+        ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter = mActivity.getSpinnerAdapter();
 
         spinnerAdapter.clear(); //先清除，再添加
         List<CompanyEachAutoSearch> companies = companyAutoSearchResult.getCompanies();

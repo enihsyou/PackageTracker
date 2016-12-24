@@ -21,6 +21,7 @@ import com.enihsyou.shane.packagetracker.model.Packages;
 public class PackageTrafficsFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private PackageTrafficsRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,13 +57,13 @@ public class PackageTrafficsFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
             mAdapter = new PackageTrafficsRecyclerViewAdapter(Packages.getPackages(getActivity()),
                     mListener);
-            recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(mAdapter);
         }
         return view;
     }
@@ -70,7 +71,7 @@ public class PackageTrafficsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

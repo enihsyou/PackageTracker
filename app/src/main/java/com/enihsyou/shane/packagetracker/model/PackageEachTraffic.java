@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 public class PackageEachTraffic {
     private static SimpleDateFormat dateFormat =
             new SimpleDateFormat("yy-MM-dd\nkk:mm:ss", Locale.getDefault());
-    private static Pattern regxPhone = Pattern.compile("电话.*?(1\\d{10})");
+    private static Pattern REGEX_PHONE = Pattern.compile(".*(?=手机|电话|号码).*?(\\d{7,}).*");
+
     private Date time;
     private String location;
     private String context;
@@ -27,7 +28,7 @@ public class PackageEachTraffic {
 
     private void parsePhone() {
         if (context != null) {
-            Matcher matcher = regxPhone.matcher(context);
+            Matcher matcher = REGEX_PHONE.matcher(context);
             if (matcher.find()) phone = matcher.group(1);
         }
     }

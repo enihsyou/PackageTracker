@@ -15,7 +15,6 @@ public class Packages {
 
     private Packages() {
         packages = new ArrayList<>();
-        packages.add(new PackageTrafficSearchResult());
     }
 
     public static List<PackageTrafficSearchResult> getPackages(Context context) {
@@ -37,7 +36,7 @@ public class Packages {
     }
 
     public static LinearLayout getCard(int position,
-            LinearLayout cardContainer) {
+        LinearLayout cardContainer) {
         PackageTrafficSearchResult searchResult = getOne(position);
         return Kuaidi100Fetcher.generateCard(searchResult, cardContainer);
     }
@@ -48,5 +47,16 @@ public class Packages {
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    public static boolean isDuplicated(PackageTrafficSearchResult result) {
+        for (PackageTrafficSearchResult aPackage : packages) {
+            if (result.equals(aPackage)) return true;
+            if (aPackage.getNumber().equals(result.getNumber())
+                && aPackage.getCompanyCode().equals(result.getCompanyCode())) {
+                if (result.getLastTime().after(aPackage.getLastTime())) { return false; }
+            }
+        }
+        return false;
     }
 }

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFab = (FabSpeedDial) findViewById(R.id.fab_speed_dial);
+        mFab = (FabSpeedDial) findViewById(R.id.fab_main);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);

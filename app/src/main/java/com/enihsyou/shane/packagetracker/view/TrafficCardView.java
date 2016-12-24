@@ -96,6 +96,8 @@ public class TrafficCardView extends CardView {
             mDetailContainer.addView(trafficLayout);
         }
         /*设置图片*/
-        ((TrafficCardDetailLayout) mDetailContainer.getChildAt(0)).setStateImage(ContextCompat.getDrawable(getContext(), R.drawable.node_path_current));
+        if (mDetailContainer.getChildCount() > 0) {
+            ((TrafficCardDetailLayout) mDetailContainer.getChildAt(0)).setStateImage(ContextCompat.getDrawable(getContext(), R.drawable.node_path_current));
+        }
     }
 }
