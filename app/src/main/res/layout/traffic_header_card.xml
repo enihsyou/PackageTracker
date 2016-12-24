@@ -35,25 +35,30 @@
                     android:contentDescription="@string/company_logo"
                     app:srcCompat="@drawable/ic_info_black_24dp" />
                 <!--单号-->
-                <TextView
-                    android:id="@+id/package_number_card_view"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@+id/company_head_card_view"
                     android:layout_toRightOf="@+id/company_head_card_view"
-                    android:height="30dp"
-                    android:textSize="25sp"
-                    tools:text="快递单号" />
-                <!--快递公司名字-->
-                <TextView
-                    android:id="@+id/company_name_card_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/package_number_card_view"
-                    android:layout_toEndOf="@+id/company_head_card_view"
-                    android:layout_toRightOf="@+id/company_head_card_view"
-                    android:height="20dp"
-                    tools:text="快递公司" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/package_number_card_view"
+                        style="?android:attr/textAppearanceLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:textIsSelectable="true"
+                        tools:text="快递单号" />
+                    <!--快递公司名字-->
+                    <TextView
+                        android:id="@+id/company_name_card_view"
+                        style="?android:attr/textAppearanceSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:textIsSelectable="true"
+                        tools:text="快递公司" />
+                </LinearLayout>
             </RelativeLayout>
             <!--包含详细快递信息-->
             <LinearLayout

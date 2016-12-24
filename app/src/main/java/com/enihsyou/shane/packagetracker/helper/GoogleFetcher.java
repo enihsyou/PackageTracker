@@ -36,7 +36,7 @@ public class GoogleFetcher {
     }
 
     @NonNull
-    private HttpUrl buildLocationUrl(String lat, String lng) {
+    private static HttpUrl buildLocationUrl(String lat, String lng) {
         return ENDPOINT.newBuilder()
             .addEncodedQueryParameter("language", "zh-CN")
             .addEncodedQueryParameter("latlng", lat.concat(",").concat(lng)).build();

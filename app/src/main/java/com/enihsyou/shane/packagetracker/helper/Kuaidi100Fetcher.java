@@ -98,7 +98,7 @@ public class Kuaidi100Fetcher {
     }
 
     @NonNull
-    private HttpUrl buildNetworkSearchUrl() {
+    private static HttpUrl buildNetworkSearchUrl() {
         return ENDPOINT.newBuilder()
             .addPathSegments(SEARCH_NETWORK)
             .build();
@@ -145,7 +145,7 @@ public class Kuaidi100Fetcher {
     }
 
     @NonNull
-    private HttpUrl buildPackageSearchURL(String number, String type) {
+    private static HttpUrl buildPackageSearchURL(String number, String type) {
         return ENDPOINT.newBuilder()
             .addPathSegment(SEARCH_PACKAGE)
             .addEncodedQueryParameter("type", type)
@@ -224,7 +224,7 @@ public class Kuaidi100Fetcher {
     }
 
     @NonNull
-    private HttpUrl buildNumberSearchURL(String number) {
+    private static HttpUrl buildNumberSearchURL(String number) {
         return ENDPOINT.newBuilder()
             .addPathSegments(SEARCH_NUMBER)
             .addEncodedQueryParameter("text", number)

@@ -1,48 +1,54 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.util.SparseArray;
-import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public enum EnumProvince {
-    北京(110000, true),
-    上海(310000, true),
-    天津(120000, true),
-    重庆(500000, true),
-    安徽(34, false),
-    澳门(82, false),
-    福建(35, false),
-    甘肃(62, false),
-    广东(44, false),
-    广西(45, false),
-    贵州(52, false),
-    海南(46, false),
-    河北(13, false),
-    河南(41, false),
-    湖北(42, false),
-    湖南(43, false),
-    吉林(22, false),
-    江苏(32, false),
-    江西(36, false),
-    辽宁(21, false),
-    宁夏(64, false),
-    青海(63, false),
-    山东(37, false),
-    山西(14, false),
-    陕西(61, false),
-    四川(51, false),
-    台湾(71, false),
-    西藏(54, false),
-    新疆(65, false),
-    香港(81, false),
-    云南(53, false),
-    浙江(33, false),
-    黑龙江(23, false),
-    内蒙古(15, false);
-    private static SparseArray<String> cities = new SparseArray<>();
-
+public abstract class Place {
+    protected String name;
+    protected String code;
+    public ArrayList<? extends Place> nexts = new ArrayList<>();
+    protected static SparseArray<String> cities = new SparseArray<>();
+    protected Place(String name, String code, ArrayList<? extends Place> nexts) {
+        this.name = name;
+        this.code = code;
+        this.nexts = nexts;
+    }
+    public abstract void populate() throws IOException;
     static {
+        cities.put(110100, "东城区");
+        cities.put(110200, "西城区");
+        cities.put(110500, "朝阳区");
+        cities.put(110600, "丰台区");
+        cities.put(110700, "石景山区");
+        cities.put(110800, "海淀区");
+        cities.put(110900, "门头沟区");
+        cities.put(111100, "房山区");
+        cities.put(111200, "通州区");
+        cities.put(111300, "顺义区");
+        cities.put(111400, "昌平区");
+        cities.put(111500, "大兴区");
+        cities.put(111600, "怀柔区");
+        cities.put(111700, "平谷区");
+        cities.put(112800, "密云县");
+        cities.put(112900, "延庆县");
+        cities.put(120100, "和平区");
+        cities.put(120200, "河东区");
+        cities.put(120300, "河西区");
+        cities.put(120400, "南开区");
+        cities.put(120500, "河北区");
+        cities.put(120600, "红桥区");
+        cities.put(121000, "东丽区");
+        cities.put(121100, "西青区");
+        cities.put(121200, "津南区");
+        cities.put(121300, "北辰区");
+        cities.put(121400, "武清区");
+        cities.put(121500, "宝坻区");
+        cities.put(121600, "滨海");
+        cities.put(122100, "宁河县");
+        cities.put(122300, "静海县");
+        cities.put(122500, "蓟县");
         cities.put(130100, "石家庄市");
         cities.put(130200, "唐山市");
         cities.put(130300, "秦皇岛市");
@@ -113,6 +119,23 @@ public enum EnumProvince {
         cities.put(231100, "黑河市");
         cities.put(231200, "绥化市");
         cities.put(232700, "大兴安岭");
+        cities.put(310100, "黄浦区");
+        cities.put(310400, "徐汇区");
+        cities.put(310500, "长宁区");
+        cities.put(310600, "静安区");
+        cities.put(310700, "普陀区");
+        cities.put(310800, "闸北区");
+        cities.put(310900, "虹口区");
+        cities.put(311000, "杨浦区");
+        cities.put(311200, "闵行区");
+        cities.put(311300, "宝山区");
+        cities.put(311400, "嘉定区");
+        cities.put(311500, "浦东");
+        cities.put(311600, "金山区");
+        cities.put(311700, "松江区");
+        cities.put(311800, "青浦区");
+        cities.put(312000, "奉贤区");
+        cities.put(313000, "崇明县");
         cities.put(320100, "南京市");
         cities.put(320200, "无锡市");
         cities.put(320300, "徐州市");
@@ -293,6 +316,44 @@ public enum EnumProvince {
         cities.put(467800, "陵水");
         cities.put(467900, "保亭");
         cities.put(468000, "琼中");
+        cities.put(500100, "万州区");
+        cities.put(500200, "涪陵区");
+        cities.put(500300, "渝中区");
+        cities.put(500400, "大渡口区");
+        cities.put(500500, "江北区");
+        cities.put(500600, "沙坪坝区");
+        cities.put(500700, "九龙坡区");
+        cities.put(500800, "南岸区");
+        cities.put(500900, "北碚区");
+        cities.put(501000, "綦江区");
+        cities.put(501100, "大足区");
+        cities.put(501200, "渝北区");
+        cities.put(501300, "巴南区");
+        cities.put(501400, "黔江区");
+        cities.put(501500, "长寿区");
+        cities.put(501600, "江津区");
+        cities.put(501700, "合川区");
+        cities.put(501800, "永川区");
+        cities.put(501900, "南川区");
+        cities.put(502300, "潼南县");
+        cities.put(502400, "铜梁县");
+        cities.put(502600, "荣昌县");
+        cities.put(502700, "璧山县");
+        cities.put(502800, "梁平县");
+        cities.put(502900, "城口县");
+        cities.put(503000, "丰都县");
+        cities.put(503100, "垫江县");
+        cities.put(503200, "武隆县");
+        cities.put(503300, "忠县");
+        cities.put(503400, "开县");
+        cities.put(503500, "云阳县");
+        cities.put(503600, "奉节县");
+        cities.put(503700, "巫山县");
+        cities.put(503800, "巫溪县");
+        cities.put(504000, "石柱");
+        cities.put(504100, "秀山");
+        cities.put(504200, "酉阳");
+        cities.put(504300, "彭水");
         cities.put(510100, "成都市");
         cities.put(510300, "自贡市");
         cities.put(510400, "攀枝花市");
@@ -433,39 +494,8 @@ public enum EnumProvince {
         cities.put(820900, "澳门新城");
     }
 
-    private int code;
-    private boolean isCity;
-
-    EnumProvince(int code, boolean isCity) {
-        this.code = code;
-        this.isCity = isCity;
-    }
-
-    /**
-     * 返回下一层城市或地区列表，如果已经是个城市了，则通过网络获取地区列表
-     * 如果是省份，则从类中获得省内城市
-     *
-     * @param isCity 是否是城市
-     *
-     * @return 下一层
-     *
-     * @throws IOException 网络错误
-     */
-    public SparseArray<String> getCity(boolean isCity) throws IOException {
-        SparseArray<String> result = new SparseArray<>();
-        if (isCity) { //如果这一层已经是城市了，则获取当前城市地区列表
-            NetworkCityResult[] cityResult =
-                new Kuaidi100Fetcher().networkCityResult(String.valueOf(code));
-            for (NetworkCityResult networkCityResult : cityResult) { // 添加每一个结果，使用地区全名
-                result.append(Integer.parseInt(networkCityResult.getCode()), networkCityResult.getFullName());
-            }
-        } else {
-            for (int i = 0; i < cities.size(); i++) {
-                int key = cities.keyAt(i);
-                String s = cities.get(key);
-                if (s.startsWith(String.valueOf(code))) result.append(key, s); //按顺序添加 没使用put
-            }
-        }
-        return result;
+    @Override
+    public String toString() {
+        return name;
     }
 }

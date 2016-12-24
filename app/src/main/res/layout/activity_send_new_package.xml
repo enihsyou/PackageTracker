@@ -6,29 +6,16 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity">
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
     <!--提供滚动功能-->
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity">
-    <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
+        <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
         <LinearLayout
             android:id="@+id/new_card_container"
             android:layout_width="match_parent"
@@ -38,7 +25,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
-        <!--添加追踪信息用的卡片-->
+            <!--添加追踪信息用的卡片-->
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -57,21 +44,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/province_spinner_send"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/city_spinner_send"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/area_spinner_send"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -85,21 +70,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/province_spinner_receive"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/city_spinner_receive"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-                    <Spinner
+                    <android.support.v7.widget.AppCompatSpinner
                         android:id="@+id/area_spinner_receive"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -126,19 +109,19 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                     <Button
-                        android:id="@+id/button_take_picture"
+                        android:id="@+id/button_search_time"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/button_take_picture" />
+                        android:text="@string/search_time" />
                     <Button
-                        android:id="@+id/button_confirm"
+                        android:id="@+id/button_search_price"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/button_confirm" />
+                        android:text="@string/search_price" />
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

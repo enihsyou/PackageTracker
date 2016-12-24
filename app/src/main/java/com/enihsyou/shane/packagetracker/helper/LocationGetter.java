@@ -8,9 +8,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Locale;
 
 public class LocationGetter extends Service implements LocationListener {
     private static final String TAG = "LocationGetter";
@@ -24,7 +26,7 @@ public class LocationGetter extends Service implements LocationListener {
         getLocation();
     }
 
-    private Location getLocation() throws SecurityException {
+    private Location getLocation() {
         LocationManager locationManager =
             (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
@@ -38,6 +40,15 @@ public class LocationGetter extends Service implements LocationListener {
         }
         if (current == null) Toast.makeText(mContext, "未获得位置信息", Toast.LENGTH_SHORT).show();
         return current;
+    }
+
+    public static boolean isPositionable(Context context) {
+        LocationManager locationManager =
+            (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Log.d(TAG, String.format(Locale.getDefault(), "isPositionable: 当前 GPS: %b Network: %b", gps, network));
+        return gps || network;
     }
 
     public Location getCurrent() {
@@ -73,10 +84,12 @@ public class LocationGetter extends Service implements LocationListener {
     @Override
     public void onProviderEnabled(String provider) {
         Toast.makeText(mContext, "定位系统已启用", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onProviderEnabled: 定位系统已启用");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         Toast.makeText(mContext, "定位系统已停用", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onProviderDisabled: 定位系统已停用");
     }
 }

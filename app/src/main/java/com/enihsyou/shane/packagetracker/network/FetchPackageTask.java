@@ -29,7 +29,8 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
 
         String queryNumber = params[0];
         String queryCompany = params[1];
-        if (!"".equals(queryNumber) && !"".equals(queryCompany)) {
+        if (queryNumber != null && !queryNumber.isEmpty() && queryCompany != null
+            && !queryCompany.isEmpty()) {
             try {
                 return fetcher.packageResult(queryNumber, queryCompany);
             } catch (IOException ignored) {}// FIXME: 2016/12/9 错误提示
