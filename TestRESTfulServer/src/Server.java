@@ -9,7 +9,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.*;
 import java.util.ArrayList;
@@ -89,17 +88,16 @@ class UserServer implements Runnable {
             in = new BufferedReader(new InputStreamReader(Client.getInputStream()));
             out = Client.getOutputStream();
             data = json.getData(in.readLine());
-            if (data.getUsermail() != null && data.getPassword() != null && !data.issuccessful()) {
-                System.out.println(
-                    LocalDate.now().toString() + " -> " + LocalTime.now() + " -> " + "From client("
-                        + Client.getInetAddress() + "):" + data);
+            if (data.getUsermail() != null && data.getPassword() != null && !data.isSuccessful()) {
                 switch (data.getHead()) {
-                    case 1:
+                    case 0:
                         SignUp();
                         break;
-                    case 2:
+                    case 1:
                         SignIn();
                         break;
+                    case 2:
+                        Addpackage();
                     default:
                         break;
                 }
@@ -109,6 +107,10 @@ class UserServer implements Runnable {
             out.flush();
             in.close();
             out.close();
+            System.out.println(
+                LocalDate.now().toString() + " -> " + LocalTime.now() + " -> " + "From client("
+                    + Client.getInetAddress() + "):"
+                    + String.format("HEAD:%s\tUSERMAIL:%s\tRESULT:%s\t\tLIST:%s", data.getHead(), data.getUsermail(), data2back.isSuccessful(), data2back.getPackageList()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,17 +148,34 @@ class UserServer implements Runnable {
 
     }
 
-    void SignIn() throws Exception {
+    boolean SignIn() throws Exception {
         int id;
         if ((id = isExist(data.getUsermail())) != -1) {
+            Server.letFileExist(new File(
+                Server.userdatapath + String.format("/User-%08d.txt", id)));
             data2back = json.getData(Files.newBufferedReader(Paths.get(
                 Server.userdatapath + String.format("/User-%08d.txt", id))).readLine());
             if (data.getPassword().equals(data2back.getPassword())) {
                 data2back.setSuccessful(true);
             } else { data2back = data; }
+            return true;
         }
+        return false;
     }
 
+    void Addpackage() throws Exception {
+        if (SignIn() && !data.getPackageList().isEmpty()) {
+            for (KUAIDI kuaidiform : data.getPackageList()) {
+                data2back.addPackage(kuaidiform);
+            }
+            BufferedWriter bw;
+            bw = Files.newBufferedWriter(Paths.get(Server.userdatapath
+                + String.format("/User-%08d.txt", data2back.getId())));
+            bw.write(json.formJson(data2back));
+            bw.close();
+            data2back.setSuccessful(true);
+        } else { data2back.setSuccessful(false); }
+    }
 
     int isExist(String usermail) throws IOException {//检测用户是否存在，存在则返回id,不存在则返回-1
         String[] tmp;
@@ -178,14 +197,14 @@ class UserServer implements Runnable {
 
 class json {
     static UserData getData(String jsonString) {
-        UserData Data = new UserData();
+        UserData data = new UserData();
         Gson gson = new GsonBuilder().create();
         try {
-            Data = gson.fromJson(jsonString, UserData.class);
+            data = gson.fromJson(jsonString, UserData.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Data;
+        return data;
     }
 
     static String formJson(UserData data) throws Exception {
@@ -195,14 +214,14 @@ class json {
         json.put("username", data.getUsername());
         json.put("usermail", data.getUsermail());
         json.put("password", data.getPassword());
-        json.put("issuccessful", data.issuccessful());
+        json.put("issuccessful", data.isSuccessful());
         json.put("remarks", data.getRemarks());
         if (data.getPackageList() != null) {
             JSONArray packageList = new JSONArray();
             for (int i = 0; i < data.getPackageList().size(); i++) {
                 JSONObject tmpPackage = new JSONObject();
-                tmpPackage.put("package_id", data.getPackageList().get(i).getId());
-                tmpPackage.put("package_info", data.getPackageList().get(i).getInfo());
+                tmpPackage.put("package_id", data.getPackageList().get(i).getPackage_id());
+                tmpPackage.put("package_info", data.getPackageList().get(i).getPackage_info());
                 packageList.put(tmpPackage);
             }
             json.put("packageList", packageList);
@@ -213,29 +232,22 @@ class json {
 
 class UserData {
     @SerializedName("head")
-    private int head ;
+    private int head = -1;
     @SerializedName("id")
     private int id = -1;
-    @SerializedName("user_name")
+    @SerializedName("username")
     private String username;
-    @SerializedName("email")
+    @SerializedName("usermail")
     private String usermail;
     @SerializedName("password")
     private String password;
     @SerializedName("remarks")
     private String remarks;
-    @SerializedName("is_successful")
+    @SerializedName("isSuccessful")
     @Expose(deserialize = false)
-    private boolean issuccessful = false;
-    private ArrayList<KUAIDI> packageList;
-
-    public boolean issuccessful() {
-        return issuccessful;
-    }
-
-    public void setSuccessful(boolean successful) {
-        issuccessful = successful;
-    }
+    private boolean isSuccessful = false;
+    @SerializedName("packageList")
+    private ArrayList<KUAIDI> packageList = new ArrayList<>();
 
     public int getHead() {
         return head;
@@ -251,6 +263,14 @@ class UserData {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isSuccessful() {
+        return isSuccessful;
+    }
+
+    public void setSuccessful(boolean successful) {
+        isSuccessful = successful;
     }
 
     public String getUsername() {
@@ -281,8 +301,18 @@ class UserData {
         return packageList;
     }
 
-    public void addPackage(String id, String info) {
-        this.packageList.add(new KUAIDI(id, info));
+    public void addPackage(KUAIDI kuaidi) {
+        if (this.getPackageList().isEmpty()) {
+            packageList.add(kuaidi);
+        } else {
+            for (KUAIDI kuaidiform : packageList) {
+                if (kuaidiform.getPackage_id().equals(kuaidi.getPackage_id())) {
+                    packageList.remove(kuaidiform);
+                    break;
+                }
+            }
+            packageList.add(kuaidi);
+        }
     }
 
     public String getRemarks() {
@@ -296,27 +326,27 @@ class UserData {
 }
 
 class KUAIDI {
-    String id;
-    String info;
+    String package_id;
+    String package_info;
 
     public KUAIDI(String id, String info) {
-        this.id = id;
-        this.info = info;
+        this.package_id = id;
+        this.package_info = info;
     }
 
-    public String getId() {
-        return id;
+    public String getPackage_id() {
+        return package_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPackage_id(String package_id) {
+        this.package_id = package_id;
     }
 
-    public String getInfo() {
-        return info;
+    public String getPackage_info() {
+        return package_info;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setPackage_info(String package_info) {
+        this.package_info = package_info;
     }
 }

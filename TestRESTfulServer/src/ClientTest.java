@@ -17,8 +17,10 @@ public class ClientTest {
 
             UserData data = new UserData();
             data.setHead(2);
-            data.setUsermail("6666@qq");
+            data.setUsermail("145204");
             data.setPassword("123");
+            // data.addPackage(new KUAIDI("2","2"));
+            data.addPackage(new KUAIDI("0","666"));
 
             Gson gson = new GsonBuilder().create();
             inputString = gson.toJson(data, UserData.class);
@@ -30,7 +32,7 @@ public class ClientTest {
             is.close();
             server.close();
         } catch (IOException e) {
-            System.out.println("错误！服务器未运行！");
+            System.out.println("错误:服务器未运行！");
         }
     }
 }
