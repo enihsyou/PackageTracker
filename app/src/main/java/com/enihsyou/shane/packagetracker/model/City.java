@@ -10,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 
 public class City extends Place {
     private static final String TAG = "City";
-    private boolean directControlled;
 
     public City(String name, String code, ArrayList<? extends Place> nexts) {
         super(name, code, nexts);
@@ -19,10 +18,6 @@ public class City extends Place {
     public City(String name, String code, ArrayList<? extends Place> nexts, boolean directControlled) {
         super(name, code, nexts);
         this.directControlled = directControlled;
-    }
-
-    public void populate(Province parent) {
-        this.nexts = parent.nexts;
     }
 
     public void populate() throws IOException {
@@ -36,7 +31,8 @@ public class City extends Place {
             for (NetworkCityResult result : results) {
                 String name = result.getName();
                 String code = result.getCode();
-                nexts.add(new Area(name, code, null));
+                String fullName = result.getFullName();
+                nexts.add(new Area(name, code, null, fullName));
             }
             Collections.reverse(nexts);
             this.nexts = nexts;
@@ -45,7 +41,4 @@ public class City extends Place {
         }
     }
 
-    public boolean isDirectControlled() {
-        return directControlled;
-    }
 }

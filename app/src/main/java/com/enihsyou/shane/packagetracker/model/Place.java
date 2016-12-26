@@ -6,6 +6,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class Place {
+    boolean directControlled;
+
+    public boolean isDirectControlled() {
+        return directControlled;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
     protected String name;
     protected String code;
     public ArrayList<? extends Place> nexts = new ArrayList<>();

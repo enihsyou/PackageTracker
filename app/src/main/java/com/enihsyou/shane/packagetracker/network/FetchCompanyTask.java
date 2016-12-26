@@ -1,6 +1,7 @@
 package com.enihsyou.shane.packagetracker.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
+    private static final String TAG = "FetchCompanyTask";
     private AddNewPackageActivity mActivity;
     private Kuaidi100Fetcher fetcher;
 
@@ -35,7 +37,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
     @Override
     protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
         if (companyAutoSearchResult == null) return; // 如果获取失败
-
+        Log.d(TAG, "onPostExecute: 公司自动完成 "+ companyAutoSearchResult);
         ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter = mActivity.getSpinnerAdapter();
 
         spinnerAdapter.clear(); //先清除，再添加

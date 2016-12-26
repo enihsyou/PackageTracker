@@ -3,8 +3,6 @@ package com.enihsyou.shane.packagetracker.model;
 import java.util.ArrayList;
 
 public class Province extends Place {
-    private boolean directControlled;
-
     public Province(String name, String code, ArrayList<? extends Place> nexts) {
         super(name, code, nexts);
     }
@@ -12,10 +10,6 @@ public class Province extends Place {
     public Province(String name, String code, ArrayList<? extends Place> nexts, boolean directControlled) {
         super(name, code, nexts);
         this.directControlled = directControlled;
-    }
-
-    public boolean isDirectControlled() {
-        return directControlled;
     }
 
     public void populate() {
@@ -30,4 +24,14 @@ public class Province extends Place {
         }
         this.nexts = nexts;
     }
+
+    // public void populate(Province parent) {
+    //     this.nexts = parent.nexts;
+    //     ArrayList<Area> result = new ArrayList<>();
+    //     for (Place next : this.nexts) {
+    //         String fullName = TextUtils.join("-", new String[]{parent.name, next.name, next.name});
+    //         result.add(new Area(next.name, next.code, null, fullName));
+    //     }
+    //     this.nexts = result;
+    // }
 }

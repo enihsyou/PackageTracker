@@ -47,7 +47,7 @@ public class LocationGetter extends Service implements LocationListener {
             (LocationManager) context.getSystemService(LOCATION_SERVICE);
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        Log.d(TAG, String.format(Locale.getDefault(), "isPositionable: 当前 GPS: %b Network: %b", gps, network));
+        Log.d(TAG, String.format(Locale.getDefault(), "isPositionable: 当前设备服务状态 GPS: %b Network: %b", gps, network));
         return gps || network;
     }
 

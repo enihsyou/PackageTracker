@@ -25,7 +25,7 @@ public class CurrentLocationResult {
         return String.format(Locale.getDefault(), "Status: %s Sizes: %d", status, results.size());
     }
 
-    static class Results {
+    public static class Results {
         @SerializedName("address_components")
         List<AddressComponents> addresses;
         @SerializedName("formatted_address")
@@ -51,11 +51,17 @@ public class CurrentLocationResult {
         }
     }
 
-    static class AddressComponents {
+    public static class AddressComponents {
         @SerializedName("long_name")
         String longName;
         @SerializedName("short_name")
         String shortName;
+        @SerializedName("types")
+        List<String> types;
+
+        public List<String> getTypes() {
+            return types;
+        }
 
         public String getLongName() {
             return longName;

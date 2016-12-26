@@ -18,17 +18,19 @@ import android.view.View;
 import android.widget.*;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.helper.LocationGetter;
-import com.enihsyou.shane.packagetracker.model.City;
-import com.enihsyou.shane.packagetracker.model.Place;
-import com.enihsyou.shane.packagetracker.model.Province;
+import com.enihsyou.shane.packagetracker.model.*;
 import com.enihsyou.shane.packagetracker.network.FetchLocationTask;
+import com.enihsyou.shane.packagetracker.network.FetchPriceTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SendNewPackageActivity extends AppCompatActivity {
     private static final String TAG = "SendNewPackageActivity";
     private static final int REQUEST_LOCATION_SERVICE = 254;
+    public boolean isReady;
     private Location mLocation;
     private FloatingActionButton mFab;
     private Button mPriceButton;
@@ -38,7 +40,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
     private Spinner mCitySendSpinner;
     private Spinner mCityReceiveSpinner;
     private Spinner mAreaSendSpinner;
-    private Spinner mAreaRecieveSpinner;
+    private Spinner mAreaReceiveSpinner;
     private EditText mWeight;
     private LocationGetter mLocationGetter;
 
@@ -55,17 +57,18 @@ public class SendNewPackageActivity extends AppCompatActivity {
         mCitySendSpinner = (Spinner) findViewById(R.id.city_spinner_send);
         mCityReceiveSpinner = (Spinner) findViewById(R.id.city_spinner_receive);
         mAreaSendSpinner = (Spinner) findViewById(R.id.area_spinner_send);
-        mAreaRecieveSpinner = (Spinner) findViewById(R.id.area_spinner_receive);
+        mAreaReceiveSpinner = (Spinner) findViewById(R.id.area_spinner_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: 点击FAB，更新位置信息");
+                Log.v(TAG, "onClick: 点击FAB，更新位置信息");
                 requestUpdateLocation();
             }
         });
-        Province[] provinces = new Province[]{
+        /*设置下拉框们···*/
+        final Province[] provinces = new Province[]{
             new Province("北京", "110000", null, true),
             new Province("天津", "120000", null, true),
             new Province("上海", "310000", null, true),
@@ -101,130 +104,150 @@ public class SendNewPackageActivity extends AppCompatActivity {
             new Province("香港", "810000", null),
             new Province("澳门", "820000", null)
         };
-        ArrayAdapter provinceArrayAdapter =
-            new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, provinces);
+        ArrayAdapter<? extends Place> provinceArrayAdapter =
+            new ArrayAdapter<>(this, R.layout.spinner_textview, provinces);
+        ArrayAdapter<? extends Place> defaultNoneAdapter =
+            new ArrayAdapter<>(this, R.layout.spinner_textview,
+                new Place[]{new Province("请选择", "00", null)});
+        provinceArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        defaultNoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mProvinceSendSpinner.setAdapter(provinceArrayAdapter);
         mProvinceReceiveSpinner.setAdapter(provinceArrayAdapter);
+        mCitySendSpinner.setAdapter(defaultNoneAdapter);
+        mCityReceiveSpinner.setAdapter(defaultNoneAdapter);
+        mAreaSendSpinner.setAdapter(defaultNoneAdapter);
+        mAreaReceiveSpinner.setAdapter(defaultNoneAdapter);
         mProvinceSendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressWarnings("Duplicates")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Province selectedItem = (Province) parent.getSelectedItem();
+                if (selectedItem.isDirectControlled()) {
+                    mCitySendSpinner.setAdapter(mProvinceSendSpinner.getAdapter());
+                    mCitySendSpinner.setSelection(position);
+                    return;
+                }
                 selectedItem.populate();
-                Place[] cities = new City[selectedItem.nexts.size()];
-                cities = selectedItem.nexts.toArray(cities);
+                ArrayList<? extends Place> cities = selectedItem.nexts;
                 ArrayAdapter cityArrayAdapter =
-                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, cities);
+                    new ArrayAdapter<>(SendNewPackageActivity.this, R.layout.spinner_textview, cities);
+                cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mCitySendSpinner.setAdapter(cityArrayAdapter);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                TextView emptyView = new TextView(parent.getContext());
-                emptyView.setText("请选择");
-                parent.setEmptyView(emptyView);
+                Log.d(TAG, "onNothingSelected: province send");
             }
         });
         mProvinceReceiveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressWarnings("Duplicates")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Province selectedItem = (Province) parent.getSelectedItem();
+                if (selectedItem.isDirectControlled()) {
+                    mCityReceiveSpinner.setAdapter(mProvinceReceiveSpinner.getAdapter());
+                    mCityReceiveSpinner.setSelection(position);
+                    return;
+                }
                 selectedItem.populate();
-                Place[] cities = selectedItem.nexts.toArray(new Place[selectedItem.nexts.size()]);
+                ArrayList<? extends Place> cities = selectedItem.nexts;
                 ArrayAdapter cityArrayAdapter =
-                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, cities);
+                    new ArrayAdapter<>(SendNewPackageActivity.this, R.layout.spinner_textview, cities);
+                cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mCityReceiveSpinner.setAdapter(cityArrayAdapter);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                TextView emptyView = new TextView(parent.getContext());
-                emptyView.setText("请选择");
-                parent.setEmptyView(emptyView);
+                Log.d(TAG, "onNothingSelected: province receive");
             }
         });
         mCitySendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressWarnings("Duplicates")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                City selectedItem = (City) parent.getSelectedItem();
-                try {
-                    if (selectedItem.isDirectControlled()) {
-                        selectedItem.populate((Province) mProvinceSendSpinner.getSelectedItem());
-                    } else { selectedItem.populate(); }
-                } catch (IOException e) {
-                    Log.e(TAG, "onItemSelected: ", e);// TODO: 2016/12/24 错误
+                Place selectedItem;
+                try { //当前省份是直辖市
+                    Province item = (Province) parent.getSelectedItem();
+                    mProvinceSendSpinner.setSelection(position);
+                    selectedItem = new City(item.getName(), item.getCode(), item.nexts);
+                } catch (ClassCastException e) {
+                    City item = (City) parent.getSelectedItem();
+                    selectedItem = item;
                 }
-                Place[] areas =
-                    selectedItem.nexts.toArray(new Place[selectedItem.nexts.size()]);
-                ArrayAdapter cityArrayAdapter =
-                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, areas);
+                try {
+                    selectedItem.populate();
+                } catch (IOException e) {
+                    e.printStackTrace();// FIXME: 2016/12/27
+                }
+                ArrayList<? extends Place> areas = selectedItem.nexts;
+                int originPosition = mAreaSendSpinner.getSelectedItemPosition();
+                ArrayAdapter<? extends Place> cityArrayAdapter =
+                    new ArrayAdapter<>(SendNewPackageActivity.this, R.layout.spinner_textview, areas);
+                cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mAreaSendSpinner.setAdapter(cityArrayAdapter);
-                if (selectedItem.isDirectControlled()) mAreaSendSpinner.setSelection(position);
+                mAreaSendSpinner.setSelection(originPosition);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                TextView emptyView = new TextView(parent.getContext());
-                emptyView.setText("请选择");
-                parent.setEmptyView(emptyView);
+                Log.d(TAG, "onNothingSelected: city send");
             }
         });
         mCityReceiveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressWarnings("Duplicates")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                City selectedItem = (City) parent.getSelectedItem();
+                Place selectedItem;
+                try { //当前省份是直辖市
+                    Province item = (Province) parent.getSelectedItem();
+                    mProvinceReceiveSpinner.setSelection(position);
+                    selectedItem = item;
+                } catch (ClassCastException e) {
+                    City item = (City) parent.getSelectedItem();
+                    selectedItem = item;
+                }
                 try {
-                    if (selectedItem.isDirectControlled()) {
-                        selectedItem.populate((Province) mProvinceReceiveSpinner.getSelectedItem());
-                    } else { selectedItem.populate(); }
-                } catch (IOException e) {// TODO: 2016/12/24 错误
-                    Log.e(TAG, "onItemSelected: ", e);
+                    selectedItem.populate();
+                } catch (IOException e) {
+                    e.printStackTrace();// FIXME: 2016/12/27
                 }
-                Place[] areas = new Place[selectedItem.nexts.size()];
-                areas = selectedItem.nexts.toArray(areas);
-                ArrayAdapter cityArrayAdapter =
-                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, areas);
-                mAreaRecieveSpinner.setAdapter(cityArrayAdapter);
-                if (selectedItem.isDirectControlled()) mAreaRecieveSpinner.setSelection(position);
+                ArrayList<? extends Place> areas = selectedItem.nexts;
+                int originPosition = mAreaReceiveSpinner.getSelectedItemPosition();
+                ArrayAdapter<? extends Place> cityArrayAdapter =
+                    new ArrayAdapter<>(SendNewPackageActivity.this, R.layout.spinner_textview, areas);
+                cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mAreaReceiveSpinner.setAdapter(cityArrayAdapter);
+                mAreaReceiveSpinner.setSelection(originPosition);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                TextView emptyView = new TextView(parent.getContext());
-                emptyView.setText("请选择");
-                parent.setEmptyView(emptyView);
+                Log.d(TAG, "onNothingSelected: city receive");
             }
         });
-        mAreaSendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*启动的时候 获取地点信息*/
+        requestUpdateLocation();
+        /*处理 查询价格按钮*/
+        mWeight.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (((City) mCitySendSpinner.getSelectedItem()).isDirectControlled()) {
-                    mCitySendSpinner.setSelection(position);
-                }
-            }
+            public void onClick(View v) {
+                Area item = (Area) mAreaSendSpinner.getSelectedItem();
+                String locationSend = item.getFullName();
+                String locationSendCode = item.getCode();
+                String locationReceive = item.getFullName();
+                String locationReceiveCode = item.getCode();
+                String weight = mWeight.getText().toString();
+                Log.d(TAG, String.format("onClick: 搜索价格: 从 %s %s，到 %s %s，重量 %s ",
+                    locationSend, locationSendCode, locationReceive, locationReceiveCode, weight));
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        mAreaRecieveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (((City) mCityReceiveSpinner.getSelectedItem()).isDirectControlled()) {
-                    mCityReceiveSpinner.setSelection(position);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                new FetchPriceTask(SendNewPackageActivity.this);
             }
         });
     }
 
-    private void requestUpdateLocation() {
+    public void requestUpdateLocation() {
         if (resolveLocationPermission()) {
             getLocation();
             new FetchLocationTask(this).execute(mLocation.getLatitude(), mLocation.getLongitude());
@@ -242,14 +265,15 @@ public class SendNewPackageActivity extends AppCompatActivity {
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         int NetworkPermissionCheck =
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        Log.d(TAG, String.format(Locale.getDefault(), "resolveLocationPermission: 权限 GPS: %b Network %b", GpsPermissionCheck, NetworkPermissionCheck));
+        Log.d(TAG, String.format(Locale.getDefault(), "resolveLocationPermission: 当前定位权限 GPS: %b Network %b", GpsPermissionCheck, NetworkPermissionCheck));
 
         if (GpsPermissionCheck != PackageManager.PERMISSION_GRANTED
             || NetworkPermissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "resolveLocationPermission: 需要向用户请求定位权限");
             /*如果需要向用户解释请求权限的原因*/
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                Log.d(TAG, "resolveLocationPermission: 向用户请求定位权限");
+                Log.d(TAG, "resolveLocationPermission: 需要向解释请求定位权限的原因");
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
                 alertDialog.setTitle("没有定位权限");
@@ -281,6 +305,66 @@ public class SendNewPackageActivity extends AppCompatActivity {
         mLocationGetter = new LocationGetter(this);
         mLocation = mLocationGetter.getCurrent();
         Log.d(TAG, String.format(Locale.getDefault(), "getLocation: 获得当前 经度: %f 纬度: %f", mLocation.getLongitude(), mLocation.getLatitude()));
+    }
+
+    public void updateLocationSelection(CurrentLocationResult current) {
+        List<CurrentLocationResult.AddressComponents> addresses = null;
+        /*检测当前地点是否有区级地址*/
+        for (CurrentLocationResult.Results results : current.getResults()) {
+            List<String> types = results.getTypes();
+            if (types.contains("sublocality_level_1")) {
+                addresses = results.getAddresses();
+                break;
+            }
+        }
+        if (addresses == null) throw new NullPointerException("没有找到地点");
+        String third = "", second = "", first = "";
+        /*获取各级地址名字*/
+        for (CurrentLocationResult.AddressComponents components : addresses) {
+            List<String> types = components.getTypes();
+            if (types.contains("sublocality_level_1")) {
+                third = components.getShortName();
+                continue;
+            }
+            if (types.contains("locality")) {
+                second = components.getShortName();
+                continue;
+            }
+            if (types.contains("administrative_area_level_1")) {
+                first = components.getShortName();
+                break;
+            }
+        }
+        Log.d(TAG, String.format("updateLocationSelection: 解析地址结果 %s %s %s", first, second, third));
+        /*设置下拉框*/
+        boolean isFirstSucceed = false, isSecondSucceed = false, isThirdSucceed = false;
+        isFirstSucceed = setSpinner(mProvinceSendSpinner, first);
+        if (isFirstSucceed) isSecondSucceed = setSpinner(mCitySendSpinner, second);
+        if (isSecondSucceed) isThirdSucceed = setSpinner(mAreaSendSpinner, third);
+        if (!isThirdSucceed) {
+            Log.d(TAG, String.format("updateLocationSelection: 失败 定位 设置下拉框 %s %s %s···",
+                first, second, third));
+        } else {
+            Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s %s %s···",
+                first, second, third));
+            Toast.makeText(this, String.format("定位到%s", ((Area) mAreaSendSpinner.getSelectedItem()).getFullName()), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private <T extends Place> boolean setSpinner(Spinner spinner, String compare) {
+        ArrayAdapter<? extends Place> provinceAdapter =
+            (ArrayAdapter<? extends Place>) spinner.getAdapter();
+        for (int i = 0; i < provinceAdapter.getCount(); i++) {
+            T item = (T) provinceAdapter.getItem(i);
+            if (compare.contains(item.getName())) {
+                spinner.setSelection(i);
+                if (spinner.getOnItemSelectedListener() != null) {
+                    spinner.getOnItemSelectedListener().onItemSelected(spinner, spinner, i, spinner.getItemIdAtPosition(i));
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

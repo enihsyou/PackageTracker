@@ -7,6 +7,7 @@ import com.enihsyou.shane.packagetracker.model.NetworkCityResult;
 import java.io.IOException;
 
 public class FetchAreaTask extends AsyncTask<String ,Void, NetworkCityResult[]>{
+    private static final String TAG = "FetchAreaTask";
     private Kuaidi100Fetcher fetcher;
 
     public FetchAreaTask() {
@@ -16,7 +17,6 @@ public class FetchAreaTask extends AsyncTask<String ,Void, NetworkCityResult[]>{
     @Override
     protected NetworkCityResult[] doInBackground(String... params) {
         if (params.length != 1) throw new IllegalArgumentException("参数有一个");
-
         String queryNumber = params[0];
         if (queryNumber != null && !queryNumber.isEmpty()) {
             try {

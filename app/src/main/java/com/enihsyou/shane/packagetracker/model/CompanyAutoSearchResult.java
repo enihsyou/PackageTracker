@@ -7,8 +7,8 @@ import java.util.Locale;
  * 输入框输入快递单号时的自动完成提示结果
  */
 public class CompanyAutoSearchResult {
-    private String number;
-    private List<CompanyEachAutoSearch> companies;
+    private String number; //单号
+    private List<CompanyEachAutoSearch> companies; //响应公司
 
     public String getNumber() {
         return number;

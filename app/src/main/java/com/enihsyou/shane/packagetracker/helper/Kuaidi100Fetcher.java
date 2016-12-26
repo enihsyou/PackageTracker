@@ -20,6 +20,7 @@ public class Kuaidi100Fetcher {
     private static final String SEARCH_PACKAGE = "query";
     private static final String SEARCH_NETWORK = "network/www/searchapi.do";
     private static final String SEARCH_COURIER = "courier";
+    private static final String SEARCH_PRICE = "order/unlogin/price.do";
 
     private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
 
@@ -33,6 +34,29 @@ public class Kuaidi100Fetcher {
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         client = new OkHttpClient();
+    }
+    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight) throws
+        IOException {
+        HttpUrl request = buildPriceSearchUrl();
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("startPlace", startPlaceCode)
+            .addEncoded("endPlace", endPlaceCode)
+            .addEncoded("street", street)
+            .addEncoded("weight", weight)
+            .build();
+        Response response = getJson(request, requestBody);
+        return parsePriceJson(response);
+    }
+
+    private PriceSearchResult parsePriceJson(Response response) {
+        return gson.fromJson(response.body().charStream(), PriceSearchResult.class);
+    }
+
+    @NonNull
+    private static HttpUrl buildPriceSearchUrl() {
+        return ENDPOINT.newBuilder()
+            .addPathSegment(SEARCH_PRICE)
+            .build();
     }
 
     /**

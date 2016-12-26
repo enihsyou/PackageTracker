@@ -33,7 +33,8 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
     @Override
     protected void onPostExecute(CurrentLocationResult currentLocationResult) {
         if (currentLocationResult == null) return;
-        Log.d(TAG, "onPostExecute: " + currentLocationResult);
-        Log.d(TAG, "onPostExecute: " + currentLocationResult.getResults());
+        Log.d(TAG, "onPostExecute: Google定位返回结果 " + currentLocationResult);
+        Log.d(TAG, "onPostExecute: Google定位详细信息 " + currentLocationResult.getResults());
+        mActivity.updateLocationSelection(currentLocationResult);
     }
 }

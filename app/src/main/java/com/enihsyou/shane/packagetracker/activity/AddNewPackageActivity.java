@@ -72,7 +72,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(TAG, "afterTextChanged: 在单号框输入字符 " + s.toString());
+                Log.v(TAG, "afterTextChanged: 在单号框输入字符 " + s.toString());
                 new FetchCompanyTask(AddNewPackageActivity.this).execute(s.toString());
             }
         });
@@ -80,7 +80,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.d(TAG, "onEditorAction: 点击键盘确认键");
+                    Log.v(TAG, "onEditorAction: 点击键盘确认键");
 
                     new FetchPackageTask(AddNewPackageActivity.this)
                             .execute(mNumberEdit.getText().toString(),
@@ -108,7 +108,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
         mConform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: 按下面板确认按钮");
+                Log.v(TAG, "onClick: 按下面板确认按钮");
                 if (mNumberEdit.getText().toString().equals("")){
                    mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
                 }
