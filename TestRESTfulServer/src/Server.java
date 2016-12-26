@@ -128,6 +128,8 @@ class UserServer implements Runnable {
                 Scanner sin = new Scanner(Server.UserTotalNumber);
                 TotalNumber = sin.nextInt();
                 data2back.setId(TotalNumber);
+                data2back.setUsername(data.getUsermail());
+                data2back.setRemarks("Welcome to SpicyChicken PackageTracker! ");
                 Server.letFileExist(Paths.get(Server.userdatapath
                     + String.format("/User-%08d.txt", data2back.getId())).toFile());
                 bw = Files.newBufferedWriter(Paths.get(Server.userdatapath
