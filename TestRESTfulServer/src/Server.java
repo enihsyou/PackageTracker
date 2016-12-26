@@ -213,7 +213,7 @@ class json {
 
 class UserData {
     @SerializedName("head")
-    private int head = -1;
+    private int head ;
     @SerializedName("id")
     private int id = -1;
     @SerializedName("user_name")
