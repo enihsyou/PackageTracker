@@ -66,10 +66,10 @@ public class SendNewPackageActivity extends AppCompatActivity {
             }
         });
         Province[] provinces = new Province[]{
-            new Province("北京", "110000", null),
-            new Province("天津", "120000", null),
-            new Province("上海", "310000", null),
-            new Province("重庆", "500000", null),
+            new Province("北京", "110000", null, true),
+            new Province("天津", "120000", null, true),
+            new Province("上海", "310000", null, true),
+            new Province("重庆", "500000", null, true),
             new Province("广东", "440000", null),
             new Province("浙江", "330000", null),
             new Province("江苏", "320000", null),
@@ -105,7 +105,6 @@ public class SendNewPackageActivity extends AppCompatActivity {
             new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, provinces);
         mProvinceSendSpinner.setAdapter(provinceArrayAdapter);
         mProvinceReceiveSpinner.setAdapter(provinceArrayAdapter);
-
         mProvinceSendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -120,7 +119,9 @@ public class SendNewPackageActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                TextView emptyView = new TextView(parent.getContext());
+                emptyView.setText("请选择");
+                parent.setEmptyView(emptyView);
             }
         });
         mProvinceReceiveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -136,22 +137,71 @@ public class SendNewPackageActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                TextView emptyView = new TextView(parent.getContext());
+                emptyView.setText("请选择");
+                parent.setEmptyView(emptyView);
             }
         });
         mCitySendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressWarnings("Duplicates")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 City selectedItem = (City) parent.getSelectedItem();
                 try {
-                    selectedItem.populate();
-                } catch (IOException e) {// TODO: 2016/12/24 错误
-                    e.printStackTrace();
+                    if (selectedItem.isDirectControlled()) {
+                        selectedItem.populate((Province) mProvinceSendSpinner.getSelectedItem());
+                    } else { selectedItem.populate(); }
+                } catch (IOException e) {
+                    Log.e(TAG, "onItemSelected: ", e);// TODO: 2016/12/24 错误
                 }
-                Place[] areas = selectedItem.nexts.toArray(new Place[selectedItem.nexts.size()]);
+                Place[] areas =
+                    selectedItem.nexts.toArray(new Place[selectedItem.nexts.size()]);
                 ArrayAdapter cityArrayAdapter =
                     new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, areas);
                 mAreaSendSpinner.setAdapter(cityArrayAdapter);
+                if (selectedItem.isDirectControlled()) mAreaSendSpinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                TextView emptyView = new TextView(parent.getContext());
+                emptyView.setText("请选择");
+                parent.setEmptyView(emptyView);
+            }
+        });
+        mCityReceiveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressWarnings("Duplicates")
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                City selectedItem = (City) parent.getSelectedItem();
+                try {
+                    if (selectedItem.isDirectControlled()) {
+                        selectedItem.populate((Province) mProvinceReceiveSpinner.getSelectedItem());
+                    } else { selectedItem.populate(); }
+                } catch (IOException e) {// TODO: 2016/12/24 错误
+                    Log.e(TAG, "onItemSelected: ", e);
+                }
+                Place[] areas = new Place[selectedItem.nexts.size()];
+                areas = selectedItem.nexts.toArray(areas);
+                ArrayAdapter cityArrayAdapter =
+                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, areas);
+                mAreaRecieveSpinner.setAdapter(cityArrayAdapter);
+                if (selectedItem.isDirectControlled()) mAreaRecieveSpinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                TextView emptyView = new TextView(parent.getContext());
+                emptyView.setText("请选择");
+                parent.setEmptyView(emptyView);
+            }
+        });
+        mAreaSendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (((City) mCitySendSpinner.getSelectedItem()).isDirectControlled()) {
+                    mCitySendSpinner.setSelection(position);
+                }
             }
 
             @Override
@@ -159,20 +209,12 @@ public class SendNewPackageActivity extends AppCompatActivity {
 
             }
         });
-        mCityReceiveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mAreaRecieveSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                City selectedItem = (City) parent.getSelectedItem();
-                try {
-                    selectedItem.populate();
-                } catch (IOException e) {// TODO: 2016/12/24 错误
-                    e.printStackTrace();
+                if (((City) mCityReceiveSpinner.getSelectedItem()).isDirectControlled()) {
+                    mCityReceiveSpinner.setSelection(position);
                 }
-                Place[] areas = new Place[selectedItem.nexts.size()];
-                areas = selectedItem.nexts.toArray(areas);
-                ArrayAdapter cityArrayAdapter =
-                    new ArrayAdapter<>(SendNewPackageActivity.this, android.R.layout.simple_spinner_dropdown_item, areas);
-                mAreaRecieveSpinner.setAdapter(cityArrayAdapter);
             }
 
             @Override
