@@ -17,10 +17,10 @@ public class ClientTest {
 
             UserData data = new UserData();
             data.setHead(2);
-            data.setUsermail("145204");
-            data.setPassword("123");
-            // data.addPackage(new KUAIDI("2","2"));
-            data.addPackage(new KUAIDI("0","666"));
+            data.setUsermail("465484@qq.com");
+            data.setPassword("1235");
+            data.addPackage(new KUAIDI("2","43"));
+            data.addPackage(new KUAIDI("3","266"));
 
             Gson gson = new GsonBuilder().create();
             inputString = gson.toJson(data, UserData.class);

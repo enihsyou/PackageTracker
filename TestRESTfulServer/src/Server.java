@@ -79,7 +79,7 @@ class UserServer implements Runnable {
     UserServer(Socket Client) {
         this.Client = Client;
         System.out.println(
-            LocalDate.now().toString() + " -> " + LocalTime.now() + " -> " + "\t用户接入："
+            LocalDate.now().toString() + "-" + LocalTime.now() + " -> " + "\t用户接入："
                 + Client.getInetAddress());
     }
 
@@ -108,7 +108,7 @@ class UserServer implements Runnable {
             in.close();
             out.close();
             System.out.println(
-                LocalDate.now().toString() + " -> " + LocalTime.now() + " -> " + "From client("
+                LocalDate.now().toString() + "-" + LocalTime.now() + " -> " + "From client("
                     + Client.getInetAddress() + "):"
                     + String.format("HEAD:%s\tUSERMAIL:%s\tRESULT:%s\t\tLIST:%s", data.getHead(), data.getUsermail(), data2back.isSuccessful(), data2back.getPackageList()));
         } catch (Exception e) {
