@@ -30,9 +30,7 @@ import static java.nio.file.StandardOpenOption.APPEND;
  * *******************************************
  */
 
-// TODO: 2016/12/24 0024 编写使用说明
 // TODO: 2016/12/24 0024 添加快递的方法
-// TODO: 2016/12/24 0024 文件写入问题
 
 public class Server {
     static String datapath = "./Data";
