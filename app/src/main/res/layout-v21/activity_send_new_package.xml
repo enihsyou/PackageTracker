@@ -46,17 +46,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:orientation="horizontal">
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/province_spinner_send"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/city_spinner_send"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/area_spinner_send"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -72,17 +72,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:orientation="horizontal">
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/province_spinner_receive"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/city_spinner_receive"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
-                        <android.support.v7.widget.AppCompatSpinner
+                        <Spinner
                             android:id="@+id/area_spinner_receive"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
