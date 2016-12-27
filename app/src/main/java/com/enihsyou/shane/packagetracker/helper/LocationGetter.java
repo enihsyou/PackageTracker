@@ -33,12 +33,13 @@ public class LocationGetter extends Service implements LocationListener {
         for (String provider : providers) {
             Location location = locationManager.getLastKnownLocation(provider);
             if (location == null) {
-                // locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
             } else if (current == null || location.getAccuracy() < current.getAccuracy()) {
                 current = location;
             }
         }
         if (current == null) Toast.makeText(mContext, "未获得位置信息", Toast.LENGTH_SHORT).show();
+        else locationManager.removeUpdates(this);
         return current;
     }
 
@@ -57,13 +58,11 @@ public class LocationGetter extends Service implements LocationListener {
     }
 
     public double getLatitude() {
-        if (current == null) getLocation();
-        return current.getLatitude();
+        return getCurrent().getLatitude();
     }
 
     public double getLongitude() {
-        if (current == null) getLocation();
-        return current.getLongitude();
+        return getCurrent().getLongitude();
     }
 
     @Override

@@ -30,7 +30,6 @@ import java.util.Locale;
 public class SendNewPackageActivity extends AppCompatActivity {
     private static final String TAG = "SendNewPackageActivity";
     private static final int REQUEST_LOCATION_SERVICE = 254;
-    public boolean isReady;
     private Location mLocation;
     private FloatingActionButton mFab;
     private Button mPriceButton;
@@ -231,7 +230,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
         /*启动的时候 获取地点信息*/
         requestUpdateLocation();
         /*处理 查询价格按钮*/
-        mWeight.setOnClickListener(new View.OnClickListener() {
+        mPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Area item = (Area) mAreaSendSpinner.getSelectedItem();
@@ -318,6 +317,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
                 break;
             }
         }
+
         if (addresses == null) throw new NullPointerException("没有找到地点");
         String third = "", second = "", first = "";
         /*获取各级地址名字*/

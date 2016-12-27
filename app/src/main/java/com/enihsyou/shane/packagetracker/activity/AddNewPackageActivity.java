@@ -19,6 +19,7 @@ import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
 import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
 import com.enihsyou.shane.packagetracker.network.FetchCompanyTask;
 import com.enihsyou.shane.packagetracker.network.FetchPackageTask;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 
@@ -81,10 +82,9 @@ public class AddNewPackageActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.v(TAG, "onEditorAction: 点击键盘确认键");
-
                     new FetchPackageTask(AddNewPackageActivity.this)
-                            .execute(mNumberEdit.getText().toString(),
-                                    ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
+                        .execute(mNumberEdit.getText().toString(),
+                            ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
                     return true;
                 }
                 return false;
@@ -100,8 +100,9 @@ public class AddNewPackageActivity extends AppCompatActivity {
         }
         //添加视图适配器
         spinnerAdapter = new ArrayAdapter<>(this,
-                R.layout.spinner_dropdown_item,
-                spinnerItems);
+            R.layout.spinner_dropdown_item,
+            spinnerItems);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(spinnerAdapter);
 
         /*设置确认按钮的监听器*/
@@ -109,23 +110,25 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "onClick: 按下面板确认按钮");
-                if (mNumberEdit.getText().toString().equals("")){
-                   mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
+                if (mNumberEdit.getText().toString().isEmpty()) {
+                    mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
                 }
                 new FetchPackageTask(AddNewPackageActivity.this)
-                        .execute(mNumberEdit.getText().toString(),
-                                ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
+                    .execute(mNumberEdit.getText().toString(),
+                        ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
             }
         });
 
         /*拍照按钮*/
+        final IntentIntegrator intent = new IntentIntegrator(this);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         boolean canTakePhoto = captureImage.resolveActivity(getPackageManager()) != null;
         mTakePicture.setEnabled(canTakePhoto);
         mTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(captureImage, 0);
+                intent.initiateScan();
+                // startActivityForResult(intent, 0);
             }
         });
     }
@@ -134,10 +137,10 @@ public class AddNewPackageActivity extends AppCompatActivity {
         View view = getCurrentFocus();
         if (view == null) return;
         InputMethodManager mInputMethodManager =
-                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
-                InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            InputMethodManager.RESULT_UNCHANGED_SHOWN);
         view.clearFocus();
     }
 }

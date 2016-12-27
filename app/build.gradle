@@ -39,5 +39,8 @@ dependencies {
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'me.grantland:autofittextview:0.2.1'
-    testCompile 'junit:junit:4.12' 
+    testCompile 'junit:junit:4.12'
+    compile 'com.google.zxing:core:3.3.0'
+    compile 'com.google.zxing:android-integration:3.3.0'
+    compile 'com.google.zxing:android-core:3.3.0'
 }
