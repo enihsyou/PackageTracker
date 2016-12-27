@@ -1,6 +1,10 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.test;
 
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
+import com.enihsyou.shane.packagetracker.model.CompanyAutoSearchResult;
+import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
+import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
+import com.enihsyou.shane.packagetracker.model.TimeSearchResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +12,6 @@ import static org.junit.Assert.*;
 
 public class Kuaidi100FetcherTest {
     private Kuaidi100Fetcher fetcher;
-
 
     @Before
     public void setUp() throws Exception {
@@ -44,5 +47,14 @@ public class Kuaidi100FetcherTest {
         assertNotNull(result);
         assertEquals("成功获取", result.getStatus(), 200);
         assertTrue("获取到列表", result.getNetLists().size() > 0);
+    }
+
+    @Test
+    public void timeResult() throws Exception {
+        String from = "311414";
+        String to = "320508";
+        TimeSearchResult result = fetcher.timeResult(from, to);
+        assertNotNull(result);
+        assertEquals("长度检测",result.getEntries().size(), 10);
     }
 }

@@ -245,6 +245,12 @@ public class SendNewPackageActivity extends AppCompatActivity {
                 new FetchPriceTask(SendNewPackageActivity.this);
             }
         });
+        mTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     public void requestUpdateLocation() {

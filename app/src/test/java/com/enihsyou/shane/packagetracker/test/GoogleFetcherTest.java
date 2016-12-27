@@ -1,6 +1,7 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.test;
 
 import com.enihsyou.shane.packagetracker.helper.GoogleFetcher;
+import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +21,6 @@ public class GoogleFetcherTest {
         String lng = "121.5566791";
         CurrentLocationResult result = fetcher.locationResult(lng, lat);
         assertNotNull(result);
-        assertEquals("OK", result.status, "OK");
+        assertEquals("OK", result.getStatus(), "OK");
     }
 }

@@ -2,12 +2,17 @@ package com.enihsyou.shane.packagetracker.helper;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.*;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.*;
 import okhttp3.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -17,11 +22,13 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class Kuaidi100Fetcher {
+    private static final String TAG = "Kuaidi100Fetcher";
     private static final String SEARCH_NUMBER = "autonumber/autoComNum";
     private static final String SEARCH_PACKAGE = "query";
     private static final String SEARCH_NETWORK = "network/www/searchapi.do";
     private static final String SEARCH_COURIER = "courier";
     private static final String SEARCH_PRICE = "order/unlogin/price.do";
+    private static final String SEARCH_TIME = "time";
 
     private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
 
@@ -38,29 +45,6 @@ public class Kuaidi100Fetcher {
             .connectTimeout(3, TimeUnit.SECONDS)
             .writeTimeout(3, TimeUnit.SECONDS)
             .readTimeout(3, TimeUnit.SECONDS)
-            .build();
-    }
-    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight) throws
-        IOException {
-        HttpUrl request = buildPriceSearchUrl();
-        RequestBody requestBody = new FormBody.Builder()
-            .addEncoded("startPlace", startPlaceCode)
-            .addEncoded("endPlace", endPlaceCode)
-            .addEncoded("street", street)
-            .addEncoded("weight", weight)
-            .build();
-        Response response = getJson(request, requestBody);
-        return parsePriceJson(response);
-    }
-
-    private PriceSearchResult parsePriceJson(Response response) {
-        return gson.fromJson(response.body().charStream(), PriceSearchResult.class);
-    }
-
-    @NonNull
-    private static HttpUrl buildPriceSearchUrl() {
-        return ENDPOINT.newBuilder()
-            .addPathSegment(SEARCH_PRICE)
             .build();
     }
 
@@ -100,6 +84,89 @@ public class Kuaidi100Fetcher {
         return detailContainer;
     }
 
+    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight) throws
+        IOException {
+        HttpUrl request = buildPriceSearchUrl();
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("startPlace", startPlaceCode)
+            .addEncoded("endPlace", endPlaceCode)
+            .addEncoded("street", street)
+            .addEncoded("weight", weight)
+            .build();
+        Response response = getJson(request, requestBody);
+        return parsePriceJson(response);
+    }
+
+    @NonNull
+    private static HttpUrl buildPriceSearchUrl() {
+        return ENDPOINT.newBuilder()
+            .addPathSegment(SEARCH_PRICE)
+            .build();
+    }
+
+    /**
+     * 获得json POST
+     *
+     * @param url 传递过来的URL路径
+     *
+     * @return 获得的Json文本
+     */
+    private Response getJson(HttpUrl url, RequestBody body) throws IOException {
+        Request request = new Request.Builder()
+            .url(url)
+            .addHeader("content-type", "application/x-www-form-urlencoded")
+            .post(body).build();
+        return client.newCall(request).execute();
+    }
+
+    private PriceSearchResult parsePriceJson(Response response) {
+        return gson.fromJson(response.body().charStream(), PriceSearchResult.class);
+    }
+
+    public TimeSearchResult timeResult(String from, String to) throws IOException {
+        HttpUrl request = buildTimeSearchUrl(from, to);
+        Response response = getHtml(request);
+        return parseTimeHtml(response);
+    }
+
+    @NonNull
+    private static HttpUrl buildTimeSearchUrl(String from, String to) {
+        return ENDPOINT.newBuilder()
+            .addPathSegment(SEARCH_TIME)
+            .addEncodedPathSegment(String.format("timecost_%s_%s", from, to))
+            .build();
+    }
+
+    private Response getHtml(HttpUrl url) throws IOException {
+        Request request = new Request.Builder()
+            .url(url).build();
+        return client.newCall(request).execute();
+    }
+
+    private TimeSearchResult parseTimeHtml(Response response) {
+        try {
+            Document document = Jsoup.parse(response.body().string());
+            Elements parent =
+                document.select("body > div.container.w960 > div.col_1 > table > tbody > tr");
+            TimeSearchResult result = new TimeSearchResult();
+            for (int i = 1; i < parent.size(); i++) {
+                Element element = parent.get(i);
+                String companyName = element.child(0).text();
+                String companyLogoUrl = element.child(0).child(0).attr("src");
+                String time = element.child(1).text();
+                result.addEntries(companyName, companyLogoUrl, time);
+            }
+            return result;
+
+
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "parseTimeHtml: 解析失败 API改了？？？", e);
+        } catch (IOException e) {
+            Log.wtf(TAG, "parseTimeHtml: ···解析HTML失败", e);
+        }
+        return null;
+    }
+
     /**
      * 获取网点信息
      *
@@ -131,21 +198,6 @@ public class Kuaidi100Fetcher {
         return ENDPOINT.newBuilder()
             .addPathSegments(SEARCH_NETWORK)
             .build();
-    }
-
-    /**
-     * 获得json POST
-     *
-     * @param url 传递过来的URL路径
-     *
-     * @return 获得的Json文本
-     */
-    private Response getJson(HttpUrl url, RequestBody body) throws IOException {
-        Request request = new Request.Builder()
-            .url(url)
-            .addHeader("content-type", "application/x-www-form-urlencoded")
-            .post(body).build();
-        return client.newCall(request).execute();
     }
 
     private NetworkSearchResult parseNetworkJson(Response response) {
