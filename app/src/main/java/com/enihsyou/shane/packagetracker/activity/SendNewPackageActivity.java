@@ -47,6 +47,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate: 启动发送新快递");
         setContentView(R.layout.activity_send_new_package);
 
         mFab = (FloatingActionButton) findViewById(R.id.fab_send_new);

@@ -31,10 +31,10 @@ public class LocationGetter extends Service implements LocationListener {
             (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         for (String provider : providers) {
-            locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
             Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null) continue;
-            if (current == null || location.getAccuracy() < current.getAccuracy()) {
+            if (location == null) {
+                // locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            } else if (current == null || location.getAccuracy() < current.getAccuracy()) {
                 current = location;
             }
         }

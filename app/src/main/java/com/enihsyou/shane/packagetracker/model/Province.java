@@ -24,14 +24,4 @@ public class Province extends Place {
         }
         this.nexts = nexts;
     }
-
-    // public void populate(Province parent) {
-    //     this.nexts = parent.nexts;
-    //     ArrayList<Area> result = new ArrayList<>();
-    //     for (Place next : this.nexts) {
-    //         String fullName = TextUtils.join("-", new String[]{parent.name, next.name, next.name});
-    //         result.add(new Area(next.name, next.code, null, fullName));
-    //     }
-    //     this.nexts = result;
-    // }
 }

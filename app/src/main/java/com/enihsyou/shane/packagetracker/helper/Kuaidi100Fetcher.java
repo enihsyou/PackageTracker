@@ -14,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Kuaidi100Fetcher {
     private static final String SEARCH_NUMBER = "autonumber/autoComNum";
@@ -33,7 +34,11 @@ public class Kuaidi100Fetcher {
         gson = new GsonBuilder().create();
         jsonParser = new JsonParser();
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        client = new OkHttpClient();
+        client = new OkHttpClient.Builder()
+            .connectTimeout(3, TimeUnit.SECONDS)
+            .writeTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(3, TimeUnit.SECONDS)
+            .build();
     }
     public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight) throws
         IOException {
