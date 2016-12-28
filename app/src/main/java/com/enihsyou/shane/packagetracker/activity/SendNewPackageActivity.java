@@ -2,6 +2,7 @@ package com.enihsyou.shane.packagetracker.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,23 +12,30 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TimingLogger;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPriceTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchTimeTask;
+import com.enihsyou.shane.packagetracker.dialog.ChooseAreaDialog;
 import com.enihsyou.shane.packagetracker.helper.LocationGetter;
 import com.enihsyou.shane.packagetracker.model.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class SendNewPackageActivity extends AppCompatActivity {
+public class SendNewPackageActivity extends AppCompatActivity implements
+    ChooseAreaDialog.ChooseListener {
     public static final Province[] PROVINCES = {
         new Province("北京", "110000", null, true),
         new Province("天津", "120000", null, true),
@@ -71,19 +79,30 @@ public class SendNewPackageActivity extends AppCompatActivity {
     private FloatingActionButton mFab;
     private Button mPriceButton;
     private Button mTimeButton;
-    private Spinner mProvinceSendSpinner;
-    private Spinner mProvinceReceiveSpinner;
-    private Spinner mCitySendSpinner;
-    private Spinner mCityReceiveSpinner;
-    private Spinner mAreaSendSpinner;
-    private Spinner mAreaReceiveSpinner;
+    private Button mProvinceSendButton;
+    private Button mProvinceReceiveButton;
+    private Button mCitySendButton;
+    private Button mCityReceiveButton;
+    private Button mAreaSendButton;
+    private Button mAreaReceiveButton;
     private EditText mWeight;
     private LocationGetter mLocationGetter;
-    private ProvinceSelectedListener lProvinceSend;
-    private ProvinceSelectedListener lProvinceReceive;
-    private CitySelectedListener lCitySend;
-    private CitySelectedListener lCityReceive;
+    private Area sendChoose;
+    private Area receiveChoose;
+    private DialogFragment mDialogFragment;
+    private ButtonListener mProvinceSendClick;
+    private ButtonListener mProvinceReceiveClick;
+    private ButtonListener mCitySendClick;
+    private ButtonListener mCityReceiveClick;
+    private ButtonListener mAreaSendClick;
+    private ButtonListener mAreaReceiveClick;
 
+    private int provinceSendIndex;
+    private int provinceReceiveIndex;
+    private int citySendIndex;
+    private int cityReceiveIndex;
+    private int areaSendIndex;
+    private int areaReceiveIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,67 +113,50 @@ public class SendNewPackageActivity extends AppCompatActivity {
         mFab = (FloatingActionButton) findViewById(R.id.fab_send_new);
         mPriceButton = (Button) findViewById(R.id.button_search_price);
         mTimeButton = (Button) findViewById(R.id.button_search_time);
-        mProvinceSendSpinner = (Spinner) findViewById(R.id.province_spinner_send);
-        mProvinceReceiveSpinner = (Spinner) findViewById(R.id.province_spinner_receive);
-        mCitySendSpinner = (Spinner) findViewById(R.id.city_spinner_send);
-        mCityReceiveSpinner = (Spinner) findViewById(R.id.city_spinner_receive);
-        mAreaSendSpinner = (Spinner) findViewById(R.id.area_spinner_send);
-        mAreaReceiveSpinner = (Spinner) findViewById(R.id.area_spinner_receive);
+        mProvinceSendButton = (Button) findViewById(R.id.btn_province_send);
+        mProvinceReceiveButton = (Button) findViewById(R.id.btn_province_receive);
+        mCitySendButton = (Button) findViewById(R.id.btn_city_send);
+        mCityReceiveButton = (Button) findViewById(R.id.btn_city_receive);
+        mAreaSendButton = (Button) findViewById(R.id.btn_area_send);
+        mAreaReceiveButton = (Button) findViewById(R.id.btn_area_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG, "onClick: 点击FAB，更新位置信息");
-                requestUpdateLocation();
+                requestUpdateLocation(true);
             }
         });
-        /*设置下拉框们···*/
-        ArrayAdapter<? extends Place> provinceArrayAdapter =
-            new ArrayAdapter<>(this, R.layout.spinner_textview, PROVINCES);
-        // ArrayAdapter<? extends Place> defaultNoneAdapter =
-        //     new ArrayAdapter<>(this, R.layout.spinner_textview,
-        //         new Place[]{new Province("请选择", "00", null)});
-        provinceArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // defaultNoneAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mProvinceSendSpinner.setAdapter(provinceArrayAdapter);
-        // mProvinceReceiveSpinner.setAdapter(provinceArrayAdapter);
-        // mCitySendSpinner.setAdapter(defaultNoneAdapter);
-        // mCityReceiveSpinner.setAdapter(defaultNoneAdapter);
-        // mAreaSendSpinner.setAdapter(defaultNoneAdapter);
-        // mAreaReceiveSpinner.setAdapter(defaultNoneAdapter);
-        lProvinceSend = new ProvinceSelectedListener(mProvinceSendSpinner, mCitySendSpinner);
-        // lProvinceReceive =
-        //     new ProvinceSelectedListener(mProvinceReceiveSpinner, mCityReceiveSpinner);
-        lCitySend =
-            new CitySelectedListener(mCitySendSpinner, mProvinceSendSpinner, mAreaSendSpinner);
-        // lCityReceive =
-        //     new CitySelectedListener(mCityReceiveSpinner, mProvinceReceiveSpinner, mAreaReceiveSpinner);
+        mProvinceSendClick =
+            new ButtonListener(DialogType.SEND_PROVINCE, mProvinceSendButton, "选择寄件省份", new ArrayList<Place>(Arrays.asList(PROVINCES)));
+        mProvinceSendButton.setOnClickListener(mProvinceSendClick);
+        mProvinceReceiveClick =
+            new ButtonListener(DialogType.RECEIVE_PROVINCE, mProvinceReceiveButton, "选择收件省份", new ArrayList<Place>(Arrays.asList(PROVINCES)));
+        mProvinceReceiveButton.setOnClickListener(mProvinceReceiveClick);
+        mCitySendClick =
+            new ButtonListener(DialogType.SEND_CITY, mCitySendButton, "选择寄件城市", new ArrayList<Place>());
+        mCitySendButton.setOnClickListener(
+            mCitySendClick);
+        mCityReceiveClick =
+            new ButtonListener(DialogType.RECEIVE_CITY, mCityReceiveButton, "选择收件城市", new ArrayList<Place>());
+        mCityReceiveButton.setOnClickListener(
+            mCityReceiveClick);
+        mAreaSendClick =
+            new ButtonListener(DialogType.SEND_AREA, mAreaSendButton, "选择寄件地区", new ArrayList<Place>());
+        mAreaSendButton.setOnClickListener(
+            mAreaSendClick);
+        mAreaReceiveClick =
+            new ButtonListener(DialogType.RECEIVE_AREA, mAreaReceiveButton, "选择收件地区", new ArrayList<Place>());
+        mAreaReceiveButton.setOnClickListener(
+            mAreaReceiveClick);
 
-        mProvinceSendSpinner.setOnItemSelectedListener(lProvinceSend);
-        // mProvinceReceiveSpinner.setOnItemSelectedListener(lProvinceReceive);
-        mCitySendSpinner.setOnItemSelectedListener(lCitySend);
-        // mCityReceiveSpinner.setOnItemSelectedListener(lCityReceive);
-        mAreaSendSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG,
-                    "Area onItemSelected() called with: parent = [" + parent + "], view = [" + view
-                        + "], position = [" + position + "], id = [" + id + "]"
-                        + parent.getSelectedItem());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         /*处理 查询价格按钮*/
         mPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Area itemFrom = (Area) mAreaSendSpinner.getSelectedItem();
-                Area itemTo = (Area) mAreaReceiveSpinner.getSelectedItem();
+                Area itemFrom = sendChoose;
+                Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
                 String locationSendCode = itemFrom.getCode();
                 String locationReceive = itemTo.getFullName();
@@ -171,8 +173,8 @@ public class SendNewPackageActivity extends AppCompatActivity {
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Area itemFrom = (Area) mAreaSendSpinner.getSelectedItem();
-                Area itemTo = (Area) mAreaReceiveSpinner.getSelectedItem();
+                Area itemFrom = sendChoose;
+                Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
                 String locationSendCode = itemFrom.getCode();
                 String locationReceive = itemTo.getFullName();
@@ -185,12 +187,12 @@ public class SendNewPackageActivity extends AppCompatActivity {
             }
         });
         /*启动的时候 获取地点信息*/
-        requestUpdateLocation();
+        requestUpdateLocation(false);
     }
 
-    public void requestUpdateLocation() {
+    public void requestUpdateLocation(boolean update) {
         if (resolveLocationPermission()) {
-            getLocation();
+            getLocation(update);
             new FetchLocationTask(this).execute(mLocation.getLatitude(), mLocation.getLongitude());
         } else {
             Log.d(TAG, "requestUpdateLocation: 没有定位能力");
@@ -215,24 +217,7 @@ public class SendNewPackageActivity extends AppCompatActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 Log.d(TAG, "resolveLocationPermission: 需要向解释请求定位权限的原因");
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setTitle("没有定位权限");
-                alertDialog.setMessage("我们需要定位权限来获取你的当前位置，按确定跳转到设置页面。");
-                // alertDialog.setTitle("没有有效的定位手段");
-                // alertDialog.setMessage("请启用GPS或者网络定位");
-                alertDialog.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        SendNewPackageActivity.this.startActivity(intent);
-                    }
-                });
-                alertDialog.setNegativeButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                showPermissionAlert(this);
             }
 
             ActivityCompat.requestPermissions(this, new String[]{
@@ -242,10 +227,28 @@ public class SendNewPackageActivity extends AppCompatActivity {
         return LocationGetter.isPositionable(this);
     }
 
-    private void getLocation() {
-        mLocationGetter = new LocationGetter(this);
+    private void getLocation(boolean update) {
+        mLocationGetter = new LocationGetter(this, update);
         mLocation = mLocationGetter.getCurrent();
         Log.d(TAG, String.format(Locale.getDefault(), "getLocation: 获得当前 经度: %f 纬度: %f", mLocation.getLongitude(), mLocation.getLatitude()));
+    }
+
+    private static void showPermissionAlert(final Context context) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle("没有定位权限");
+        alertDialog.setMessage("我们需要定位权限来获取你的当前位置，按确定跳转到设置页面。");
+        alertDialog.setPositiveButton(context.getResources().getString(R.string.go_setting), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                context.startActivity(intent);
+            }
+        });
+        alertDialog.setNegativeButton(context.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
     }
 
     public void updateLocationSelection(CurrentLocationResult current) {
@@ -286,20 +289,35 @@ public class SendNewPackageActivity extends AppCompatActivity {
             Log.d(TAG, String.format("updateLocationSelection: 失败 定位 设置下拉框 %s %s %s",
                 first, second, third));
         } else {
-            mProvinceSendSpinner.setSelection(indexFirst, true);
-            if (!PROVINCES[indexFirst].isDirectControlled()) {
-                mCitySendSpinner.setSelection(indexSecond, true);
-            }
-            final int position = indexThird;
-            mAreaSendSpinner.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mAreaSendSpinner.setSelection(position, true);
-                }
-            }, 50);
-            Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s-%s-%s",
-                first, second, third));
-            Toast.makeText(this, String.format("定位到%s-%s-%s", first, second, third), Toast.LENGTH_SHORT).show();
+            // try {
+            //     mProvinceSendButton.setSelection(indexFirst, true);
+            //     if (!PROVINCES[indexFirst].isDirectControlled()) {
+            //         // lCitySend.setSecondSpinnerAdapter(PROVINCES[indexFirst].nexts, indexThird);
+            //         mCitySendButton.setSelection(indexSecond, true);
+            //         // final int position = indexSecond;
+            //         // mCitySendButton.post(new Runnable() {
+            //         //     @Override
+            //         //     public void run() {
+            //         //         mCitySendButton.setSelection(position, true);
+            //         //     }
+            //         // });
+            //     }
+            //     mAreaSendButton.setSelection(indexThird);
+            //
+            //     // final int position = indexThird;
+            //     // mAreaSendButton.postDelayed(new Runnable() {
+            //     //     @Override
+            //     //     public void run() {
+            //     //         mAreaSendButton.setSelection(position, true);
+            //     //     }
+            //     // }, 80);
+            //     Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s-%s-%s",
+            //         first, second, third));
+            //     Toast.makeText(this, String.format("定位到%s-%s-%s", first, second, third), Toast.LENGTH_SHORT).show();
+            // } catch (IndexOutOfBoundsException e) {
+            //     Log.e(TAG, "updateLocationSelection: confirmed bug", e);
+            // }
+
         }
     }
 
@@ -370,94 +388,173 @@ public class SendNewPackageActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_LOCATION_SERVICE: {
                 try {
-                    getLocation();
+                    getLocation(true);
                     new FetchLocationTask(this).execute(mLocation.getLatitude(), mLocation.getLongitude());
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "onRequestPermissionsResult: e", e);
+                    Log.e(TAG, "onRequestPermissionsResult: ", e);
                 }
             }
         }
     }
 
-    public static class ProvinceSelectedListener implements AdapterView.OnItemSelectedListener {
-        private Spinner mSpinner;
-        private Spinner mSecondSpinner;
-
-        ProvinceSelectedListener(Spinner spinner, Spinner citySpinner) {
-            mSpinner = spinner;
-            mSecondSpinner = citySpinner;
+    @Override
+    public void OnItemClick(DialogFragment dialog, DialogType type, int which, Place place) {
+        Log.d(TAG, "OnItemClick: " + place);
+        Province provinceItem;
+        City cityItem;
+        Area areaItem;
+        switch (type) {
+            case SEND_PROVINCE:
+                setProvinceSendButton(which, (Province) place);
+                break;
+            case SEND_CITY:
+                setCitySendButton(which, (City) place);
+                break;
+            case SEND_AREA:
+                setAreaSendButton(which, (Area) place);
+                break;
+            case RECEIVE_PROVINCE:
+                setProvinceReceiveButton(which, (Province) place);
+                break;
+            case RECEIVE_CITY:
+                setCityReceiveButton(which, (City) place);
+                break;
+            case RECEIVE_AREA:
+                setAreaReceiveButton(which, (Area) place);
+                break;
+            default:
+                Log.wtf(TAG, "WTF " + type);
         }
+        // setButtons();
+    }
 
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Log.d(TAG,
-                "Province onItemSelected() called with: parent = [" + parent + "], view = [" + view
-                    + "], position = [" + position + "], id = [" + id + "]"
-                    + parent.getSelectedItem());
-            if (view == null) return;
-            Province selectedItem = (Province) parent.getSelectedItem();
-            selectedItem.populate();
-            setSecondSpinnerAdapter(selectedItem.nexts, position);
+    @Override
+    public void OnDialogPositiveClick(DialogFragment dialog) {
+        Log.d(TAG, "OnDialogPositiveClick: ok");
+    }
+
+    @Override
+    public void OnDialogNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "OnDialogNegativeClick: cancel");
+    }
+
+    private void setAreaReceiveButton(int which, Area place) {
+        mAreaReceiveButton.setText(place.getName());
+        place.populate();
+        areaReceiveIndex = which;
+        receiveChoose = place;
+    }
+
+    private void setCityReceiveButton(int which, City place) {
+        mCityReceiveButton.setText(place.getName());
+        place.populate();
+        cityReceiveIndex = which;
+        mAreaReceiveClick.setList(PROVINCES[provinceReceiveIndex].nexts.get(which).nexts);
+        if (place.isDirectControlled()) {
+            mCityReceiveButton.setEnabled(false);
+            setProvinceReceiveButton(which, PROVINCES[which]);
+        } else {
+            mCityReceiveButton.setEnabled(true);
         }
+        setAreaReceiveButton(0, (Area) place.nexts.get(0));
+    }
 
-        private void setSecondSpinnerAdapter(List<? extends Place> cities, int secondPosition) {
-            Log.d(TAG, "Province setSecondSpinnerAdapter() called with: cities = [" + cities + "]");
-
-            ArrayAdapter<? extends Place> cityArrayAdapter =
-                new ArrayAdapter<>(mSecondSpinner.getContext(), R.layout.spinner_textview, cities);
-            cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mSecondSpinner.setAdapter(cityArrayAdapter);
-            //如果当前选择省份是直辖市，直接禁用城市选择
-            if (((Place) mSpinner.getSelectedItem()).isDirectControlled()) {
-                mSecondSpinner.setEnabled(false);
-                mSecondSpinner.setSelection(secondPosition, true);
-            } else { mSecondSpinner.setEnabled(true); }
-
-            Log.d(TAG, "Province setSecondSpinnerAdapter: Done");
-        }
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            Log.d(TAG, "onNothingSelected: province");
+    private void setProvinceReceiveButton(int which, Province place) {
+        if (which == provinceReceiveIndex) return;
+        mProvinceReceiveButton.setText(place.getName());
+        place.populate();
+        provinceReceiveIndex = which;
+        mCityReceiveClick.setList(PROVINCES[which].nexts);
+        if (place.isDirectControlled()) {
+            mCityReceiveButton.setEnabled(false);
+            setCityReceiveButton(which, (City) place.nexts.get(0));
+        } else {
+            mCityReceiveButton.setEnabled(true);
+            setCityReceiveButton(0, (City) place.nexts.get(0));
         }
     }
 
-    public static class CitySelectedListener implements AdapterView.OnItemSelectedListener {
-        private Spinner mSpinner;
-        private Spinner mProvinceSpinner;
-        private Spinner mAreaSpinner;
+    private void setAreaSendButton(int which, Area place) {
+        mAreaSendButton.setText(place.getName());
+        place.populate();
+        citySendIndex = which;
+        sendChoose = place;
+    }
 
-        CitySelectedListener(Spinner spinner, Spinner provinceSpinner, Spinner areaSpinner) {
-            mSpinner = spinner;
-            mProvinceSpinner = provinceSpinner;
-            mAreaSpinner = areaSpinner;
+    private void setCitySendButton(int which, City place) {
+        mCitySendButton.setText(place.getName());
+        place.populate();
+        citySendIndex = which;
+        mAreaSendClick.setList(PROVINCES[provinceSendIndex].nexts.get(which).nexts);
+        if (place.isDirectControlled()) {
+            mCitySendButton.setEnabled(false);
+            setProvinceSendButton(which, PROVINCES[which]);
+        } else {
+            mCitySendButton.setEnabled(true);
+        }
+        setAreaSendButton(0, (Area) place.nexts.get(0));
+    }
+
+    private void setProvinceSendButton(int which, Province place) {
+        if (which == provinceSendIndex)return;
+        mProvinceSendButton.setText(place.getName());
+        place.populate();
+        provinceSendIndex = which;
+        mCitySendClick.setList(PROVINCES[which].nexts);
+        if (place.isDirectControlled()) {
+            mCitySendButton.setEnabled(false);
+            setCitySendButton(which, (City) place.nexts.get(0));
+        } else {
+            mCitySendButton.setEnabled(true);
+            setCitySendButton(0, (City) place.nexts.get(0));
+        }
+    }
+
+    private void setButtons() {
+        if (sendChoose != null) {
+            mProvinceSendButton.setText(sendChoose.getFirst());
+            mCitySendButton.setText(sendChoose.getSecond());
+            mAreaSendButton.setText(sendChoose.getName());
+        }
+        if (receiveChoose != null) {
+            mProvinceReceiveButton.setText(receiveChoose.getFirst());
+            mCityReceiveButton.setText(sendChoose.getSecond());
+            mAreaReceiveButton.setText(receiveChoose.getName());
+        }
+    }
+
+    public enum DialogType {
+        SEND_PROVINCE,
+        RECEIVE_PROVINCE,
+        SEND_CITY,
+        RECEIVE_CITY,
+        SEND_AREA,
+        RECEIVE_AREA
+    }
+
+    private class ButtonListener implements View.OnClickListener {
+        private FragmentManager mManager;
+        private String mTitle;
+        private ArrayList<Place> mList;
+        private DialogType mType;
+        private Button mButton;
+
+        public ButtonListener(DialogType type, Button button, String title, ArrayList<Place> list) {
+            mType = type;
+            mButton = button;
+            mManager = getSupportFragmentManager();
+            mTitle = title;
+            mList = list;
+        }
+
+        public void setList(ArrayList<Place> list) {
+            mList = list;
         }
 
         @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Log.d(TAG,
-                "City onItemSelected() called with: parent = [" + parent + "], view = [" + view
-                    + "], position = [" + position + "], id = [" + id + "]"
-                    + parent.getSelectedItem());
-            if (view == null) return;
-            City selectedItem = (City) parent.getSelectedItem();
-            if (selectedItem.populate(mAreaSpinner) == null) {
-                setSecondSpinnerAdapter(selectedItem.nexts);
-            }
-        }
-
-        private void setSecondSpinnerAdapter(List<? extends Place> areas) {
-            Log.d(TAG, "City setSecondSpinnerAdapter() called with: areas = [" + areas + "]");
-            ArrayAdapter<? extends Place> areaArrayAdapter =
-                new ArrayAdapter<>(mAreaSpinner.getContext(), R.layout.spinner_textview, areas);
-            areaArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mAreaSpinner.setAdapter(areaArrayAdapter);
-            Log.d(TAG, "City setSecondSpinnerAdapter: Done");
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            Log.d(TAG, "onNothingSelected: city");
+        public void onClick(View v) {
+            mDialogFragment = ChooseAreaDialog.newInstance(mType, mTitle, mList);
+            mDialogFragment.show(mManager, String.format("选择框 %s", mTitle));
         }
     }
 }

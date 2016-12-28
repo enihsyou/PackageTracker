@@ -12,11 +12,11 @@ import java.util.concurrent.ExecutionException;
 public class City extends Place {
     private static final String TAG = "City";
 
-    public City(String name, String code, ArrayList<? extends Place> nexts) {
+    public City(String name, String code, ArrayList<Place> nexts) {
         super(name, code, nexts);
     }
 
-    public City(String name, String code, ArrayList<? extends Place> nexts, boolean directControlled) {
+    public City(String name, String code, ArrayList<Place> nexts, boolean directControlled) {
         super(name, code, nexts);
         this.directControlled = directControlled;
     }

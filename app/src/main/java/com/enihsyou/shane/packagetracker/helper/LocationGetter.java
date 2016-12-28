@@ -20,9 +20,12 @@ public class LocationGetter extends Service implements LocationListener {
     private static final long MIN_TIME_BW_UPDATES = 0;
     private Context mContext;
     private Location current;
+    private boolean update;
 
-    public LocationGetter(Context context) {
+    public LocationGetter(Context context, boolean update) {
         mContext = context;
+        // this.update = update;
+        this.update = false;
         getLocation();
     }
 
@@ -32,13 +35,17 @@ public class LocationGetter extends Service implements LocationListener {
         List<String> providers = locationManager.getProviders(true);
         for (String provider : providers) {
             Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null) {
+            if (location == null || this.update) {
+                Log.i(TAG, String.format("getLocation: %s %s, request update", provider, location));
                 locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
             } else if (current == null || location.getAccuracy() < current.getAccuracy()) {
                 current = location;
             }
         }
-        if (current == null) Toast.makeText(mContext, "未获得位置信息", Toast.LENGTH_SHORT).show();
+        if (current == null) {
+            Toast.makeText(mContext, "未获得位置信息", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "getLocation: No location");
+        }
         else locationManager.removeUpdates(this);
         return current;
     }
@@ -52,13 +59,13 @@ public class LocationGetter extends Service implements LocationListener {
         return gps || network;
     }
 
+    public double getLatitude() {
+        return getCurrent().getLatitude();
+    }
+
     public Location getCurrent() {
         if (current == null) getLocation();
         return current;
-    }
-
-    public double getLatitude() {
-        return getCurrent().getLatitude();
     }
 
     public double getLongitude() {
@@ -91,4 +98,5 @@ public class LocationGetter extends Service implements LocationListener {
         Toast.makeText(mContext, "定位系统已停用", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onProviderDisabled: 定位系统已停用");
     }
+
 }

@@ -21,9 +21,9 @@ public abstract class Place {
 
     protected String name;
     protected String code;
-    public ArrayList<? extends Place> nexts;
+    public ArrayList<Place> nexts;
     protected static SparseArray<String> cities = new SparseArray<>();
-    protected Place(String name, String code, ArrayList<? extends Place> nexts) {
+    protected Place(String name, String code, ArrayList<Place> nexts) {
         this.name = name;
         this.code = code;
         this.nexts = (nexts == null) ? new ArrayList<Place>() : nexts;

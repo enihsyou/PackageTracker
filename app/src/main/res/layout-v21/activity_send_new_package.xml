@@ -45,22 +45,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
-                        <Spinner
-                            android:id="@+id/province_spinner_send"
-                            android:layout_width="0dp"
+                        android:orientation="vertical">
+                        <Button
+                            android:id="@+id/btn_province_send"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                        <Spinner
-                            android:id="@+id/city_spinner_send"
-                            android:layout_width="0dp"
+                            android:lines="1"
+                            android:text="@string/send_province" />
+                        <Button
+                            android:id="@+id/btn_city_send"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                        <Spinner
-                            android:id="@+id/area_spinner_send"
-                            android:layout_width="0dp"
+                            android:lines="1"
+                            android:text="@string/send_city" />
+                        <Button
+                            android:id="@+id/btn_area_send"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:lines="1"
+                            android:text="@string/send_area" />
                     </LinearLayout>
                     <!--下面收件地址-->
                     <TextView
@@ -71,22 +74,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
-                        <Spinner
-                            android:id="@+id/province_spinner_receive"
-                            android:layout_width="0dp"
+                        android:orientation="vertical">
+                        <Button
+                            android:id="@+id/btn_province_receive"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                        <Spinner
-                            android:id="@+id/city_spinner_receive"
-                            android:layout_width="0dp"
+                            android:lines="1"
+                            android:text="@string/receive_province" />
+                        <Button
+                            android:id="@+id/btn_city_receive"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                        <Spinner
-                            android:id="@+id/area_spinner_receive"
-                            android:layout_width="0dp"
+                            android:lines="1"
+                            android:text="@string/receive_city" />
+                        <Button
+                            android:id="@+id/btn_area_receive"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:lines="1"
+                            android:text="@string/receive_area" />
                     </LinearLayout>
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"

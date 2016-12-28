@@ -21,12 +21,12 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
     private Kuaidi100Fetcher fetcher;
     private Spinner spinner;
     private City selectedItem;
-    // private int positon;
+    // private int position;
 
     public FetchAreaTask(Spinner spinner, City selectedItem) {
         fetcher = new Kuaidi100Fetcher();
         this.spinner = spinner;
-        // this.positon = position;
+        // this.position = position;
         this.selectedItem = selectedItem;
     }
 
@@ -42,7 +42,7 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
         if (queryNumber != null && !("00".equals(queryNumber)) && !queryNumber.isEmpty()) {
             try {
                 List<NetworkCityResult> results = fetcher.networkCityResult(queryNumber);
-                ArrayList<Area> nexts = new ArrayList<>();
+                ArrayList<Place> nexts = new ArrayList<>();
                 for (NetworkCityResult result : results) {
                     String name = result.getName();
                     String code = result.getCode();

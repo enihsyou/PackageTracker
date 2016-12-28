@@ -5,18 +5,18 @@ import com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity;
 import java.util.ArrayList;
 
 public class Province extends Place {
-    public Province(String name, String code, ArrayList<? extends Place> nexts) {
+    public Province(String name, String code, ArrayList<Place> nexts) {
         super(name, code, nexts);
     }
 
-    public Province(String name, String code, ArrayList<? extends Place> nexts, boolean directControlled) {
+    public Province(String name, String code, ArrayList<Place> nexts, boolean directControlled) {
         super(name, code, nexts);
         this.directControlled = directControlled;
     }
 
     public void populate() {
         if (nexts.size() > 0) return;
-        ArrayList<City> nexts = new ArrayList<>();
+        ArrayList<Place> nexts = new ArrayList<>();
         if (isDirectControlled()) {
             for (int i = 0; i < SendNewPackageActivity.PROVINCES.length; i++) {
                 Province province = SendNewPackageActivity.PROVINCES[i];
