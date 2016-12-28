@@ -8,6 +8,7 @@ import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.*;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -143,7 +145,7 @@ public class Kuaidi100Fetcher {
         return client.newCall(request).execute();
     }
 
-    private TimeSearchResult parseTimeHtml(Response response) {
+    private static TimeSearchResult parseTimeHtml(Response response) {
         try {
             Document document = Jsoup.parse(response.body().string());
             Elements parent =
@@ -157,8 +159,6 @@ public class Kuaidi100Fetcher {
                 result.addEntries(companyName, companyLogoUrl, time);
             }
             return result;
-
-
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "parseTimeHtml: 解析失败 API改了？？？", e);
         } catch (IOException e) {
@@ -203,7 +203,7 @@ public class Kuaidi100Fetcher {
     private NetworkSearchResult parseNetworkJson(Response response) {
         NetworkSearchResult result =
             gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
-        for (NetworkNetListResult listResult : result.getNetLists()) {
+        for (NetworkSearchResult.NetworkNetListResult listResult : result.getNetLists()) {
             listResult.cleanHtml();
         }
         return result;
@@ -361,7 +361,7 @@ public class Kuaidi100Fetcher {
      *
      * @throws IOException 网络错误
      */
-    public NetworkCityResult[] networkCityResult(String cityCode) throws IOException {
+    public List<NetworkCityResult> networkCityResult(String cityCode) throws IOException {
         HttpUrl request = buildNetworkSearchUrl();
         RequestBody requestBody = new FormBody.Builder()
             .addEncoded("method", "getcounty")
@@ -371,7 +371,7 @@ public class Kuaidi100Fetcher {
         return parseNetworkCityJson(response);
     }
 
-    private NetworkCityResult[] parseNetworkCityJson(Response response) {
-        return gson.fromJson(response.body().charStream(), NetworkCityResult[].class);
+    private List<NetworkCityResult> parseNetworkCityJson(Response response) {
+        return gson.fromJson(response.body().charStream(), new TypeToken<List<NetworkCityResult>>(){}.getType());
     }
 }

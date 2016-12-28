@@ -94,9 +94,9 @@
     <string name="empty_package_number">Empty package number</string>
     <string name="search_hint">Search package</string>
     <string name="find_network">Find network</string>
-    <string name="send_address">寄件地址</string>
-    <string name="receive_address">寄件地址</string>
-    <string name="send_weight">包裹重量</string>
+    <string name="send_address">Send address</string>
+    <string name="receive_address">Receive address</string>
+    <string name="send_weight">Package weight (default set to 1kg)</string>
     <string name="button_confirm">Confirm</string>
     <string name="search_price">查价格</string>
     <string name="search_time">查时效</string>

@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.network;
+package com.enihsyou.shane.packagetracker.async_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -25,15 +25,16 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
 
     @Override
     protected PackageTrafficSearchResult doInBackground(String... params) {
-        if (params.length != 2) return null;
-
+        if (params.length != 2) throw new IllegalArgumentException("参数有两个");
         String queryNumber = params[0];
         String queryCompany = params[1];
         if (queryNumber != null && !queryNumber.isEmpty() && queryCompany != null
             && !queryCompany.isEmpty()) {
             try {
                 return fetcher.packageResult(queryNumber, queryCompany);
-            } catch (IOException ignored) {}// FIXME: 2016/12/9 错误提示
+            } catch (IOException e) {
+                Log.e(TAG, "doInBackground: 网络错误？", e);
+            }
         }
         return null;
     }
@@ -41,6 +42,7 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
     @Override
     protected void onPostExecute(PackageTrafficSearchResult searchResult) {
         if (searchResult == null) { // 如果获取不到正确的结果
+            Log.i(TAG, "onPostExecute: 失败 查询包裹 获得空结果");
             /*设置输入框检查器*/
             mActivity.getNumberEditWrapper().setError(mActivity
                 .getResources().getString(R.string.wrong_package_number));

@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.network;
+package com.enihsyou.shane.packagetracker.async_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -24,19 +24,22 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
     @Override
     protected CompanyAutoSearchResult doInBackground(String... params) {
         if (params.length != 1) throw new IllegalArgumentException("参数有一个");
-
         String queryNumber = params[0];
-        if (!"".equals(queryNumber)) {
+        if (queryNumber != null && !queryNumber.isEmpty()) {
             try {
                 return fetcher.companyResult(queryNumber);
-            } catch (IOException ignored) {}// FIXME: 2016/12/9 错误提示
+            } catch (IOException e){
+                Log.e(TAG, "doInBackground: 网络错误？", e);
+            }
         }
         return null;
     }
 
     @Override
     protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
-        if (companyAutoSearchResult == null) return; // 如果获取失败
+        if (companyAutoSearchResult == null) {
+            Log.i(TAG, "onPostExecute: 失败 查询公司自动完成 获得空结果");
+            return;}
         Log.d(TAG, "onPostExecute: 公司自动完成 "+ companyAutoSearchResult);
         ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter = mActivity.getSpinnerAdapter();
 

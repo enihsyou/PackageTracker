@@ -2,19 +2,18 @@ package com.enihsyou.shane.packagetracker.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class PriceSearchResult {
     @SerializedName("orderList")
     private OrderList orderList;
-    public List<PriceInfo> getPriceInfos(){
-        return Arrays.asList(orderList.priceInfo);
+    public List<PriceInfo> getPriceInfo(){
+        return orderList.priceInfo;
     }
 
     static class OrderList {
         @SerializedName("priceInfo")
-        private PriceInfo[] priceInfo;
+        private List<PriceInfo> priceInfo;
     }
 
     static class PriceInfo {

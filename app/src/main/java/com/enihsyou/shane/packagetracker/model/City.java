@@ -1,11 +1,12 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import android.os.AsyncTask;
 import android.util.Log;
-import com.enihsyou.shane.packagetracker.network.FetchAreaTask;
+import android.widget.Spinner;
+import com.enihsyou.shane.packagetracker.async_tasks.FetchAreaTask;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class City extends Place {
@@ -20,25 +21,18 @@ public class City extends Place {
         this.directControlled = directControlled;
     }
 
-    public void populate() throws IOException {
-        if (isDirectControlled()) {
-            Log.e(TAG, "populate: 在非直辖市下，用错方法");
-            return;
-        }
+    public void populate(){
+        if (nexts.size() > 0) return;
         try {
-            NetworkCityResult[] results = new FetchAreaTask().execute(this.code).get();
-            ArrayList<Area> nexts = new ArrayList<>();
-            for (NetworkCityResult result : results) {
-                String name = result.getName();
-                String code = result.getCode();
-                String fullName = result.getFullName();
-                nexts.add(new Area(name, code, null, fullName));
-            }
-            Collections.reverse(nexts);
-            this.nexts = nexts;
+            new FetchAreaTask(this).execute(this.code).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+            Log.e(TAG, String.format("populate: 获取%s地区列表被中断", name), e);
         }
     }
 
+    public AsyncTask<String, Void, List<NetworkCityResult>> populate(Spinner spinner) {
+        if (nexts.size() > 0) return null;
+        return new FetchAreaTask(spinner, this).execute(this.code);
+    }
 }

@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.network;
+package com.enihsyou.shane.packagetracker.async_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,13 +26,18 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
 
         try {
             return fetcher.locationResult(lat, lng);
-        } catch (IOException ignored) {} // FIXME: 2016/12/21 错误提示
+        } catch (IOException e) {
+            Log.e(TAG, "doInBackground: 网络错误？", e);
+        }
         return null;
     }
 
     @Override
     protected void onPostExecute(CurrentLocationResult currentLocationResult) {
-        if (currentLocationResult == null) return;
+        if (currentLocationResult == null) {
+            Log.i(TAG, "onPostExecute: 失败 地址反向解析 获得空结果");
+            return;
+        }
         Log.d(TAG, "onPostExecute: Google定位返回结果 " + currentLocationResult);
         Log.d(TAG, "onPostExecute: Google定位详细信息 " + currentLocationResult.getResults());
         mActivity.updateLocationSelection(currentLocationResult);

@@ -2,7 +2,6 @@ package com.enihsyou.shane.packagetracker.helper;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.TimingLogger;
 import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,9 +39,7 @@ public class GoogleFetcher {
     public CurrentLocationResult locationResult(String lat, String lng) throws IOException {
         HttpUrl request = buildLocationUrl(lat, lng);
         Log.v(TAG, "locationResult: 发送的请求地址 " + request);
-        TimingLogger timings = new TimingLogger(TAG, "locationResult" + request);
         Response response = getJson(request);
-        timings.dumpToLog();
         return parseLocationJson(response);
     }
 
