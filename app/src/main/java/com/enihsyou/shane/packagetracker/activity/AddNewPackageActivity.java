@@ -15,10 +15,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.enihsyou.shane.packagetracker.R;
-import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
-import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchCompanyTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPackageTask;
+import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
+import com.enihsyou.shane.packagetracker.model.EnumCompanyCodeString;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;

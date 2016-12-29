@@ -429,6 +429,23 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         }
     }
 
+    // @Override
+    // public void onConfigurationChanged(Configuration newConfig) {
+    //     super.onConfigurationChanged(newConfig);
+    //     switch (newConfig.orientation) {
+    //         case Configuration.ORIENTATION_LANDSCAPE:
+    //             Toast.makeText(this, "横屏", Toast.LENGTH_LONG).show();
+    //             Log.d(TAG, "onConfigurationChanged: 横屏");
+    //             break;
+    //         case Configuration.ORIENTATION_PORTRAIT:
+    //             Toast.makeText(this, "竖屏", Toast.LENGTH_LONG).show();
+    //             Log.d(TAG, "onConfigurationChanged: 竖屏");
+    //             break;
+    //         default:
+    //             Log.d(TAG, "onConfigurationChanged: 触发" );
+    //     }
+    // }
+
     @Override
     public void OnItemClick(DialogFragment dialog, DialogType type, int which, Place place) {
         Log.d(TAG, "OnItemClick: " + place);
