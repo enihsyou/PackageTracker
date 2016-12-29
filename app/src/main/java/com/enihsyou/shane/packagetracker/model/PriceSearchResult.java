@@ -6,27 +6,28 @@ import java.util.List;
 
 public class PriceSearchResult {
     @SerializedName("orderList")
-    private OrderList orderList;
-    public List<PriceInfo> getPriceInfo(){
-        return orderList.priceInfo;
+    private List<Entry> orderList;
+
+    public List<Entry> getPriceInfo() {
+        return orderList;
     }
 
-    static class OrderList {
+    static class Entry {
         @SerializedName("priceInfo")
-        private List<PriceInfo> priceInfo;
+        private PriceInfo priceInfo;
     }
 
     static class PriceInfo {
         @SerializedName("companyName")
-        private String companyName;
+        private String companyName; //公司名字
         @SerializedName("expressCode")
-        private String expressCode;
+        private String expressCode; //公司代号
         @SerializedName("tel")
-        private String telephone;
+        private String telephone;//联系电话
         @SerializedName("produceType")
-        private String productType;
+        private String productType;//快递类型
         @SerializedName("totalPrice")
-        private String totalPrice;
+        private String totalPrice;//总价
 
         public String getCompanyName() {
             return companyName;

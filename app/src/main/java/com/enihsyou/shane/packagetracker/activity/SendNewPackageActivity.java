@@ -19,9 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TimingLogger;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPriceTask;
@@ -105,6 +103,73 @@ public class SendNewPackageActivity extends AppCompatActivity implements
     private int areaSendIndex;
     private int areaReceiveIndex;
 
+    /**
+     * 遍历省份列表，找到匹配的对象序号
+     *
+     * @param compare 要对比的字符串
+     *
+     * @return 匹配的省份列表中的序号
+     */
+    private static int trySetProvinceButton(String compare) {
+        for (int i = 0; i < PROVINCES.length; i++) {
+            Province province = PROVINCES[i];
+            if (compare.contains(province.getName())) {
+                Log.d(TAG, "trySetProvinceButton: province " + i);
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 遍历城市列表，找到匹配的地区序号
+     *
+     * @param parentSelected 匹配的省份列表
+     * @param compare        对比的字符串
+     *
+     * @return 匹配的列表中的序号
+     */
+    private static int trySetCityButton(int parentSelected, String compare) {
+        if (parentSelected < 0) return -1;
+        Province parent = PROVINCES[parentSelected]; //匹配的省份
+        parent.populate(); //扩展下级列表
+        for (Place city : parent.nexts) {
+            if (compare.contains(city.getName())) {
+                Log.d(TAG, "trySetCityButton: city " + parent.nexts.indexOf(city));
+                return parent.nexts.indexOf(city);
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 遍历地区列表，找到匹配的序号
+     *
+     * @param parent1 省份序号
+     * @param parent2 城市序号
+     * @param compare 对比字符串
+     *
+     * @return 匹配的地区序号
+     */
+    private static int trySetAreaButton(int parent1, int parent2, String compare) {
+        if (parent1 < 0 || parent2 < 0) return -1;
+        City city = (City) PROVINCES[parent1].nexts.get(parent2);
+        city.populate();//扩展下级列表
+        for (Place place : city.nexts) {
+            if (compare.contains(place.getName())) {
+                Log.d(TAG, "trySetAreaButton: area " + city.nexts.indexOf(place));
+                return city.nexts.indexOf(place);
+            }
+        }
+        return -1;
+    }
+
+    private static Area calcChooseArea(int first, int second, int third) {
+        PROVINCES[first].populate();
+        PROVINCES[first].nexts.get(second).populate();
+        return (Area) PROVINCES[first].nexts.get(second).nexts.get(third);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +186,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mAreaSendButton = (Button) findViewById(R.id.btn_area_send);
         mAreaReceiveButton = (Button) findViewById(R.id.btn_area_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.list_container);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,75 +373,8 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * 遍历省份列表，找到匹配的对象序号
-     *
-     * @param compare 要对比的字符串
-     *
-     * @return 匹配的省份列表中的序号
-     */
-    private static int trySetProvinceButton(String compare) {
-        for (int i = 0; i < PROVINCES.length; i++) {
-            Province province = PROVINCES[i];
-            if (compare.contains(province.getName())) {
-                Log.d(TAG, "trySetProvinceButton: province " + i);
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 遍历城市列表，找到匹配的地区序号
-     *
-     * @param parentSelected 匹配的省份列表
-     * @param compare        对比的字符串
-     *
-     * @return 匹配的列表中的序号
-     */
-    private static int trySetCityButton(int parentSelected, String compare) {
-        if (parentSelected < 0) return -1;
-        Province parent = PROVINCES[parentSelected]; //匹配的省份
-        parent.populate(); //扩展下级列表
-        for (Place city : parent.nexts) {
-            if (compare.contains(city.getName())) {
-                Log.d(TAG, "trySetCityButton: city " + parent.nexts.indexOf(city));
-                return parent.nexts.indexOf(city);
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 遍历地区列表，找到匹配的序号
-     *
-     * @param parent1 省份序号
-     * @param parent2 城市序号
-     * @param compare 对比字符串
-     *
-     * @return 匹配的地区序号
-     */
-    private static int trySetAreaButton(int parent1, int parent2, String compare) {
-        if (parent1 < 0 || parent2 < 0) return -1;
-        City city = (City) PROVINCES[parent1].nexts.get(parent2);
-        city.populate();//扩展下级列表
-        for (Place place : city.nexts) {
-            if (compare.contains(place.getName())) {
-                Log.d(TAG, "trySetAreaButton: area " + city.nexts.indexOf(place));
-                return city.nexts.indexOf(place);
-            }
-        }
-        return -1;
-    }
-
     private void setButtons(Area sendChoose) {
         setButtons(sendChoose, receiveChoose);
-    }
-
-    private static Area calcChooseArea(int first, int second, int third) {
-        PROVINCES[first].populate();
-        PROVINCES[first].nexts.get(second).populate();
-        return (Area) PROVINCES[first].nexts.get(second).nexts.get(third);
     }
 
     @SuppressWarnings("Duplicates")
@@ -389,6 +388,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
             } else {
                 mCitySendButton.setEnabled(true);
             }
+            mAreaSendButton.setEnabled(true);
         }
         if (receiveChoose != null && !receiveChoose.getName().isEmpty()) {
             mProvinceReceiveButton.setText(receiveChoose.getFirst());
@@ -399,9 +399,8 @@ public class SendNewPackageActivity extends AppCompatActivity implements
             } else {
                 mCityReceiveButton.setEnabled(true);
             }
+            mAreaReceiveButton.setEnabled(true);
         }
-        mAreaSendButton.setEnabled(true);
-        mAreaReceiveButton.setEnabled(true);
     }
 
     @Override
@@ -466,7 +465,8 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         receiveChoose = calcChooseArea(provinceReceiveIndex, cityReceiveIndex, which);
         areaReceiveIndex = which;
         if (receiveChoose != place) {
-            throw new IllegalArgumentException("area receive not equal :"+receiveChoose+ "  "+place);
+            throw new IllegalArgumentException(
+                "area receive not equal :" + receiveChoose + "  " + place);
         }
     }
 

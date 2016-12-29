@@ -86,23 +86,27 @@ public class Kuaidi100Fetcher {
         return detailContainer;
     }
 
-    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight) throws
+    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, int currentPage) throws
         IOException {
-        HttpUrl request = buildPriceSearchUrl();
+        HttpUrl request = buildPriceSearchUrl(String.valueOf(currentPage), String.valueOf(15));
         RequestBody requestBody = new FormBody.Builder()
             .addEncoded("startPlace", startPlaceCode)
             .addEncoded("endPlace", endPlaceCode)
             .addEncoded("street", street)
             .addEncoded("weight", weight)
             .build();
+        Log.d(TAG, String.format("priceResult: 发送价格查询URL: %s 内容: %s %s %s %s", request, startPlaceCode, endPlaceCode, street, weight));
         Response response = getJson(request, requestBody);
         return parsePriceJson(response);
     }
 
     @NonNull
-    private static HttpUrl buildPriceSearchUrl() {
+    private static HttpUrl buildPriceSearchUrl(String currentPage, String pageSize) {
         return ENDPOINT.newBuilder()
-            .addPathSegment(SEARCH_PRICE)
+            .addPathSegments(SEARCH_PRICE)
+            .addQueryParameter("action", "searchOrderPrice")
+            .addQueryParameter("currentPage", currentPage)
+            .addQueryParameter("pageSize", pageSize)
             .build();
     }
 
@@ -127,6 +131,7 @@ public class Kuaidi100Fetcher {
 
     public TimeSearchResult timeResult(String from, String to) throws IOException {
         HttpUrl request = buildTimeSearchUrl(from, to);
+        Log.d(TAG, "priceResult: 发送时效查询URL " + request);
         Response response = getHtml(request);
         return parseTimeHtml(response);
     }
@@ -189,6 +194,7 @@ public class Kuaidi100Fetcher {
             .addEncoded("offset", offset)
             .addEncoded("size", size)
             .build();
+        Log.d(TAG, String.format("priceResult: 发送网点查询URL: %s 内容:%s", request, requestBody));
         Response response = getJson(request, requestBody);
         return parseNetworkJson(response);
     }
@@ -221,6 +227,7 @@ public class Kuaidi100Fetcher {
      */
     public PackageTrafficSearchResult packageResult(String number, String type) throws IOException {
         HttpUrl request = buildPackageSearchURL(number, type);
+        Log.d(TAG, "priceResult: 发送包裹查询URL " + request);
         Response response = getJson(request);
         return parsePackageJson(response);
     }
@@ -300,6 +307,7 @@ public class Kuaidi100Fetcher {
      */
     public CompanyAutoSearchResult companyResult(String number) throws IOException {
         HttpUrl request = buildNumberSearchURL(number);
+        Log.d(TAG, "priceResult: 发送公司查询URL: " + request);
         Response response = getJson(request);
         return parseCompanyJson(response);
     }
@@ -367,11 +375,12 @@ public class Kuaidi100Fetcher {
             .addEncoded("method", "getcounty")
             .addEncoded("city", cityCode)
             .build();
+        Log.d(TAG, String.format("priceResult: 发送三级城市查询URL: %s 内容: %s", request, requestBody));
         Response response = getJson(request, requestBody);
         return parseNetworkCityJson(response);
     }
 
     private List<NetworkCityResult> parseNetworkCityJson(Response response) {
-        return gson.fromJson(response.body().charStream(), new TypeToken<List<NetworkCityResult>>(){}.getType());
+        return gson.fromJson(response.body().charStream(), new TypeToken<List<NetworkCityResult>>() {}.getType());
     }
 }

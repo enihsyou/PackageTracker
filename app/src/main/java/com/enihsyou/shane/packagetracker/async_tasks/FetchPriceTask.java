@@ -26,7 +26,7 @@ public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> {
         String street = params[2];
         String weight = params[3];
         try {
-            return fetcher.priceResult(locationSendCode, locationReceiveCode, street, weight);
+            return fetcher.priceResult(locationSendCode, locationReceiveCode, street, weight, 1);
         } catch (IOException e) {
             Log.e(TAG, "doInBackground: 网络错误？", e);
             e.printStackTrace();
