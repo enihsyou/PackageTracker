@@ -5,7 +5,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 
 public abstract class Place {
-    protected static SparseArray<String> cities = new SparseArray<>();
+    static SparseArray<String> cities = new SparseArray<>();
 
     static {
         // cities.put(110100, "东城区");

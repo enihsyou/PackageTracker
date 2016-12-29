@@ -29,7 +29,7 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
         String queryNumber = params[0];
         if (queryNumber != null && !("00".equals(queryNumber)) && !queryNumber.isEmpty()) {
             try {
-                Log.v(TAG, "doInBackground: 启动网络服务获取地区列表 "+ queryNumber);
+                Log.v(TAG, "doInBackground: 启动网络服务获取县区列表 "+ queryNumber);
                 List<NetworkCityResult> results = fetcher.networkCityResult(queryNumber);
                 ArrayList<Place> nexts = new ArrayList<>();
                 for (NetworkCityResult result : results) {
@@ -51,7 +51,7 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
     @Override
     protected void onPostExecute(List<NetworkCityResult> networkCityResults) {
         if (networkCityResults == null) {
-            Log.i(TAG, "onPostExecute: 失败 查询第三级地区 获得空结果");
+            Log.i(TAG, "onPostExecute: 失败 查询第三级县区 获得空结果");
         }
     }
 }

@@ -13,9 +13,11 @@
         <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
+            android:minWidth="60dp"
             android:maxWidth="200dp"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
+            android:layout_marginEnd="@dimen/default_gap"
             android:contentDescription="@string/company_logo" />
         <LinearLayout
             android:layout_width="fill_parent"

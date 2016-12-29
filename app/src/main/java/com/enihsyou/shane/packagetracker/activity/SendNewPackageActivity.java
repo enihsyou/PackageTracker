@@ -1,191 +1,56 @@
 package com.enihsyou.shane.packagetracker.activity;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.util.Log;
-import android.util.TimingLogger;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPriceTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchTimeTask;
 import com.enihsyou.shane.packagetracker.dialog.ChooseAreaDialog;
-import com.enihsyou.shane.packagetracker.helper.LocationGetter;
-import com.enihsyou.shane.packagetracker.model.*;
+import com.enihsyou.shane.packagetracker.enums.DialogType;
+import com.enihsyou.shane.packagetracker.model.Area;
+import com.enihsyou.shane.packagetracker.model.City;
+import com.enihsyou.shane.packagetracker.model.Place;
+import com.enihsyou.shane.packagetracker.model.Province;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
-public class SendNewPackageActivity extends AppCompatActivity implements
-    ChooseAreaDialog.ChooseListener {
-    public static final Province[] PROVINCES = {
-        new Province("北京", "110000", null, true),
-        new Province("天津", "120000", null, true),
-        new Province("上海", "310000", null, true),
-        new Province("重庆", "500000", null, true),
-        new Province("广东", "440000", null),
-        new Province("浙江", "330000", null),
-        new Province("江苏", "320000", null),
-        new Province("山东", "370000", null),
-        new Province("河南", "410000", null),
-        new Province("河北", "130000", null),
-        new Province("福建", "350000", null),
-        new Province("湖北", "420000", null),
-        new Province("陕西", "610000", null),
-        new Province("辽宁", "210000", null),
-        new Province("四川", "510000", null),
-        new Province("安徽", "340000", null),
-        new Province("湖南", "430000", null),
-        new Province("山西", "140000", null),
-        new Province("黑龙江", "230000", null),
-        new Province("广西", "450000", null),
-        new Province("内蒙古", "150000", null),
-        new Province("吉林", "220000", null),
-        new Province("云南", "530000", null),
-        new Province("江西", "360000", null),
-        new Province("贵州", "520000", null),
-        new Province("甘肃", "620000", null),
-        new Province("新疆", "650000", null),
-        new Province("海南", "460000", null),
-        new Province("宁夏", "640000", null),
-        new Province("青海", "630000", null),
-        new Province("西藏", "540000", null),
-        new Province("台湾", "710000", null),
-        new Province("香港", "810000", null),
-        new Province("澳门", "820000", null)
-    };
+import static com.enihsyou.shane.packagetracker.model.Places.*;
+
+public class SendNewPackageActivity extends NeedLocationActivity implements
+    ChooseAreaDialog.OnChooseListener {
     private static final String TAG = "SendNewPackageActivity";
-    private static final int REQUEST_LOCATION_SERVICE = 254;
-    private static TimingLogger mTimings;
-    private Location mLocation;
-    private FloatingActionButton mFab;
+
     private Button mPriceButton;
     private Button mTimeButton;
-    private Button mProvinceSendButton;
     private Button mProvinceReceiveButton;
-    private Button mCitySendButton;
     private Button mCityReceiveButton;
-    private Button mAreaSendButton;
     private Button mAreaReceiveButton;
     private EditText mWeight;
-    private LocationGetter mLocationGetter;
-    private Area sendChoose;
     private Area receiveChoose;
-    private DialogFragment mDialogFragment;
-    private ButtonListener mProvinceSendClick;
-    private ButtonListener mProvinceReceiveClick;
-    private ButtonListener mCitySendClick;
-    private ButtonListener mCityReceiveClick;
-    private ButtonListener mAreaSendClick;
-    private ButtonListener mAreaReceiveClick;
-
-    private int provinceSendIndex;
-    private int provinceReceiveIndex;
-    private int citySendIndex;
-    private int cityReceiveIndex;
-    private int areaSendIndex;
-    private int areaReceiveIndex;
-
-    public GridLayout getGridLayout() {
-        return mGridLayout;
-    }
-
     private GridLayout mGridLayout;
 
-    /**
-     * 遍历省份列表，找到匹配的对象序号
-     *
-     * @param compare 要对比的字符串
-     *
-     * @return 匹配的省份列表中的序号
-     */
-    private static int trySetProvinceButton(String compare) {
-        for (int i = 0; i < PROVINCES.length; i++) {
-            Province province = PROVINCES[i];
-            if (compare.contains(province.getName())) {
-                Log.d(TAG, "trySetProvinceButton: province " + i);
-                return i;
-            }
-        }
-        return -1;
-    }
+    private OnAddressButtonClickListener mCityReceiveClick;
+    private OnAddressButtonClickListener mProvinceReceiveClick;
+    private OnAddressButtonClickListener mAreaReceiveClick;
 
-    /**
-     * 遍历城市列表，找到匹配的地区序号
-     *
-     * @param parentSelected 匹配的省份列表
-     * @param compare        对比的字符串
-     *
-     * @return 匹配的列表中的序号
-     */
-    private static int trySetCityButton(int parentSelected, String compare) {
-        if (parentSelected < 0) return -1;
-        Province parent = PROVINCES[parentSelected]; //匹配的省份
-        parent.populate(); //扩展下级列表
-        for (Place city : parent.nexts) {
-            if (compare.contains(city.getName())) {
-                Log.d(TAG, "trySetCityButton: city " + parent.nexts.indexOf(city));
-                return parent.nexts.indexOf(city);
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * 遍历地区列表，找到匹配的序号
-     *
-     * @param parent1 省份序号
-     * @param parent2 城市序号
-     * @param compare 对比字符串
-     *
-     * @return 匹配的地区序号
-     */
-    private static int trySetAreaButton(int parent1, int parent2, String compare) {
-        if (parent1 < 0 || parent2 < 0) return -1;
-        City city = (City) PROVINCES[parent1].nexts.get(parent2);
-        city.populate();//扩展下级列表
-        for (Place place : city.nexts) {
-            if (compare.contains(place.getName())) {
-                Log.d(TAG, "trySetAreaButton: area " + city.nexts.indexOf(place));
-                return city.nexts.indexOf(place);
-            }
-        }
-        return -1;
-    }
-
-    private static Area calcChooseArea(int first, int second, int third) {
-        PROVINCES[first].populate();
-        PROVINCES[first].nexts.get(second).populate();
-        return (Area) PROVINCES[first].nexts.get(second).nexts.get(third);
-    }
+    private int provinceReceiveIndex;
+    private int cityReceiveIndex;
+    private int areaReceiveIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: 启动发送新快递");
         setContentView(R.layout.activity_send_new_package);
-        mTimings = new TimingLogger(TAG, "计时器");
-        mFab = (FloatingActionButton) findViewById(R.id.fab_send_new);
+        mFab = (FloatingActionButton) findViewById(R.id.fab_location);
         mPriceButton = (Button) findViewById(R.id.button_search_price);
         mTimeButton = (Button) findViewById(R.id.button_search_time);
         mProvinceSendButton = (Button) findViewById(R.id.btn_province_send);
@@ -196,7 +61,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mAreaReceiveButton = (Button) findViewById(R.id.btn_area_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
         mGridLayout = (GridLayout) findViewById(R.id.list_container);
-
+        /*FAB设置点击强制更新位置信息*/
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,28 +69,38 @@ public class SendNewPackageActivity extends AppCompatActivity implements
                 requestUpdateLocation(true);
             }
         });
+        /*设置按钮监听器*/
         mProvinceSendClick =
-            new ButtonListener(DialogType.SEND_PROVINCE, mProvinceSendButton, "选择寄件省份", new ArrayList<Place>(Arrays.asList(PROVINCES)));
-        mProvinceSendButton.setOnClickListener(mProvinceSendClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.SEND_PROVINCE,
+                "选择寄件省份", PROVINCES);
         mProvinceReceiveClick =
-            new ButtonListener(DialogType.RECEIVE_PROVINCE, mProvinceReceiveButton, "选择收件省份", new ArrayList<Place>(Arrays.asList(PROVINCES)));
-        mProvinceReceiveButton.setOnClickListener(mProvinceReceiveClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.RECEIVE_PROVINCE,
+                "选择收件省份", PROVINCES);
         mCitySendClick =
-            new ButtonListener(DialogType.SEND_CITY, mCitySendButton, "选择寄件城市", new ArrayList<Place>());
-        mCitySendButton.setOnClickListener(
-            mCitySendClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.SEND_CITY,
+                "选择寄件城市", new ArrayList<Place>());
         mCityReceiveClick =
-            new ButtonListener(DialogType.RECEIVE_CITY, mCityReceiveButton, "选择收件城市", new ArrayList<Place>());
-        mCityReceiveButton.setOnClickListener(
-            mCityReceiveClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.RECEIVE_CITY,
+                "选择收件城市", new ArrayList<Place>());
         mAreaSendClick =
-            new ButtonListener(DialogType.SEND_AREA, mAreaSendButton, "选择寄件地区", new ArrayList<Place>());
-        mAreaSendButton.setOnClickListener(
-            mAreaSendClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.SEND_AREA,
+                "选择寄件县区", new ArrayList<Place>());
         mAreaReceiveClick =
-            new ButtonListener(DialogType.RECEIVE_AREA, mAreaReceiveButton, "选择收件地区", new ArrayList<Place>());
-        mAreaReceiveButton.setOnClickListener(
-            mAreaReceiveClick);
+            new OnAddressButtonClickListener(
+                this, DialogType.RECEIVE_AREA,
+                "选择收件县区", new ArrayList<Place>());
+        mProvinceSendButton.setOnClickListener(mProvinceSendClick);
+        mProvinceReceiveButton.setOnClickListener(mProvinceReceiveClick);
+        mCitySendButton.setOnClickListener(mCitySendClick);
+        mCityReceiveButton.setOnClickListener(mCityReceiveClick);
+        mAreaSendButton.setOnClickListener(mAreaSendClick);
+        mAreaReceiveButton.setOnClickListener(mAreaReceiveClick);
+        /*预设置按钮*/
         mCitySendButton.setEnabled(false);
         mCityReceiveButton.setEnabled(false);
         mAreaSendButton.setEnabled(false);
@@ -253,7 +128,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendChoose==null || receiveChoose == null)return;
+                if (sendChoose == null || receiveChoose == null) return;
                 Area itemFrom = sendChoose;
                 Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
@@ -271,136 +146,8 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         requestUpdateLocation(false);
     }
 
-    public void requestUpdateLocation(boolean update) {
-        if (resolveLocationPermission()) {
-            getLocation(update);
-            new FetchLocationTask(this).execute(mLocation.getLatitude(), mLocation.getLongitude());
-        } else {
-            Log.d(TAG, "requestUpdateLocation: 没有定位能力");
-        }
-    }
-
-    /**
-     * @return 是否有获取位置信息的能力
-     */
-    private boolean resolveLocationPermission() {
-        /*检查应用权限*/
-        int GpsPermissionCheck =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        int NetworkPermissionCheck =
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        Log.d(TAG, String.format(Locale.getDefault(), "resolveLocationPermission: 当前定位权限 GPS: %b Network %b", GpsPermissionCheck, NetworkPermissionCheck));
-
-        if (GpsPermissionCheck != PackageManager.PERMISSION_GRANTED
-            || NetworkPermissionCheck != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "resolveLocationPermission: 需要向用户请求定位权限");
-            /*如果需要向用户解释请求权限的原因*/
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                Log.d(TAG, "resolveLocationPermission: 需要向解释请求定位权限的原因");
-                showPermissionAlert(this);
-            }
-
-            ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
-            }, REQUEST_LOCATION_SERVICE);
-        }
-        return LocationGetter.isPositionable(this);
-    }
-
-    private void getLocation(boolean update) {
-        mLocationGetter = new LocationGetter(this, update);
-        mLocation = mLocationGetter.getCurrent();
-        Log.d(TAG, String.format(Locale.getDefault(), "getLocation: 获得当前 经度: %f 纬度: %f", mLocation.getLongitude(), mLocation.getLatitude()));
-    }
-
-    private static void showPermissionAlert(final Context context) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("没有定位权限");
-        alertDialog.setMessage("我们需要定位权限来获取你的当前位置，按确定跳转到设置页面。");
-        alertDialog.setPositiveButton(context.getResources().getString(R.string.go_setting), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(intent);
-            }
-        });
-        alertDialog.setNegativeButton(context.getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
-    }
-
-    public void updateLocationSelection(CurrentLocationResult current) {
-        List<CurrentLocationResult.AddressComponents> addresses = null;
-        /*检测当前地点是否有区级地址*/
-        for (CurrentLocationResult.Results results : current.getResults()) {
-            List<String> types = results.getTypes();
-            if (types.contains("sublocality_level_1")) {
-                addresses = results.getAddresses();
-                break;
-            }
-        }
-        if (addresses == null) throw new NullPointerException("没有找到地点");
-        String third = "", second = "", first = "";
-        /*获取各级地址名字*/
-        for (CurrentLocationResult.AddressComponents components : addresses) {
-            List<String> types = components.getTypes();
-            if (types.contains("sublocality_level_1")) {
-                third = components.getShortName();
-                continue;
-            }
-            if (types.contains("locality")) {
-                second = components.getShortName();
-                continue;
-            }
-            if (types.contains("administrative_area_level_1")) {
-                first = components.getShortName();
-                break;
-            }
-        }
-        Log.d(TAG, String.format("updateLocationSelection: 解析地址结果 %s %s %s", first, second, third));
-        /*设置下拉框*/
-        int indexFirst = -1, indexSecond = -1, indexThird = -1;
-        indexFirst = trySetProvinceButton(first);
-        if (indexFirst >= 0) indexSecond = trySetCityButton(indexFirst, second);
-        if (indexSecond >= 0) indexThird = trySetAreaButton(indexFirst, indexSecond, third);
-        if (indexThird < 0) {
-            Log.d(TAG, String.format("updateLocationSelection: 失败 定位 设置下拉框 %s %s %s",
-                first, second, third));
-        } else {
-            try {
-                setProvinceSendButton(indexFirst, PROVINCES[indexFirst]);
-                setCitySendButton(indexSecond, (City) PROVINCES[indexFirst].nexts.get(indexSecond));
-                setAreaSendButton(indexThird, (Area) PROVINCES[indexFirst].nexts.get(indexSecond).nexts.get(indexThird));
-                setButtons(calcChooseArea(indexFirst, indexSecond, indexThird));
-                Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s-%s-%s",
-                    first, second, third));
-                Toast.makeText(this, String.format("定位到%s-%s-%s", first, second, third), Toast.LENGTH_SHORT).show();
-            } catch (IndexOutOfBoundsException e) {
-                Log.e(TAG, "updateLocationSelection: confirmed bug", e);
-            }
-        }
-    }
-
-    private void setButtons(Area sendChoose) {
-        setButtons(sendChoose, receiveChoose);
-    }
-
     @SuppressWarnings("Duplicates")
-    private void setButtons(Area sendChoose, Area receiveChoose) {
-        if (sendChoose != null && !sendChoose.getName().isEmpty()) {
-            mProvinceSendButton.setText(sendChoose.getFirst());
-            mCitySendButton.setText(sendChoose.getSecond());
-            mAreaSendButton.setText(sendChoose.getName());
-            if (sendChoose.isDirectControlled()) {
-                mCitySendButton.setEnabled(false);
-            } else {
-                mCitySendButton.setEnabled(true);
-            }
-            mAreaSendButton.setEnabled(true);
-        }
+    private void setReceiveButtons(Area receiveChoose) {
         if (receiveChoose != null && !receiveChoose.getName().isEmpty()) {
             mProvinceReceiveButton.setText(receiveChoose.getFirst());
             mCityReceiveButton.setText(receiveChoose.getSecond());
@@ -411,6 +158,10 @@ public class SendNewPackageActivity extends AppCompatActivity implements
                 mCityReceiveButton.setEnabled(true);
             }
             mAreaReceiveButton.setEnabled(true);
+
+            mProvinceReceiveClick.setPosition(provinceReceiveIndex);
+            mCityReceiveClick.setPosition(cityReceiveIndex);
+            mAreaReceiveClick.setPosition(areaReceiveIndex);
         }
     }
 
@@ -503,9 +254,9 @@ public class SendNewPackageActivity extends AppCompatActivity implements
             "setCityReceiveButton() called with: which = [" + which + "], place = [" + place + "]");
         receiveChoose = calcChooseArea(provinceReceiveIndex, which, 0);
         cityReceiveIndex = which;
-        mAreaReceiveClick.setList(PROVINCES[provinceReceiveIndex].nexts.get(which).nexts);
+        mAreaReceiveClick.setList(getCity(provinceReceiveIndex, cityReceiveIndex).nexts);
         if (place.isDirectControlled()) {
-            setProvinceReceiveButton(which, PROVINCES[which]);
+            setProvinceReceiveButton(which, getProvince(cityReceiveIndex));
         }
         setAreaReceiveButton(0, (Area) place.nexts.get(0));
     }
@@ -517,7 +268,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         if (which == provinceReceiveIndex) return;
         receiveChoose = calcChooseArea(which, 0, 0);
         provinceReceiveIndex = which;
-        mCityReceiveClick.setList(PROVINCES[which].nexts);
+        mCityReceiveClick.setList(getProvince(provinceReceiveIndex).nexts);
         if (place.isDirectControlled()) {
             setCityReceiveButton(which, (City) place.nexts.get(which));
         } else {
@@ -525,76 +276,12 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         }
     }
 
-    private void setAreaSendButton(int which, Area place) {
-        Log.d(TAG,
-            "setAreaSendButton() called with: which = [" + which + "], place = [" + place + "]");
-        sendChoose = calcChooseArea(provinceSendIndex, citySendIndex, which);
-        areaSendIndex = which;
-        if (sendChoose != place) { throw new IllegalArgumentException("area send not equal"); }
-    }
-
-    private void setCitySendButton(int which, City place) {
-        Log.d(TAG,
-            "setCitySendButton() called with: which = [" + which + "], place = [" + place + "]");
-        sendChoose = calcChooseArea(provinceSendIndex, which, 0);
-        citySendIndex = which;
-        mAreaSendClick.setList(PROVINCES[provinceSendIndex].nexts.get(which).nexts);
-        if (place.isDirectControlled()) {
-            setProvinceSendButton(which, PROVINCES[which]);
-        }
-        setAreaSendButton(0, (Area) place.nexts.get(0));
-    }
-
-    private void setProvinceSendButton(int which, Province place) {
-        Log.d(TAG, "setProvinceSendButton() called with: which = [" + which + "], place = [" + place
-            + "]");
-        if (which == provinceSendIndex) return;
-        sendChoose = calcChooseArea(which, 0, 0);
-        provinceSendIndex = which;
-        mCitySendClick.setList(PROVINCES[which].nexts);
-        if (place.isDirectControlled()) {
-            setCitySendButton(which, (City) place.nexts.get(which));
-        } else {
-            setCitySendButton(0, (City) place.nexts.get(0));
-        }
-    }
-
     private void setButtons() {
-        setButtons(sendChoose, receiveChoose);
+        setSendButtons(sendChoose);
+        setReceiveButtons(receiveChoose);
     }
 
-    public enum DialogType {
-        SEND_PROVINCE,
-        RECEIVE_PROVINCE,
-        SEND_CITY,
-        RECEIVE_CITY,
-        SEND_AREA,
-        RECEIVE_AREA
-    }
-
-    private class ButtonListener implements View.OnClickListener {
-        private FragmentManager mManager;
-        private String mTitle;
-        private ArrayList<Place> mList;
-        private DialogType mType;
-        private Button mButton;
-
-        public ButtonListener(DialogType type, Button button, String title, ArrayList<Place> list) {
-            mType = type;
-            mButton = button;
-            mManager = getSupportFragmentManager();
-            mTitle = title;
-            mList = list;
-        }
-
-        public void setList(ArrayList<Place> list) {
-            mList = list;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mDialogFragment = ChooseAreaDialog.newInstance(mType, mTitle, mList);
-            mDialogFragment.show(mManager, String.format("选择框 %s", mTitle));
-        }
+    public GridLayout getGridLayout() {
+        return mGridLayout;
     }
 }

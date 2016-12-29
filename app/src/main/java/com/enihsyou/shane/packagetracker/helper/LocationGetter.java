@@ -20,33 +20,29 @@ public class LocationGetter extends Service implements LocationListener {
     private static final long MIN_TIME_BW_UPDATES = 0;
     private Context mContext;
     private Location current;
-    private boolean update;
+    private LocationManager mLocationManager;
 
-    public LocationGetter(Context context, boolean update) {
+    public LocationGetter(Context context) {
         mContext = context;
-        // this.update = update;
-        this.update = false;
         getLocation();
     }
 
     private Location getLocation() {
-        LocationManager locationManager =
-            (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
+        mLocationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
         for (String provider : providers) {
-            Location location = locationManager.getLastKnownLocation(provider);
-            if (location == null || this.update) {
-                Log.i(TAG, String.format("getLocation: %s %s, request update", provider, location));
-                locationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            Location location = mLocationManager.getLastKnownLocation(provider);
+            if (location == null) {
+                Log.i(TAG, String.format("getLocation: %s, request update", provider));
+                mLocationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
             } else if (current == null || location.getAccuracy() < current.getAccuracy()) {
                 current = location;
             }
         }
         if (current == null) {
-            Toast.makeText(mContext, "未获得位置信息", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "正在搜寻位置", Toast.LENGTH_SHORT).show();
             Log.w(TAG, "getLocation: No location");
-        }
-        else locationManager.removeUpdates(this);
+        } else { mLocationManager.removeUpdates(this); }
         return current;
     }
 
@@ -59,17 +55,18 @@ public class LocationGetter extends Service implements LocationListener {
         return gps || network;
     }
 
-    public double getLatitude() {
-        return getCurrent().getLatitude();
+    public void requestUpdate(boolean update) {
+        if (update) {
+            for (String provider : mLocationManager.getProviders(true)) {
+                Log.i(TAG, String.format("getLocation: %s, request update", provider));
+                mLocationManager.requestLocationUpdates(provider, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            }
+        }
     }
 
     public Location getCurrent() {
         if (current == null) getLocation();
         return current;
-    }
-
-    public double getLongitude() {
-        return getCurrent().getLongitude();
     }
 
     @Override
@@ -84,7 +81,7 @@ public class LocationGetter extends Service implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        Log.d(TAG, String.format("onStatusChanged: %s %d", provider, status));
     }
 
     @Override
@@ -98,5 +95,4 @@ public class LocationGetter extends Service implements LocationListener {
         Toast.makeText(mContext, "定位系统已停用", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onProviderDisabled: 定位系统已停用");
     }
-
 }

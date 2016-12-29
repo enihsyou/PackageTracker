@@ -1,5 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import com.enihsyou.shane.packagetracker.enums.EnumCompanyCodeString;
+
 /**
  * 从API获取的由快递单号推测的快递公司信息
  */

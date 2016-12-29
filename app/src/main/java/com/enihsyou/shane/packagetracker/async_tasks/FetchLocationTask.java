@@ -2,7 +2,7 @@ package com.enihsyou.shane.packagetracker.async_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity;
+import com.enihsyou.shane.packagetracker.activity.NeedLocationActivity;
 import com.enihsyou.shane.packagetracker.helper.GoogleFetcher;
 import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 
@@ -10,10 +10,10 @@ import java.io.IOException;
 
 public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationResult> {
     private static final String TAG = "FetchLocationTask";
-    private SendNewPackageActivity mActivity;
+    private NeedLocationActivity mActivity;
     private GoogleFetcher fetcher;
 
-    public FetchLocationTask(SendNewPackageActivity activity) {
+    public FetchLocationTask(NeedLocationActivity activity) {
         fetcher = new GoogleFetcher();
         mActivity = activity;
     }
@@ -25,7 +25,6 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
         String lng = String.valueOf(params[1]);
 
         try {
-            Log.v(TAG, "doInBackground: ");
             return fetcher.locationResult(lat, lng);
         } catch (IOException e) {
             Log.e(TAG, "doInBackground: 网络错误？", e);

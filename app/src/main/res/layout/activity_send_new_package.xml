@@ -159,12 +159,11 @@
 
 
 <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab_send_new"
+    android:id="@+id/fab_location"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|end"
     android:layout_margin="@dimen/fab_margin"
-    android:translationZ="@dimen/fab_translation_z"
     app:srcCompat="@drawable/ic_my_location" />
 
 </android.support.design.widget.CoordinatorLayout>

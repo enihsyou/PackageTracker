@@ -187,7 +187,7 @@ public class Kuaidi100Fetcher {
     /**
      * 获取网点信息
      *
-     * @param area    地区
+     * @param area    县区
      * @param keyword 搜索关键词
      * @param offset  偏移量，用于翻页
      * @param size    获取大小
@@ -221,7 +221,7 @@ public class Kuaidi100Fetcher {
     private NetworkSearchResult parseNetworkJson(Response response) {
         NetworkSearchResult result =
             gson.fromJson(response.body().charStream(), NetworkSearchResult.class);
-        for (NetworkSearchResult.NetworkNetListResult listResult : result.getNetLists()) {
+        for (NetworkSearchResult.NetworkNetList listResult : result.getNetLists()) {
             listResult.cleanHtml();
         }
         return result;
@@ -355,6 +355,7 @@ public class Kuaidi100Fetcher {
         String num = jsonObject.get("num").getAsString(); //获取单号
 
         JsonArray autoArray = jsonObject.getAsJsonArray("auto"); //获取公司信息列表
+        if (autoArray == null) return null;
         for (JsonElement element : autoArray) {
             CompanyEachAutoSearch eachCompany = new CompanyEachAutoSearch();
             JsonObject detail = element.getAsJsonObject();
@@ -378,7 +379,7 @@ public class Kuaidi100Fetcher {
     }
 
     /**
-     * 获取输入地区的城市列表
+     * 获取输入县区的城市列表
      *
      * @param cityCode 城市代码
      *

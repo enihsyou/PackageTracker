@@ -25,7 +25,7 @@ public class City extends Place {
             new FetchAreaTask(this).execute(this.code).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
-            Log.e(TAG, String.format("populate: 获取%s地区列表被中断", name), e);
+            Log.e(TAG, String.format("populate: 获取%s县区列表被中断", name), e);
         }
     }
 }

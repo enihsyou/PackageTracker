@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.model;
+package com.enihsyou.shane.packagetracker.enums;
 
 /**
  * 从JSON的快件状态数字转成文字

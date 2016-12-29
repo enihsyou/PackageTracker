@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class NetworkCityResult {
     @SerializedName("name")
-    private String name; //地区名称
+    private String name; //县区名称
     @SerializedName("number")
-    private String code; // 地区代号
+    private String code; // 县区代号
     @SerializedName("fullName")
-    private String fullName; //地区全名
+    private String fullName; //县区全名
 
     public String getName() {
         return name;

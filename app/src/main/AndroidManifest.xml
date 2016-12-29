@@ -66,13 +66,16 @@
             android:label="@string/title_activity_send_new"
             android:parentActivityName=".activity.MainActivity">
         </activity>
-
+        <activity android:name=".activity.SearchNetworkActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_network_search"
+            android:parentActivityName=".activity.MainActivity"  >
+        </activity>
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.TrackDetailActivity" />
 
-        <activity android:name=".activity.NetworkSearchActivity">
-        </activity>
+
         </application>
 
 </manifest>

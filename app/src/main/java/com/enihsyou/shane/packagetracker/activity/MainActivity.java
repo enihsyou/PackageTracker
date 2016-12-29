@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity
                         startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
                         break;
                     case R.id.action_network_search:
-                        startActivity(new Intent(MainActivity.this, NetworkSearchActivity.class));
+                        startActivity(new Intent(MainActivity.this, SearchNetworkActivity.class));
                         break;
                     case R.id.action_chop_hands:
                         Intent taobao = new Intent(Intent.ACTION_VIEW);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
                 break;
             case R.id.nav_find_network:
-                startActivity(new Intent(MainActivity.this, NetworkSearchActivity.class));
+                startActivity(new Intent(MainActivity.this, SearchNetworkActivity.class));
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

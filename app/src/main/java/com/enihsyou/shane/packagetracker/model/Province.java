@@ -1,10 +1,11 @@
 package com.enihsyou.shane.packagetracker.model;
 
-import com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity;
-
 import java.util.ArrayList;
 
+import static com.enihsyou.shane.packagetracker.model.Places.PROVINCES;
+
 public class Province extends Place {
+
     public Province(String name, String code, ArrayList<Place> nexts) {
         super(name, code, nexts);
     }
@@ -18,8 +19,7 @@ public class Province extends Place {
         if (nexts.size() > 0) return;
         ArrayList<Place> nexts = new ArrayList<>();
         if (isDirectControlled()) {
-            for (int i = 0; i < SendNewPackageActivity.PROVINCES.length; i++) {
-                Province province = SendNewPackageActivity.PROVINCES[i];
+            for (Province province : PROVINCES) {
                 String cityCode = province.getCode();
                 String cityName = province.getName();
                 nexts.add(new City(cityName, cityCode, null, isDirectControlled()));
