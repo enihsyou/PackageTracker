@@ -1,5 +1,5 @@
 #快递收发和跟踪系统
-
+![ICON](https://raw.githubusercontent.com/enihsyou/PackageTracker/master/app/src/main/ic_launcher-web.png)
 ##项目介绍
 **辣鸡快递查**——能够获取和跟踪快递最新进展情况的Android应用.
 
