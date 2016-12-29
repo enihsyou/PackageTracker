@@ -7,6 +7,7 @@ import com.enihsyou.shane.packagetracker.helper.GoogleFetcher;
 import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationResult> {
     private static final String TAG = "FetchLocationTask";
@@ -20,7 +21,9 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
 
     @Override
     protected CurrentLocationResult doInBackground(Double... params) {
-        if (params.length != 2) throw new IllegalArgumentException("参数有两个");
+        if (params.length != 2) {
+            throw new IllegalArgumentException("参数有两个 " + Arrays.toString(params));
+        }
         String lat = String.valueOf(params[0]);
         String lng = String.valueOf(params[1]);
 

@@ -9,6 +9,7 @@ import com.enihsyou.shane.packagetracker.model.CompanyAutoSearchResult;
 import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchResult> {
@@ -23,13 +24,15 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
 
     @Override
     protected CompanyAutoSearchResult doInBackground(String... params) {
-        if (params.length != 1) throw new IllegalArgumentException("参数有一个");
+        if (params.length != 1) {
+            throw new IllegalArgumentException("参数有一个 " + Arrays.toString(params));
+        }
         String queryNumber = params[0];
         if (queryNumber != null && !queryNumber.isEmpty()) {
             try {
-                Log.v(TAG, "doInBackground: 启动网络服务获取公司列表 "+queryNumber);
+                Log.v(TAG, "doInBackground: 启动网络服务获取公司列表 " + queryNumber);
                 return fetcher.companyResult(queryNumber);
-            } catch (IOException e){
+            } catch (IOException e) {
                 Log.e(TAG, "doInBackground: 网络错误？", e);
             }
         }
@@ -40,8 +43,9 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
     protected void onPostExecute(CompanyAutoSearchResult companyAutoSearchResult) {
         if (companyAutoSearchResult == null) {
             Log.i(TAG, "onPostExecute: 失败 查询公司自动完成 获得空结果");
-            return;}
-        Log.d(TAG, "onPostExecute: 公司自动完成 "+ companyAutoSearchResult);
+            return;
+        }
+        Log.d(TAG, "onPostExecute: 公司自动完成 " + companyAutoSearchResult);
         ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter = mActivity.getSpinnerAdapter();
 
         spinnerAdapter.clear(); //先清除，再添加

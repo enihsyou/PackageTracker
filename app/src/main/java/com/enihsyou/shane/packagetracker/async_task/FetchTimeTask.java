@@ -14,6 +14,7 @@ import com.enihsyou.shane.packagetracker.model.TimeSearchResult;
 import okhttp3.HttpUrl;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FetchTimeTask extends AsyncTask<String, Void, TimeSearchResult> implements
     Kuaidi100Fetcher.SetImage {
@@ -28,7 +29,9 @@ public class FetchTimeTask extends AsyncTask<String, Void, TimeSearchResult> imp
 
     @Override
     protected TimeSearchResult doInBackground(String... params) {
-        if (params.length != 2) throw new IllegalArgumentException("参数有两个");
+        if (params.length != 2) {
+            throw new IllegalArgumentException("参数有两个 " + Arrays.toString(params));
+        }
         String from = params[0];
         String to = params[1];
         try {

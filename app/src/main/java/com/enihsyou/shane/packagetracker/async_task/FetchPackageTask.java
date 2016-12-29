@@ -11,6 +11,7 @@ import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSearchResult> {
     private static final String TAG = "FetchPackageTask";
@@ -25,7 +26,9 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
 
     @Override
     protected PackageTrafficSearchResult doInBackground(String... params) {
-        if (params.length != 2) throw new IllegalArgumentException("参数有两个");
+        if (params.length != 2) {
+            throw new IllegalArgumentException("参数有两个 " + Arrays.toString(params));
+        }
         String queryNumber = params[0];
         String queryCompany = params[1];
         if (queryNumber != null && !queryNumber.isEmpty() && queryCompany != null

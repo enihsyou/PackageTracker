@@ -7,6 +7,7 @@ import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResult> {
     private static final String TAG = "FetchNetworkTask";
@@ -20,7 +21,9 @@ public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResul
 
     @Override
     protected NetworkSearchResult doInBackground(String... params) {
-        if (params.length != 4) throw new IllegalArgumentException("参数有四个");
+        if (params.length != 4) {
+            throw new IllegalArgumentException("参数有四个 " + Arrays.toString(params));
+        }
         String area = params[0];
         String keyword = params[1];
         String offset = params[2];

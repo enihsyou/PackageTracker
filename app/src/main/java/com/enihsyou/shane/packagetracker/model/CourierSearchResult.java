@@ -27,10 +27,16 @@ public class CourierSearchResult {
         private String courierName;//快递员名字
         @SerializedName("courierTel")
         private String courierTel;//快递员电话 带马
+        @SerializedName("workArea")
+        private String workArea;//工作区域
         @SerializedName("guid")
         private String guid;//快递员id
         @SerializedName("logo")
         private String logoUrl;//头像
+
+        public String getWorkArea() {
+            return workArea;
+        }
 
         public String getCompanyName() {
             return companyName;

@@ -42,7 +42,8 @@ public abstract class NeedLocationActivity extends AppCompatActivity {
     int provinceSendIndex;
     int citySendIndex;
     int areaSendIndex;
-    private LocationGetter mLocationGetter;
+    LocationGetter mLocationGetter;
+    CurrentLocationResult mCurrentLocation;
 
     static Area calcChooseArea(int first, int second, int third) {
         PROVINCES.get(first).populate();
@@ -181,6 +182,7 @@ public abstract class NeedLocationActivity extends AppCompatActivity {
     }
 
     public void updateLocationSelection(CurrentLocationResult current) {
+        mCurrentLocation = current;
         List<CurrentLocationResult.AddressComponents> addresses = null;
         /*检测当前地点是否有区级地址*/
         for (CurrentLocationResult.Results results : current.getResults()) {

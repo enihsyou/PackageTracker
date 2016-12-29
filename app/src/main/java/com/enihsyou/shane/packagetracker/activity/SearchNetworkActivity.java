@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import static com.enihsyou.shane.packagetracker.model.Places.PROVINCES;
 
 public class SearchNetworkActivity extends NeedLocationActivity implements
-    ChooseAreaDialog.OnChooseListener{
+    ChooseAreaDialog.OnChooseListener {
     private static final String TAG = "SearchNetworkActivity";
 
     private TextInputEditText mStreetText;
@@ -108,17 +108,33 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
             public void onClick(View v) {
                 if (sendChoose == null) return;
                 String location = sendChoose.getFullName();
-                String locationCode = sendChoose.getCode();
                 String street = mStreetText.getText().toString();
-                Log.d(TAG, String.format("onClick: 搜索快递员: 从 %s %s %s",
-                    location, locationCode, street));
+                if (street.isEmpty() && mCurrentLocation != null) {
+                    String area = calcStreetPart();
+                    if (area != null) { street = area; } else street = location;
+                }
+                Log.d(TAG, String.format("onClick: 搜索快递员: 在 %s %s",
+                    location, street));
 
                 new FetchCourierTask(SearchNetworkActivity.this)
-                    .execute(location, locationCode, street);
+                    .execute(location, street);
             }
         });
         /*启动的时候 获取地点信息*/
         requestUpdateLocation(false);
+    }
+
+    private String calcStreetPart() {
+        String street = null;
+        try {
+            String area1 = mCurrentLocation.getResults().get(0).getFormattedAddress();
+            String area2 = mCurrentLocation.getResults().get(1).getFormattedAddress();
+            street = area1.substring(area2.length());
+        } catch (Exception e) {
+            Log.e(TAG, "onClick: 处理地区字符串时错误", e);
+
+        }
+        return street;
     }
 
     public ExpandableListView getDetailView() {
@@ -146,6 +162,14 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         }
         setSendButtons(sendChoose);
     }
+
+    @Override
+    void setSendButtons(Area sendChoose) {
+        super.setSendButtons(sendChoose);
+        String street = calcStreetPart();
+        if (street != null) { mStreetText.setText(street); }
+    }
+
     @Override
     public void OnDialogPositiveClick(DialogFragment dialog) {
         Log.d(TAG, "OnDialogPositiveClick: ok");

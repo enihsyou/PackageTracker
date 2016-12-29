@@ -15,6 +15,7 @@ import com.enihsyou.shane.packagetracker.model.PriceSearchResult;
 import okhttp3.HttpUrl;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> implements
     Kuaidi100Fetcher.SetImage {
@@ -29,7 +30,9 @@ public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> i
 
     @Override
     protected PriceSearchResult doInBackground(String... params) {
-        if (params.length != 4) throw new IllegalArgumentException("参数有四个");
+        if (params.length != 4) {
+            throw new IllegalArgumentException("参数有四个 " + Arrays.toString(params));
+        }
         String locationSendCode = params[0];
         String locationReceiveCode = params[1];
         String street = params[2];

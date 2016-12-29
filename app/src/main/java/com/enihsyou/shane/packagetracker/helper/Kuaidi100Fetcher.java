@@ -11,6 +11,7 @@ import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.*;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.*;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import org.jsoup.Jsoup;
@@ -31,7 +32,7 @@ public class Kuaidi100Fetcher {
     private static final String SEARCH_NUMBER = "autonumber/autoComNum";
     private static final String SEARCH_PACKAGE = "query";
     private static final String SEARCH_NETWORK = "network/www/searchapi.do";
-    private static final String SEARCH_COURIER = "courier";
+    private static final String SEARCH_COURIER = "courier/searchapi.do";
     private static final String SEARCH_PRICE = "order/unlogin/price.do";
     private static final String SEARCH_TIME = "time";
     private static final String LOGO_URL = "order/images/company/";
@@ -404,8 +405,40 @@ public class Kuaidi100Fetcher {
         return gson.fromJson(response.body().charStream(), new TypeToken<List<NetworkCityResult>>() {}.getType());
     }
 
+    public CourierSearchResult courierResult(String area, String keyword) throws IOException {
+        HttpUrl url = buildCourierSearchUrl();
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("method", "courieraround")
+            .addEncoded("json", gson.toJson(new CourierJson(area, keyword), CourierJson.class))
+            .build();
+        Response response = getJson(url, requestBody);
+        return parseCourierJson(response);
+    }
+
+    private CourierSearchResult parseCourierJson(Response response) {
+        return gson.fromJson(response.body().charStream(), CourierSearchResult.class);
+    }
+    @Nullable
+    private static HttpUrl buildCourierSearchUrl() {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(SEARCH_COURIER)
+            .build();
+    }
+
     public interface SetImage {
         void SetBitmap(Bitmap bitmap, ImageView view);
+    }
+
+    private static class CourierJson {
+        @SerializedName("xzqnamae")
+        private String area;
+        @SerializedName("keywords")
+        private String keyword;
+
+        public CourierJson(String area, String keyword) {
+            this.area = area;
+            this.keyword = keyword;
+        }
     }
 
     private static class DownLoad implements Callback {
