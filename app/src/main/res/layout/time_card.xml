@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:grid="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:translationZ="@dimen/cardview_default_elevation"
+    grid:layout_columnWeight="1"
     grid:contentPadding="@dimen/default_gap">
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,14 +17,9 @@
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:contentDescription="@string/company_logo" />
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical|end"
-            android:gravity="center_vertical|end"
-            android:orientation="vertical">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:orientation="horizontal">
@@ -34,37 +29,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:text="@string/company_name"
-                    tools:text="@string/company_name" />
+                    tools:text="@string/company_name"
+                    android:layout_marginRight="4dp" />
                 <TextView
-                    android:id="@+id/price"
+                    android:id="@+id/time"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
                     android:layout_marginStart="4dp"
                     android:gravity="center_vertical|end"
                     android:lines="1"
-                    android:text="@string/price"
-                    tools:text="@string/price" />
+                    android:text="@string/time"
+                    tools:text="@string/time"
+                    android:layout_marginLeft="4dp" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/express_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/express_type"
-                    tools:text="@string/express_type" />
-                <TextView
-                    android:id="@+id/phone_number"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:gravity="center_vertical|end"
-                    android:text="@string/telephone"
-                    tools:text="@string/telephone" />
-        </LinearLayout>
-    </LinearLayout></LinearLayout>
+    </LinearLayout>
 </android.support.v7.widget.CardView>

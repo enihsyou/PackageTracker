@@ -12,16 +12,22 @@ public class PriceSearchResult {
         return orderList;
     }
 
-    static class Entry {
+    public static class Entry {
         @SerializedName("priceInfo")
         private PriceInfo priceInfo;
+
+        public PriceInfo getPriceInfo() {
+            return priceInfo;
+        }
     }
 
-    static class PriceInfo {
+    public static class PriceInfo {
         @SerializedName("companyName")
         private String companyName; //公司名字
         @SerializedName("expressCode")
         private String expressCode; //公司代号
+        @SerializedName("companyCode")
+        private String companyCode;  //公司代号
         @SerializedName("tel")
         private String telephone;//联系电话
         @SerializedName("produceType")
@@ -33,8 +39,12 @@ public class PriceSearchResult {
             return companyName;
         }
 
-        public String getExpressCode() {
-            return expressCode;
+        public String getCode() {
+            if (expressCode!= null && !expressCode.trim().isEmpty())
+                return expressCode;
+            else if (companyCode!=null &&!companyCode.trim().isEmpty())
+                return companyCode;
+            return "";
         }
 
         public String getTelephone() {

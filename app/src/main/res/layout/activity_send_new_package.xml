@@ -7,9 +7,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity">
     <!--提供滚动功能-->
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -28,24 +26,25 @@
             <!--添加追踪信息用的卡片-->
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <!--由上下两部分组成-->
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:padding="8dp"
                     android:orientation="vertical">
                     <!--上面寄件地址-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:layout_weight="1"
                         android:orientation="vertical"><TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -74,9 +73,9 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
+                            android:layout_weight="1"
                             android:orientation="vertical"><TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -115,42 +114,57 @@
                             android:inputType="numberDecimal"
                             android:maxLength="20"
                             android:maxLines="1" />
-                </android.support.design.widget.TextInputLayout>
+                    </android.support.design.widget.TextInputLayout>
                     <!--最下面两个按钮-->
                     <LinearLayout
                         style="?android:attr/buttonBarStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-                    <Button
-                        android:id="@+id/button_search_time"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/search_time" />
-                    <Button
-                        android:id="@+id/button_search_price"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/search_price" />
-                </LinearLayout>
-                </LinearLayout>
-        </android.support.v7.widget.CardView>
-            <!--下面 由程序添加搜索结果-->
+                        <Button
+                            android:id="@+id/button_search_time"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/search_time" />
+                        <Button
+                            android:id="@+id/button_search_price"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/search_price" />
+                    </LinearLayout>
+                    </LinearLayout>
+             </android.support.v7.widget.CardView>
 
-    </LinearLayout>
+            <android.support.v7.widget.GridLayout xmlns:grid="http://schemas.android.com/apk/res-auto"
+                android:layout_marginTop="@dimen/keyline_1_minus_8dp"
+                android:id="@+id/list_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                grid:alignmentMode="alignBounds"
+                grid:orientation="horizontal"
+                grid:columnCount="1"
+                grid:useDefaultMargins="true">
+                <!--由程序添加搜索结果-->
+
+            </android.support.v7.widget.GridLayout>
+        </LinearLayout>
 
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_send_new"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_my_location" />
+
+
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab_send_new"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="@dimen/fab_margin"
+    android:translationZ="@dimen/fab_translation_z"
+    app:srcCompat="@drawable/ic_my_location" />
 
 </android.support.design.widget.CoordinatorLayout>

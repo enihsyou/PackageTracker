@@ -56,7 +56,7 @@ public class ChooseAreaDialog extends DialogFragment {
         builder.setTitle(mTitle);
         builder.setSingleChoiceItems(
             new ArrayAdapter<>(this.getActivity(),
-                android.R.layout.simple_list_item_1, mPlaceList),0,
+                android.R.layout.select_dialog_singlechoice, mPlaceList),0,
             new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

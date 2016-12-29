@@ -1,4 +1,5 @@
 package com.enihsyou.shane.packagetracker.async_tasks;
 
-public class UpdateLocation {
+public class UpdateLocationTask  {
+
 }

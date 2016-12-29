@@ -1,8 +1,11 @@
 package com.enihsyou.shane.packagetracker.helper;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.*;
@@ -31,6 +34,7 @@ public class Kuaidi100Fetcher {
     private static final String SEARCH_COURIER = "courier";
     private static final String SEARCH_PRICE = "order/unlogin/price.do";
     private static final String SEARCH_TIME = "time";
+    private static final String LOGO_URL = "order/images/company/";
 
     private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
 
@@ -84,6 +88,14 @@ public class Kuaidi100Fetcher {
         TrafficCardView detailContainer) {
         detailContainer.addTraffics(searchResult.getTraffics());
         return detailContainer;
+    }
+
+    @NonNull
+    public static HttpUrl buildCompanyLogoUrl(String companyCode, String imageExt) {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(LOGO_URL)
+            .addPathSegment(companyCode + imageExt)
+            .build();
     }
 
     public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, int currentPage) throws
@@ -359,6 +371,11 @@ public class Kuaidi100Fetcher {
         return searchResult;
     }
 
+    public void DownloadImage(SetImage callback, final HttpUrl url, final ImageView view) {
+        if (url == null) return;
+        final Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new DownLoad(callback, view));
+    }
 
     /**
      * 获取输入地区的城市列表
@@ -382,5 +399,33 @@ public class Kuaidi100Fetcher {
 
     private List<NetworkCityResult> parseNetworkCityJson(Response response) {
         return gson.fromJson(response.body().charStream(), new TypeToken<List<NetworkCityResult>>() {}.getType());
+    }
+
+    public interface SetImage {
+        void SetBitmap(Bitmap bitmap, ImageView view);
+    }
+
+    private static class DownLoad implements Callback {
+        private SetImage listener;
+        private ImageView image;
+
+        public DownLoad(SetImage callback, ImageView view) {
+            listener = callback;
+            image = view;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.w(TAG, "onFailure: 下载失败", e);
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            Log.v(TAG, "onResponse: 下载成功 " + response.request().url());
+            byte[] bytes = response.body().bytes();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            listener.SetBitmap(bitmap, image);
+        }
+
     }
 }

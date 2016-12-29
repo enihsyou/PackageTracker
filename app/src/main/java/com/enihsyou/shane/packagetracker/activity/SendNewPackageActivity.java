@@ -16,10 +16,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.util.TimingLogger;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPriceTask;
@@ -102,6 +105,12 @@ public class SendNewPackageActivity extends AppCompatActivity implements
     private int cityReceiveIndex;
     private int areaSendIndex;
     private int areaReceiveIndex;
+
+    public GridLayout getGridLayout() {
+        return mGridLayout;
+    }
+
+    private GridLayout mGridLayout;
 
     /**
      * 遍历省份列表，找到匹配的对象序号
@@ -186,7 +195,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mAreaSendButton = (Button) findViewById(R.id.btn_area_send);
         mAreaReceiveButton = (Button) findViewById(R.id.btn_area_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.list_container);
+        mGridLayout = (GridLayout) findViewById(R.id.list_container);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,6 +234,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (sendChoose == null || receiveChoose == null) return;
                 Area itemFrom = sendChoose;
                 Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
@@ -243,6 +253,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (sendChoose==null || receiveChoose == null)return;
                 Area itemFrom = sendChoose;
                 Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
