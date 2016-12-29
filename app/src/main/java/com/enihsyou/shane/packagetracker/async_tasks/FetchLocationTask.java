@@ -25,6 +25,7 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
         String lng = String.valueOf(params[1]);
 
         try {
+            Log.v(TAG, "doInBackground: ");
             return fetcher.locationResult(lat, lng);
         } catch (IOException e) {
             Log.e(TAG, "doInBackground: 网络错误？", e);

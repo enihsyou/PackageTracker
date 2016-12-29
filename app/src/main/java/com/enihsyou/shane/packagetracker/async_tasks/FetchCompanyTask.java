@@ -27,6 +27,7 @@ public class FetchCompanyTask extends AsyncTask<String, Void, CompanyAutoSearchR
         String queryNumber = params[0];
         if (queryNumber != null && !queryNumber.isEmpty()) {
             try {
+                Log.v(TAG, "doInBackground: 启动网络服务获取公司列表 "+queryNumber);
                 return fetcher.companyResult(queryNumber);
             } catch (IOException e){
                 Log.e(TAG, "doInBackground: 网络错误？", e);

@@ -21,6 +21,7 @@ import android.util.TimingLogger;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.async_tasks.FetchPriceTask;
@@ -150,7 +151,10 @@ public class SendNewPackageActivity extends AppCompatActivity implements
             new ButtonListener(DialogType.RECEIVE_AREA, mAreaReceiveButton, "选择收件地区", new ArrayList<Place>());
         mAreaReceiveButton.setOnClickListener(
             mAreaReceiveClick);
-
+        mCitySendButton.setEnabled(false);
+        mCityReceiveButton.setEnabled(false);
+        mAreaSendButton.setEnabled(false);
+        mAreaReceiveButton.setEnabled(false);
         /*处理 查询价格按钮*/
         mPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,42 +286,24 @@ public class SendNewPackageActivity extends AppCompatActivity implements
         Log.d(TAG, String.format("updateLocationSelection: 解析地址结果 %s %s %s", first, second, third));
         /*设置下拉框*/
         int indexFirst = -1, indexSecond = -1, indexThird = -1;
-        indexFirst = trySetProvinceSpinner(first);
-        if (indexFirst >= 0) indexSecond = trySetCitySpinner(indexFirst, second);
-        if (indexSecond >= 0) indexThird = trySetAreaSpinner(indexFirst, indexSecond, third);
+        indexFirst = trySetProvinceButton(first);
+        if (indexFirst >= 0) indexSecond = trySetCityButton(indexFirst, second);
+        if (indexSecond >= 0) indexThird = trySetAreaButton(indexFirst, indexSecond, third);
         if (indexThird < 0) {
             Log.d(TAG, String.format("updateLocationSelection: 失败 定位 设置下拉框 %s %s %s",
                 first, second, third));
         } else {
-            // try {
-            //     mProvinceSendButton.setSelection(indexFirst, true);
-            //     if (!PROVINCES[indexFirst].isDirectControlled()) {
-            //         // lCitySend.setSecondSpinnerAdapter(PROVINCES[indexFirst].nexts, indexThird);
-            //         mCitySendButton.setSelection(indexSecond, true);
-            //         // final int position = indexSecond;
-            //         // mCitySendButton.post(new Runnable() {
-            //         //     @Override
-            //         //     public void run() {
-            //         //         mCitySendButton.setSelection(position, true);
-            //         //     }
-            //         // });
-            //     }
-            //     mAreaSendButton.setSelection(indexThird);
-            //
-            //     // final int position = indexThird;
-            //     // mAreaSendButton.postDelayed(new Runnable() {
-            //     //     @Override
-            //     //     public void run() {
-            //     //         mAreaSendButton.setSelection(position, true);
-            //     //     }
-            //     // }, 80);
-            //     Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s-%s-%s",
-            //         first, second, third));
-            //     Toast.makeText(this, String.format("定位到%s-%s-%s", first, second, third), Toast.LENGTH_SHORT).show();
-            // } catch (IndexOutOfBoundsException e) {
-            //     Log.e(TAG, "updateLocationSelection: confirmed bug", e);
-            // }
-
+            try {
+                setProvinceSendButton(indexFirst, PROVINCES[indexFirst]);
+                setCitySendButton(indexSecond, (City) PROVINCES[indexFirst].nexts.get(indexSecond));
+                setAreaSendButton(indexThird, (Area) PROVINCES[indexFirst].nexts.get(indexSecond).nexts.get(indexThird));
+                setButtons(calcChooseArea(indexFirst, indexSecond, indexThird));
+                Log.d(TAG, String.format("updateLocationSelection: 成功 定位 设置下拉框 %s-%s-%s",
+                    first, second, third));
+                Toast.makeText(this, String.format("定位到%s-%s-%s", first, second, third), Toast.LENGTH_SHORT).show();
+            } catch (IndexOutOfBoundsException e) {
+                Log.e(TAG, "updateLocationSelection: confirmed bug", e);
+            }
         }
     }
 
@@ -328,11 +314,11 @@ public class SendNewPackageActivity extends AppCompatActivity implements
      *
      * @return 匹配的省份列表中的序号
      */
-    private static int trySetProvinceSpinner(String compare) {
+    private static int trySetProvinceButton(String compare) {
         for (int i = 0; i < PROVINCES.length; i++) {
             Province province = PROVINCES[i];
             if (compare.contains(province.getName())) {
-                Log.d(TAG, "trySetProvinceSpinner: province " + i);
+                Log.d(TAG, "trySetProvinceButton: province " + i);
                 return i;
             }
         }
@@ -347,13 +333,13 @@ public class SendNewPackageActivity extends AppCompatActivity implements
      *
      * @return 匹配的列表中的序号
      */
-    private static int trySetCitySpinner(int parentSelected, String compare) {
+    private static int trySetCityButton(int parentSelected, String compare) {
         if (parentSelected < 0) return -1;
         Province parent = PROVINCES[parentSelected]; //匹配的省份
         parent.populate(); //扩展下级列表
         for (Place city : parent.nexts) {
             if (compare.contains(city.getName())) {
-                Log.d(TAG, "trySetCitySpinner: city " + parent.nexts.indexOf(city));
+                Log.d(TAG, "trySetCityButton: city " + parent.nexts.indexOf(city));
                 return parent.nexts.indexOf(city);
             }
         }
@@ -369,17 +355,53 @@ public class SendNewPackageActivity extends AppCompatActivity implements
      *
      * @return 匹配的地区序号
      */
-    private static int trySetAreaSpinner(int parent1, int parent2, String compare) {
+    private static int trySetAreaButton(int parent1, int parent2, String compare) {
         if (parent1 < 0 || parent2 < 0) return -1;
         City city = (City) PROVINCES[parent1].nexts.get(parent2);
         city.populate();//扩展下级列表
         for (Place place : city.nexts) {
             if (compare.contains(place.getName())) {
-                Log.d(TAG, "trySetAreaSpinner: area " + city.nexts.indexOf(place));
+                Log.d(TAG, "trySetAreaButton: area " + city.nexts.indexOf(place));
                 return city.nexts.indexOf(place);
             }
         }
         return -1;
+    }
+
+    private void setButtons(Area sendChoose) {
+        setButtons(sendChoose, receiveChoose);
+    }
+
+    private static Area calcChooseArea(int first, int second, int third) {
+        PROVINCES[first].populate();
+        PROVINCES[first].nexts.get(second).populate();
+        return (Area) PROVINCES[first].nexts.get(second).nexts.get(third);
+    }
+
+    @SuppressWarnings("Duplicates")
+    private void setButtons(Area sendChoose, Area receiveChoose) {
+        if (sendChoose != null && !sendChoose.getName().isEmpty()) {
+            mProvinceSendButton.setText(sendChoose.getFirst());
+            mCitySendButton.setText(sendChoose.getSecond());
+            mAreaSendButton.setText(sendChoose.getName());
+            if (sendChoose.isDirectControlled()) {
+                mCitySendButton.setEnabled(false);
+            } else {
+                mCitySendButton.setEnabled(true);
+            }
+        }
+        if (receiveChoose != null && !receiveChoose.getName().isEmpty()) {
+            mProvinceReceiveButton.setText(receiveChoose.getFirst());
+            mCityReceiveButton.setText(receiveChoose.getSecond());
+            mAreaReceiveButton.setText(receiveChoose.getName());
+            if (receiveChoose.isDirectControlled()) {
+                mCityReceiveButton.setEnabled(false);
+            } else {
+                mCityReceiveButton.setEnabled(true);
+            }
+        }
+        mAreaSendButton.setEnabled(true);
+        mAreaReceiveButton.setEnabled(true);
     }
 
     @Override
@@ -400,9 +422,9 @@ public class SendNewPackageActivity extends AppCompatActivity implements
     @Override
     public void OnItemClick(DialogFragment dialog, DialogType type, int which, Place place) {
         Log.d(TAG, "OnItemClick: " + place);
-        Province provinceItem;
-        City cityItem;
-        Area areaItem;
+        // Province provinceItem;
+        // City cityItem;
+        // Area areaItem;
         switch (type) {
             case SEND_PROVINCE:
                 setProvinceSendButton(which, (Province) place);
@@ -425,7 +447,7 @@ public class SendNewPackageActivity extends AppCompatActivity implements
             default:
                 Log.wtf(TAG, "WTF " + type);
         }
-        // setButtons();
+        setButtons();
     }
 
     @Override
@@ -439,88 +461,78 @@ public class SendNewPackageActivity extends AppCompatActivity implements
     }
 
     private void setAreaReceiveButton(int which, Area place) {
-        mAreaReceiveButton.setText(place.getName());
-        place.populate();
+        Log.d(TAG,
+            "setAreaReceiveButton() called with: which = [" + which + "], place = [" + place + "]");
+        receiveChoose = calcChooseArea(provinceReceiveIndex, cityReceiveIndex, which);
         areaReceiveIndex = which;
-        receiveChoose = place;
+        if (receiveChoose != place) {
+            throw new IllegalArgumentException("area receive not equal :"+receiveChoose+ "  "+place);
+        }
     }
 
     private void setCityReceiveButton(int which, City place) {
-        mCityReceiveButton.setText(place.getName());
-        place.populate();
+        Log.d(TAG,
+            "setCityReceiveButton() called with: which = [" + which + "], place = [" + place + "]");
+        receiveChoose = calcChooseArea(provinceReceiveIndex, which, 0);
         cityReceiveIndex = which;
         mAreaReceiveClick.setList(PROVINCES[provinceReceiveIndex].nexts.get(which).nexts);
         if (place.isDirectControlled()) {
-            mCityReceiveButton.setEnabled(false);
             setProvinceReceiveButton(which, PROVINCES[which]);
-        } else {
-            mCityReceiveButton.setEnabled(true);
         }
         setAreaReceiveButton(0, (Area) place.nexts.get(0));
     }
 
     private void setProvinceReceiveButton(int which, Province place) {
+        Log.d(TAG,
+            "setProvinceReceiveButton() called with: which = [" + which + "], place = [" + place
+                + "]");
         if (which == provinceReceiveIndex) return;
-        mProvinceReceiveButton.setText(place.getName());
-        place.populate();
+        receiveChoose = calcChooseArea(which, 0, 0);
         provinceReceiveIndex = which;
         mCityReceiveClick.setList(PROVINCES[which].nexts);
         if (place.isDirectControlled()) {
-            mCityReceiveButton.setEnabled(false);
-            setCityReceiveButton(which, (City) place.nexts.get(0));
+            setCityReceiveButton(which, (City) place.nexts.get(which));
         } else {
-            mCityReceiveButton.setEnabled(true);
             setCityReceiveButton(0, (City) place.nexts.get(0));
         }
     }
 
     private void setAreaSendButton(int which, Area place) {
-        mAreaSendButton.setText(place.getName());
-        place.populate();
-        citySendIndex = which;
-        sendChoose = place;
+        Log.d(TAG,
+            "setAreaSendButton() called with: which = [" + which + "], place = [" + place + "]");
+        sendChoose = calcChooseArea(provinceSendIndex, citySendIndex, which);
+        areaSendIndex = which;
+        if (sendChoose != place) { throw new IllegalArgumentException("area send not equal"); }
     }
 
     private void setCitySendButton(int which, City place) {
-        mCitySendButton.setText(place.getName());
-        place.populate();
+        Log.d(TAG,
+            "setCitySendButton() called with: which = [" + which + "], place = [" + place + "]");
+        sendChoose = calcChooseArea(provinceSendIndex, which, 0);
         citySendIndex = which;
         mAreaSendClick.setList(PROVINCES[provinceSendIndex].nexts.get(which).nexts);
         if (place.isDirectControlled()) {
-            mCitySendButton.setEnabled(false);
             setProvinceSendButton(which, PROVINCES[which]);
-        } else {
-            mCitySendButton.setEnabled(true);
         }
         setAreaSendButton(0, (Area) place.nexts.get(0));
     }
 
     private void setProvinceSendButton(int which, Province place) {
-        if (which == provinceSendIndex)return;
-        mProvinceSendButton.setText(place.getName());
-        place.populate();
+        Log.d(TAG, "setProvinceSendButton() called with: which = [" + which + "], place = [" + place
+            + "]");
+        if (which == provinceSendIndex) return;
+        sendChoose = calcChooseArea(which, 0, 0);
         provinceSendIndex = which;
         mCitySendClick.setList(PROVINCES[which].nexts);
         if (place.isDirectControlled()) {
-            mCitySendButton.setEnabled(false);
-            setCitySendButton(which, (City) place.nexts.get(0));
+            setCitySendButton(which, (City) place.nexts.get(which));
         } else {
-            mCitySendButton.setEnabled(true);
             setCitySendButton(0, (City) place.nexts.get(0));
         }
     }
 
     private void setButtons() {
-        if (sendChoose != null) {
-            mProvinceSendButton.setText(sendChoose.getFirst());
-            mCitySendButton.setText(sendChoose.getSecond());
-            mAreaSendButton.setText(sendChoose.getName());
-        }
-        if (receiveChoose != null) {
-            mProvinceReceiveButton.setText(receiveChoose.getFirst());
-            mCityReceiveButton.setText(sendChoose.getSecond());
-            mAreaReceiveButton.setText(receiveChoose.getName());
-        }
+        setButtons(sendChoose, receiveChoose);
     }
 
     public enum DialogType {

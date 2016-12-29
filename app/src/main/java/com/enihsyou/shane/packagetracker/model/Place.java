@@ -5,30 +5,8 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 
 public abstract class Place {
-    boolean directControlled;
-
-    public boolean isDirectControlled() {
-        return directControlled;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    protected String name;
-    protected String code;
-    public ArrayList<Place> nexts;
     protected static SparseArray<String> cities = new SparseArray<>();
-    protected Place(String name, String code, ArrayList<Place> nexts) {
-        this.name = name;
-        this.code = code;
-        this.nexts = (nexts == null) ? new ArrayList<Place>() : nexts;
-    }
-    public abstract void populate();
+
     static {
         // cities.put(110100, "东城区");
         // cities.put(110200, "西城区");
@@ -506,6 +484,31 @@ public abstract class Place {
         cities.put(820800, "路氹城");
         cities.put(820900, "澳门新城");
     }
+
+    public ArrayList<Place> nexts;
+    protected String name;
+    protected String code;
+    boolean directControlled;
+
+    protected Place(String name, String code, ArrayList<Place> nexts) {
+        this.name = name;
+        this.code = code;
+        this.nexts = (nexts == null) ? new ArrayList<Place>() : nexts;
+    }
+
+    public boolean isDirectControlled() {
+        return directControlled;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public abstract void populate();
 
     @Override
     public String toString() {

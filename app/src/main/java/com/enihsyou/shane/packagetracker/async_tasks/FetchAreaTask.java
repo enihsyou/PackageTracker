@@ -2,9 +2,6 @@ package com.enihsyou.shane.packagetracker.async_tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.Area;
 import com.enihsyou.shane.packagetracker.model.City;
@@ -19,16 +16,7 @@ import java.util.List;
 public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResult>> {
     private static final String TAG = "FetchAreaTask";
     private Kuaidi100Fetcher fetcher;
-    private Spinner spinner;
     private City selectedItem;
-    // private int position;
-
-    public FetchAreaTask(Spinner spinner, City selectedItem) {
-        fetcher = new Kuaidi100Fetcher();
-        this.spinner = spinner;
-        // this.position = position;
-        this.selectedItem = selectedItem;
-    }
 
     public FetchAreaTask(City selectedItem) {
         fetcher = new Kuaidi100Fetcher();
@@ -41,13 +29,14 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
         String queryNumber = params[0];
         if (queryNumber != null && !("00".equals(queryNumber)) && !queryNumber.isEmpty()) {
             try {
+                Log.v(TAG, "doInBackground: 启动网络服务获取地区列表 "+ queryNumber);
                 List<NetworkCityResult> results = fetcher.networkCityResult(queryNumber);
                 ArrayList<Place> nexts = new ArrayList<>();
                 for (NetworkCityResult result : results) {
                     String name = result.getName();
                     String code = result.getCode();
                     String fullName = result.getFullName();
-                    nexts.add(new Area(name, code, null, fullName));
+                    nexts.add(new Area(name, code, null, fullName, selectedItem.isDirectControlled()));
                 }
                 Collections.reverse(nexts);
                 selectedItem.nexts = nexts;
@@ -63,16 +52,6 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
     protected void onPostExecute(List<NetworkCityResult> networkCityResults) {
         if (networkCityResults == null) {
             Log.i(TAG, "onPostExecute: 失败 查询第三级地区 获得空结果");
-            return;
         }
-        /*如果传递了spinner，设置spinner的选项*/
-        if (spinner == null) return;
-        ArrayList<? extends Place> areas = selectedItem.nexts;
-        // int originPosition = spinner.getSelectedItemPosition();
-        ArrayAdapter<? extends Place> cityArrayAdapter =
-            new ArrayAdapter<>(spinner.getContext(), R.layout.spinner_textview, areas);
-        cityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(cityArrayAdapter);
-        // spinner.setSelection(this.positon);
     }
 }

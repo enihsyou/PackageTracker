@@ -36,15 +36,21 @@
                     android:layout_margin="8dp"
                     android:orientation="vertical">
                     <!--上面寄件地址-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/send_address" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="vertical"><TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/send_address" />
+
                         <Button
                             android:id="@+id/btn_province_send"
                             android:layout_width="match_parent"
@@ -64,16 +70,17 @@
                             android:lines="1"
                             android:text="@string/send_area" />
                     </LinearLayout>
-                    <!--下面收件地址-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/receive_address" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:orientation="vertical">
+                        <!--下面收件地址-->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:orientation="vertical"><TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/receive_address" />
                         <Button
                             android:id="@+id/btn_province_receive"
                             android:layout_width="match_parent"
@@ -92,8 +99,9 @@
                             android:layout_height="wrap_content"
                             android:lines="1"
                             android:text="@string/receive_area" />
+                    </LinearLayout>
 
-                </LinearLayout>
+                    </LinearLayout>
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
