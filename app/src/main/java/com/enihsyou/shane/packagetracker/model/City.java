@@ -1,7 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
 import android.util.Log;
-import com.enihsyou.shane.packagetracker.async_tasks.FetchAreaTask;
+import com.enihsyou.shane.packagetracker.async_task.FetchAreaTask;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;

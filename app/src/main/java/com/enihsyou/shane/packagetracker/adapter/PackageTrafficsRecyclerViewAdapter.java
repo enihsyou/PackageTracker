@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.holder.PackageViewHolder;
+import com.enihsyou.shane.packagetracker.holder.PackageHolder;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment.OnListFragmentInteractionListener;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
@@ -14,10 +14,9 @@ import java.util.List;
 /**
  * 能够展示一个 {@link PackageTrafficSearchResult} ，
  * 并且可以回调指定的 {@link OnListFragmentInteractionListener}的{@link RecyclerView.Adapter}
- * TODO: Replace the implementation with code for your data type.
  */
 public class PackageTrafficsRecyclerViewAdapter
-        extends RecyclerView.Adapter<PackageViewHolder> {
+        extends RecyclerView.Adapter<PackageHolder> {
 
     private final List<PackageTrafficSearchResult> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -29,15 +28,15 @@ public class PackageTrafficsRecyclerViewAdapter
     }
 
     @Override
-    public PackageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PackageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.traffic_header_card, parent, false);
-        return new PackageViewHolder(view);
+        return new PackageHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final PackageViewHolder holder, int position) {
+    public void onBindViewHolder(final PackageHolder holder, int position) {
         PackageTrafficSearchResult item = mValues.get(position);
         holder.bindItem(item);
 

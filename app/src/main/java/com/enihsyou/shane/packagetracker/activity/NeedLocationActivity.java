@@ -17,8 +17,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
-import com.enihsyou.shane.packagetracker.async_tasks.FetchLocationTask;
+import com.enihsyou.shane.packagetracker.async_task.FetchLocationTask;
 import com.enihsyou.shane.packagetracker.helper.LocationGetter;
+import com.enihsyou.shane.packagetracker.listener.OnAddressButtonClickListener;
 import com.enihsyou.shane.packagetracker.model.*;
 
 import java.util.List;
@@ -234,16 +235,12 @@ public abstract class NeedLocationActivity extends AppCompatActivity {
 
 
     void setAreaSendButton(int which, Area place) {
-        Log.d(TAG,
-            "setAreaSendButton() called with: which = [" + which + "], place = [" + place + "]");
         sendChoose = calcChooseArea(provinceSendIndex, citySendIndex, which);
         areaSendIndex = which;
         if (sendChoose != place) { throw new IllegalArgumentException("area send not equal"); }
     }
 
     void setCitySendButton(int which, City place) {
-        Log.d(TAG,
-            "setCitySendButton() called with: which = [" + which + "], place = [" + place + "]");
         sendChoose = calcChooseArea(provinceSendIndex, which, 0);
         citySendIndex = which;
         mAreaSendClick.setList(getCity(provinceSendIndex, citySendIndex).nexts);
@@ -254,8 +251,6 @@ public abstract class NeedLocationActivity extends AppCompatActivity {
     }
 
     void setProvinceSendButton(int which, Province place) {
-        Log.d(TAG, "setProvinceSendButton() called with: which = [" + which + "], place = [" + place
-            + "]");
         if (which == provinceSendIndex) return;
         sendChoose = calcChooseArea(which, 0, 0);
         provinceSendIndex = which;

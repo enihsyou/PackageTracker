@@ -1,4 +1,4 @@
-package com.enihsyou.shane.packagetracker.async_tasks;
+package com.enihsyou.shane.packagetracker.async_task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;

@@ -1,10 +1,11 @@
-package com.enihsyou.shane.packagetracker.async_tasks;
+package com.enihsyou.shane.packagetracker.async_task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayout;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
@@ -79,6 +80,12 @@ public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> i
             productTypeText.setText(productType == null ? "普通快递" : productType.trim());
             telephoneText.setText(telephone == null ? "" : telephone.trim());
 
+            telephoneText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: click on " + ((TextView) v).getText().toString());
+                }
+            });
             gridLayout.addView(card);
         }
     }

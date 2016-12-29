@@ -8,7 +8,7 @@ import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 
-public class PackageViewHolder extends RecyclerView.ViewHolder {
+public class PackageHolder extends RecyclerView.ViewHolder {
     public TrafficCardView getViewRoot() {
         return mViewRoot;
     }
@@ -35,7 +35,7 @@ public class PackageViewHolder extends RecyclerView.ViewHolder {
     private ImageView mCompanyHead;
     private PackageTrafficSearchResult mItem;
 
-    public PackageViewHolder(View view) {
+    public PackageHolder(View view) {
         super(view);
         TrafficCardView cardView = (TrafficCardView) view.findViewById(R.id.header_detail_container);
         mViewRoot = cardView;

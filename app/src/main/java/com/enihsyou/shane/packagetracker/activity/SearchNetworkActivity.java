@@ -3,29 +3,44 @@ package com.enihsyou.shane.packagetracker.activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import com.enihsyou.shane.packagetracker.R;
-import com.enihsyou.shane.packagetracker.async_tasks.FetchCourierTask;
-import com.enihsyou.shane.packagetracker.async_tasks.FetchNetworkTask;
+import com.enihsyou.shane.packagetracker.adapter.NetworkListViewAdapter;
+import com.enihsyou.shane.packagetracker.async_task.FetchCourierTask;
+import com.enihsyou.shane.packagetracker.async_task.FetchNetworkTask;
+import com.enihsyou.shane.packagetracker.dialog.ChooseAreaDialog;
 import com.enihsyou.shane.packagetracker.enums.DialogType;
-import com.enihsyou.shane.packagetracker.model.Place;
+import com.enihsyou.shane.packagetracker.listener.OnAddressButtonClickListener;
+import com.enihsyou.shane.packagetracker.model.*;
 
 import java.util.ArrayList;
 
 import static com.enihsyou.shane.packagetracker.model.Places.PROVINCES;
 
-public class SearchNetworkActivity extends NeedLocationActivity {
+public class SearchNetworkActivity extends NeedLocationActivity implements
+    ChooseAreaDialog.OnChooseListener{
     private static final String TAG = "SearchNetworkActivity";
 
     private TextInputEditText mStreetText;
     private Button mNetworkButton;
     private Button mCourierButton;
+
     private ListView mListView;
-    private ExpandableListView mDeatailView;
+    private ExpandableListView mDetailView;
+    private NetworkListViewAdapter mListViewAdapter;
+
+    public NetworkListViewAdapter getListViewAdapter() {
+        return mListViewAdapter;
+    }
+
+    public void setListViewAdapter(NetworkListViewAdapter listViewAdapter) {
+        mListViewAdapter = listViewAdapter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +54,12 @@ public class SearchNetworkActivity extends NeedLocationActivity {
         mStreetText = (TextInputEditText) findViewById(R.id.ipt_street);
         mNetworkButton = (Button) findViewById(R.id.btn_search_network);
         mCourierButton = (Button) findViewById(R.id.btn_search_courier);
+        mListView = (ListView) findViewById(R.id.entry_list);
+        mDetailView = (ExpandableListView) findViewById(R.id.sub_list);
+        mListViewAdapter =
+            new NetworkListViewAdapter(this, R.layout.network_card, new ArrayList<NetworkSearchResult.NetworkNetList>());
+        mListView.setAdapter(mListViewAdapter);
+
         /*设置按钮监听器*/
         mProvinceSendClick =
             new OnAddressButtonClickListener(
@@ -74,11 +95,12 @@ public class SearchNetworkActivity extends NeedLocationActivity {
                 String location = sendChoose.getFullName();
                 String locationCode = sendChoose.getCode();
                 String street = mStreetText.getText().toString();
+
                 Log.d(TAG, String.format("onClick: 搜索网点: 从 %s %s %s",
                     location, locationCode, street));
 
                 new FetchNetworkTask(SearchNetworkActivity.this)
-                    .execute(location, locationCode, street);
+                    .execute(location, street, "0", "10");
             }
         });
         mCourierButton.setOnClickListener(new View.OnClickListener() {
@@ -90,11 +112,47 @@ public class SearchNetworkActivity extends NeedLocationActivity {
                 String street = mStreetText.getText().toString();
                 Log.d(TAG, String.format("onClick: 搜索快递员: 从 %s %s %s",
                     location, locationCode, street));
+
                 new FetchCourierTask(SearchNetworkActivity.this)
                     .execute(location, locationCode, street);
             }
         });
         /*启动的时候 获取地点信息*/
         requestUpdateLocation(false);
+    }
+
+    public ExpandableListView getDetailView() {
+        return mDetailView;
+    }
+
+    @Override
+    public void OnItemClick(DialogFragment dialog, DialogType type, int which, Place place) {
+        Log.d(TAG, "OnItemClick: " + place);
+        // Province provinceItem;
+        // City cityItem;
+        // Area areaItem;
+        switch (type) {
+            case SEND_PROVINCE:
+                setProvinceSendButton(which, (Province) place);
+                break;
+            case SEND_CITY:
+                setCitySendButton(which, (City) place);
+                break;
+            case SEND_AREA:
+                setAreaSendButton(which, (Area) place);
+                break;
+            default:
+                Log.wtf(TAG, "WTF " + type);
+        }
+        setSendButtons(sendChoose);
+    }
+    @Override
+    public void OnDialogPositiveClick(DialogFragment dialog) {
+        Log.d(TAG, "OnDialogPositiveClick: ok");
+    }
+
+    @Override
+    public void OnDialogNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "OnDialogNegativeClick: cancel");
     }
 }
