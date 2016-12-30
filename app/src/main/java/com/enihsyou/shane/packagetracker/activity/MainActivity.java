@@ -69,9 +69,7 @@ public class MainActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-        mLoginHeader = (ImageView) findViewById(R.id.nav_user_head_image);
-        mLoginUsername = (TextView) findViewById(R.id.nav_username_text);
-        mLoginEmail = (TextView) findViewById(R.id.nav_user_email_text);
+
         setSupportActionBar(mToolbar); //顺序错误会导致点击左上角按钮失效
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -115,15 +113,19 @@ public class MainActivity extends AppCompatActivity
             R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        mNavigationView.setNavigationItemSelectedListener(this);
         /*点击头像登录*/
+        View header = mNavigationView.getHeaderView(0);
+        mLoginHeader = (ImageView) header.findViewById(R.id.nav_user_head_image);
+        mLoginUsername = (TextView) header.findViewById(R.id.nav_username_text);
+        mLoginEmail = (TextView) header.findViewById(R.id.nav_user_email_text);
         mLoginHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
-        mNavigationView.setNavigationItemSelectedListener(this);
-
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final String main_tutorial_switch = getString(R.string.main_tutorial_switch);
         boolean showTutorial = sharedPref.getBoolean(main_tutorial_switch, true);
