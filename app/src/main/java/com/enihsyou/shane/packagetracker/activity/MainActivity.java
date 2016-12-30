@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.adapter.PackageTrafficsRecyclerViewAdapter;
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity
     private SectionsPagerAdapter mSectionsPagerAdapter; //负责提供3个页面，保存在内存里
     private TabLayout mTabLayout;
     private SearchView mSearchView;
+    private ImageView mLoginHeader;
+    private TextView mLoginUsername;
+    private TextView mLoginEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,9 @@ public class MainActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mNavigationView = (NavigationView) findViewById(R.id.nav_view);
-
+        mLoginHeader = (ImageView) findViewById(R.id.nav_user_head_image);
+        mLoginUsername = (TextView) findViewById(R.id.nav_username_text);
+        mLoginEmail = (TextView) findViewById(R.id.nav_user_email_text);
         setSupportActionBar(mToolbar); //顺序错误会导致点击左上角按钮失效
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -108,7 +115,13 @@ public class MainActivity extends AppCompatActivity
             R.string.navigation_drawer_close);
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
-
+        /*点击头像登录*/
+        mLoginHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
         mNavigationView.setNavigationItemSelectedListener(this);
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

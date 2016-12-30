@@ -8,6 +8,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -66,16 +71,25 @@
             android:label="@string/title_activity_send_new"
             android:parentActivityName=".activity.MainActivity">
         </activity>
-        <activity android:name=".activity.SearchNetworkActivity"
+        <activity
+            android:name=".activity.SearchNetworkActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_network_search"
-            android:parentActivityName=".activity.MainActivity"  >
+            android:parentActivityName=".activity.MainActivity">
         </activity>
+
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".activity.TrackDetailActivity" />
 
-
-        </application>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.enihsyou.shane.packagetracker.activity.MainActivity" />
+        </activity>
+    </application>
 
 </manifest>
