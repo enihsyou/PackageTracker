@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    <TextView
+        android:id="@+id/phone_number"
+        style="?android:textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
+        android:text="@string/telephone" />
+    <LinearLayout
+        style="?android:buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <Button
+        android:id="@+id/make_call"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:text="@string/make_call"
+        android:textSize="16sp" />
+    <Button
+        android:id="@+id/copy_text"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:padding="16dp"
+        android:text="@string/copy_text"
+        android:textSize="16sp" />
+    </LinearLayout>
+</LinearLayout>
+

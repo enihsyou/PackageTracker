@@ -13,13 +13,12 @@ import com.enihsyou.shane.packagetracker.model.CourierSearchResult;
 
 import java.util.List;
 
-public class CourierListViewAdapter
-    extends BaseListViewAdapter<CourierSearchResult.Courier> implements
-    OnDownloadCallback {
-    private static final String TAG = "NetworkListViewAdapter";
+public class CourierListAdapter
+    extends BaseListViewAdapter<CourierSearchResult.Courier> implements OnDownloadCallback {
+    private static final String TAG = "NetworkListAdapter";
     private List<CourierSearchResult.Courier> items;
 
-    public CourierListViewAdapter(Activity context, int resource, List<CourierSearchResult.Courier> objects) {
+    public CourierListAdapter(Activity context, int resource, List<CourierSearchResult.Courier> objects) {
         super(context, resource);
         mActivity = context;
         mResource = resource;

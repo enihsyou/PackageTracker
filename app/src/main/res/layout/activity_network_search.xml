@@ -20,8 +20,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
             android:layout_marginBottom="@dimen/default_gap"
+            android:focusableInTouchMode="true"
             android:translationZ="@dimen/cardview_default_elevation">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -108,15 +108,15 @@
             android:dividerHeight="@dimen/default_gap">
 
         </ListView>
-        <ExpandableListView
-            android:id="@+id/sub_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/keyline_1_minus_8dp"
-            android:animateLayoutChanges="true">
-                <!--由程序添加搜索结果-->
+        <!--<ExpandableListView-->
+        <!--android:id="@+id/sub_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/keyline_1_minus_8dp"-->
+        <!--android:animateLayoutChanges="true">-->
+        <!--&lt;!&ndash;由程序添加搜索结果&ndash;&gt;-->
 
-        </ExpandableListView>
+        <!--</ExpandableListView>-->
     </LinearLayout>
 
 <android.support.design.widget.FloatingActionButton

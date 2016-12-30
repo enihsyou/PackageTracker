@@ -23,8 +23,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
 
-public class AddNewPackageActivity extends AppCompatActivity {
-    private static final String TAG = "AddNewPackageActivity";
+public class AddPackageActivity extends AppCompatActivity {
+    private static final String TAG = "AddPackageActivity";
     ArrayAdapter<CompanyEachAutoSearch> spinnerAdapter;
     private LinearLayout mCardContainer;
     private TextInputLayout mNumberEditWrapper;
@@ -74,7 +74,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 Log.v(TAG, "afterTextChanged: 在单号框输入字符 " + s.toString());
-                new FetchCompanyTask(AddNewPackageActivity.this).execute(s.toString());
+                new FetchCompanyTask(AddPackageActivity.this).execute(s.toString());
             }
         });
         mNumberEdit.setOnEditorActionListener(new EditText.OnEditorActionListener() {
@@ -82,7 +82,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.v(TAG, "onEditorAction: 点击键盘上的确认键");
-                    new FetchPackageTask(AddNewPackageActivity.this)
+                    new FetchPackageTask(AddPackageActivity.this)
                         .execute(mNumberEdit.getText().toString(),
                             ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
                     return true;
@@ -113,7 +113,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
                 if (mNumberEdit.getText().toString().isEmpty()) {
                     mNumberEditWrapper.setError(getResources().getString(R.string.wrong_package_number));
                 }
-                new FetchPackageTask(AddNewPackageActivity.this)
+                new FetchPackageTask(AddPackageActivity.this)
                     .execute(mNumberEdit.getText().toString(),
                         ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
             }

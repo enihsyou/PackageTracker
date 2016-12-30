@@ -1,12 +1,13 @@
 package com.enihsyou.shane.packagetracker.activity;
 
 import android.app.SearchManager;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -34,12 +34,10 @@ import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener,
@@ -83,10 +81,10 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_receive_package:
-                        startActivity(new Intent(MainActivity.this, AddNewPackageActivity.class));
+                        startActivity(new Intent(MainActivity.this, AddPackageActivity.class));
                         break;
                     case R.id.action_send_package:
-                        startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
+                        startActivity(new Intent(MainActivity.this, SendPackageActivity.class));
                         break;
                     case R.id.action_network_search:
                         startActivity(new Intent(MainActivity.this, SearchNetworkActivity.class));
@@ -113,42 +111,28 @@ public class MainActivity extends AppCompatActivity
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
-
-        new TapTargetSequence(this)
-            .targets(
-                TapTarget.forToolbarNavigationIcon(mToolbar, "这是侧边抽屉，你也可以向右滑动打开它")
-                // TapTarget.forToolbarMenuItem(mToolbar, R.id.menu_search, "搜索")
-            ).listener(new TapTargetSequence.Listener() {
-            @Override
-            public void onSequenceFinish() {
-                Snackbar.make(getCurrentFocus(), "完成教程", Snackbar.LENGTH_SHORT).setAction("再来一遍", new View.OnClickListener() {
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean showTutorial = sharedPref.getBoolean("main_tutorial_switch", true);
+        if (showTutorial) {
+            final TapTargetSequence sequence = new TapTargetSequence(this)
+                .targets(
+                    TapTarget.forToolbarNavigationIcon(mToolbar, getString(R.string.help_main_tutorial_drawer)),
+                    TapTarget.forView(mFab, getString(R.string.help_main_tutorial_fab)).transparentTarget(true)
+                ).listener(new TapTargetSequence.Listener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onSequenceFinish() {
+                        Snackbar.make(mViewPager, "完成主页教程", Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean("main_tutorial_switch", false).apply();
+                    }
 
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        Snackbar.make(mViewPager, "跳过主页教程", Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean("main_tutorial_switch", false).apply();
                     }
                 });
-            }
-
-            @Override
-            public void onSequenceCanceled(TapTarget lastTarget) {
-                final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("Oops!")
-                    .setMessage("你跳过了教程")
-                    .setPositiveButton("跳过", null)
-                    .setNegativeButton("继续", null).show();
-                TapTargetView.showFor(dialog,
-                    TapTarget.forView(dialog.getButton(DialogInterface.BUTTON_POSITIVE), "Uh oh!",
-                        String.format(Locale.getDefault(), "你跳过了第%d步", lastTarget.id()))
-                        .cancelable(false)
-                        .tintTarget(false), new TapTargetView.Listener() {
-                        @Override
-                        public void onTargetClick(TapTargetView view) {
-                            super.onTargetClick(view);
-                            dialog.dismiss();
-                        }
-                    });
-            }
-        }).start();
+            sequence.start();
+        }
     }
 
     private void launchTaobao() {
@@ -193,10 +177,10 @@ public class MainActivity extends AppCompatActivity
         /*处理左侧抽屉的选择*/
         switch (item.getItemId()) {
             case R.id.nav_receive_package:
-                startActivity(new Intent(this, AddNewPackageActivity.class));
+                startActivity(new Intent(this, AddPackageActivity.class));
                 break;
             case R.id.nav_send_package:
-                startActivity(new Intent(MainActivity.this, SendNewPackageActivity.class));
+                startActivity(new Intent(MainActivity.this, SendPackageActivity.class));
                 break;
             case R.id.nav_find_network:
                 startActivity(new Intent(MainActivity.this, SearchNetworkActivity.class));
@@ -226,18 +210,22 @@ public class MainActivity extends AppCompatActivity
         final PackageTrafficsRecyclerViewAdapter adapter = (
             (PackageTrafficsFragment) mSectionsPagerAdapter.getItem(mTabLayout.getSelectedTabPosition())).getAdapter();
 
-        final int posList = adapter.getValues().indexOf(item);//适配器里的位置
+        final int posList = adapter.getValues().indexOf(item); //适配器里的位置
         Log.d(TAG, "onItemLongPressed: 当前选择Tab" + mTabLayout.getSelectedTabPosition());
 
         /*移除*/
         adapter.remove(item, posList);
         Log.d(TAG, "onItemLongPressed: 已移除" + item + "  " + posList);
 
-        Snackbar.make(this.getCurrentFocus(), getString(R.string.item_has_been_removed, item.getNumber()), Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
+        Snackbar.make(mViewPager, getString(R.string.item_has_been_removed, item.getNumber()), Snackbar.LENGTH_LONG).setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.undoRemove(item, posPile);
-                Log.d(TAG, "onItemLongPressed: 已添加" + item + "  " + posPile);
+                adapter.undoRemove(item, posList, posPile);
+                // FIXME: 2016/12/30
+                /*存在一个Bug
+                * 当通过Snackbar恢复一个对象的时候，如果这时候不在原先的位置时，不会正确的更新UI
+                * */
+                Log.d(TAG, "onItemLongPressed: 已添加" + item + "  " + posList);
             }
         }).show();
     }

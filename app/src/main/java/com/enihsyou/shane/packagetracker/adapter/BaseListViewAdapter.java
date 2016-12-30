@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseListViewAdapter<V> extends ArrayAdapter<BaseHolder> {
-    private static final String TAG = "NetworkListViewAdapter";
+    private static final String TAG = "NetworkListAdapter";
     Activity mActivity;
     int mResource;
     List<V> items = new ArrayList<>();
@@ -25,11 +25,11 @@ public abstract class BaseListViewAdapter<V> extends ArrayAdapter<BaseHolder> {
         return items.size();
     }
 
+    @Override
+    public abstract View getView(int position, View convertView, ViewGroup parent);
+
     public void setItems(List<V> lists) {
         items = lists;
         notifyDataSetChanged();
     }
-
-    @Override
-    public abstract View getView(int position, View convertView, ViewGroup parent);
 }

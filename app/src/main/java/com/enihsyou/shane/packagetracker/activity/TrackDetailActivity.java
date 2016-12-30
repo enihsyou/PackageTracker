@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
@@ -20,6 +21,7 @@ import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.PackageEachTraffic;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,12 +32,14 @@ public class TrackDetailActivity extends AppCompatActivity {
     private NestedScrollView mScrollView;
     private PackageTrafficSearchResult mTraffic;
     private String phoneNumber;
+    private ImageView mToolbarImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_package_detail);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbarImage = (ImageView) findViewById(R.id.toolbar_image);
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mScrollView = (NestedScrollView) findViewById(R.id.detail_card_container);
 
@@ -78,6 +82,10 @@ public class TrackDetailActivity extends AppCompatActivity {
             /*匹配成功*/
             if (aPackage.getNumber().equals(query)) {
                 mTraffic = aPackage;
+                String path =
+                    Kuaidi100Fetcher.buildCompanyLongLogoUrl(mTraffic.getCompanyCode()).toString();
+                Log.d(TAG, "doMySearch: " + path);
+                Picasso.with(this).load(path).resize(1480, 480).centerInside().into(mToolbarImage);
                 LinearLayout linearLayout = (LinearLayout) LayoutInflater
                     .from(this)
                     .inflate(R.layout.traffic_header_card, mScrollView, false);
@@ -99,7 +107,7 @@ public class TrackDetailActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addNew = new Intent(getApplication(), AddNewPackageActivity.class);
+                Intent addNew = new Intent(getApplication(), AddPackageActivity.class);
                 startActivity(addNew);
             }
         });

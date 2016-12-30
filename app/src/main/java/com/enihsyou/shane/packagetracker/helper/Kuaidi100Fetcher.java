@@ -36,11 +36,12 @@ public class Kuaidi100Fetcher {
     private static final String SEARCH_COURIER = "courier/searchapi.do";
     private static final String SEARCH_PRICE = "order/unlogin/price.do";
     private static final String SEARCH_TIME = "time";
-    private static final String LOGO_URL = "order/images/company/";
-    private static final String LOGO_URL_144 = "images/all/144/";
-
-    private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
-    private static HttpUrl CDN_ENDPOINT = HttpUrl.parse("http://cdn.kuaidi100.com");
+    private static final String LOGO_URL = "order/images/company/"; //小的很的那种
+    private static final String LOGO_URL_144 = "images/all/144/"; //144*144方形
+    private static final String LOGO_URL_148 = "images/all/148x48/"; //148*48长方形
+    /*使用HTTPS*/
+    private static HttpUrl ENDPOINT = HttpUrl.parse("https://www.kuaidi100.com");
+    private static HttpUrl CDN_ENDPOINT = HttpUrl.parse("https://cdn.kuaidi100.com");
 
     private final Gson gson;
     private final JsonParser jsonParser;
@@ -60,6 +61,13 @@ public class Kuaidi100Fetcher {
 
     public static HttpUrl resolveRelativeUrl(String URL) {
         return ENDPOINT.resolve(URL);
+    }
+
+    public static HttpUrl buildCompanyLongLogoUrl(String companyCode) {
+        return CDN_ENDPOINT.newBuilder()
+            .addPathSegments(LOGO_URL_148)
+            .addPathSegment(companyCode + "_logo.png")
+            .build();
     }
 
     /**
@@ -101,21 +109,6 @@ public class Kuaidi100Fetcher {
     }
 
     /**
-     * 获取公司图标，小号的那种
-     * @param companyCode 公司代码
-     * @param imageExt 图片格式
-     *
-     * @return 图片的URL
-     */
-    @NonNull
-    public static HttpUrl buildCompanyLogoUrl(String companyCode, String imageExt) {
-        return ENDPOINT.newBuilder()
-            .addPathSegments(LOGO_URL)
-            .addPathSegment(companyCode + imageExt)
-            .build();
-    }
-
-    /**
      * 获取公司图标，大号的那种 144px
      *
      * @param companyCode 公司代码
@@ -129,6 +122,23 @@ public class Kuaidi100Fetcher {
             .addPathSegment(companyCode + ".png")
             .build();
     }
+
+    /**
+     * 获取公司图标，小号的那种
+     *
+     * @param companyCode 公司代码
+     * @param imageExt    图片格式
+     *
+     * @return 图片的URL
+     */
+    @NonNull
+    public static HttpUrl buildCompanyLogoUrl(String companyCode, String imageExt) {
+        return ENDPOINT.newBuilder()
+            .addPathSegments(LOGO_URL)
+            .addPathSegment(companyCode + imageExt)
+            .build();
+    }
+
     public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, int currentPage) throws
         IOException {
         HttpUrl request = buildPriceSearchUrl(String.valueOf(currentPage), String.valueOf(15));
@@ -457,6 +467,20 @@ public class Kuaidi100Fetcher {
         return gson.fromJson(response.body().charStream(), CourierSearchResult.class);
     }
 
+    public CourierDetailSearchResult courierDetailResult(String guid) throws IOException {
+        HttpUrl url = buildCourierSearchUrl();
+        RequestBody requestBody = new FormBody.Builder()
+            .addEncoded("method", "courierdetail")
+            .addEncoded("json", gson.toJson(new CourierDetailJson(guid), CourierDetailJson.class))
+            .build();
+        Response response = getJson(url, requestBody);
+        return parseCourierDetailJson(response);
+    }
+
+    private CourierDetailSearchResult parseCourierDetailJson(Response response) {
+        return gson.fromJson(response.body().charStream(), CourierDetailSearchResult.class);
+    }
+
     /**
      * 设置ImageView的图片
      */
@@ -473,6 +497,15 @@ public class Kuaidi100Fetcher {
         public CourierJson(String area, String keyword) {
             this.area = area;
             this.keyword = keyword;
+        }
+    }
+
+    private static class CourierDetailJson {
+        @SerializedName("guid")
+        private String guid;
+
+        public CourierDetailJson(String guid) {
+            this.guid = guid;
         }
     }
 

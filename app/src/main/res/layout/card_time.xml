@@ -5,8 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:translationZ="@dimen/cardview_default_elevation"
-    grid:layout_columnWeight="1"
-    grid:contentPadding="@dimen/default_gap">
+    grid:contentPadding="@dimen/default_gap"
+    grid:layout_columnWeight="1">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,13 +14,14 @@
         <ImageView
             android:id="@+id/logo"
             android:layout_width="wrap_content"
-            android:minHeight="30dp"
-            android:maxWidth="40dp"
-            grid:srcCompat="@drawable/image_placeholder"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
             android:layout_marginEnd="@dimen/default_gap"
-            android:contentDescription="@string/company_logo" />
+            android:layout_marginRight="@dimen/default_gap"
+            android:contentDescription="@string/company_logo"
+            android:maxWidth="40dp"
+            android:minHeight="30dp"
+            android:scaleType="fitCenter"
+            grid:srcCompat="@drawable/image_placeholder" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -32,6 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
                     android:text="@string/company_name"
                     tools:text="@string/company_name" />
                 <TextView
@@ -39,6 +41,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
+                    android:layout_marginLeft="4dp"
                     android:layout_marginStart="4dp"
                     android:gravity="center_vertical|end"
                     android:lines="1"

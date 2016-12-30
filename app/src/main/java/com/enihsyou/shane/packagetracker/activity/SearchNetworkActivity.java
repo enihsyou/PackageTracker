@@ -1,6 +1,8 @@
 package com.enihsyou.shane.packagetracker.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -10,7 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.adapter.BaseListViewAdapter;
-import com.enihsyou.shane.packagetracker.adapter.NetworkListViewAdapter;
+import com.enihsyou.shane.packagetracker.adapter.NetworkListAdapter;
 import com.enihsyou.shane.packagetracker.async_task.FetchCourierTask;
 import com.enihsyou.shane.packagetracker.async_task.FetchNetworkTask;
 import com.enihsyou.shane.packagetracker.dialog.ChooseAreaDialog;
@@ -31,7 +33,6 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
     private Button mCourierButton;
 
     private ListView mListView;
-    // private ExpandableListView mDetailView;
     private BaseListViewAdapter mListViewAdapter;
 
 
@@ -55,7 +56,7 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         mListView = (ListView) findViewById(R.id.entry_list);
         // mDetailView = (ExpandableListView) findViewById(R.id.sub_list);
         mListViewAdapter =
-            new NetworkListViewAdapter(this, R.layout.network_card, new ArrayList<NetworkSearchResult.NetworkNetList>());
+            new NetworkListAdapter(this, R.layout.card_network, new ArrayList<NetworkSearchResult.NetworkNetList>());
         mListView.setAdapter(mListViewAdapter);
         /*设置按钮监听器*/
         mProvinceSendClick =
@@ -92,12 +93,14 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
                 String location = sendChoose.getFullName();
                 String locationCode = sendChoose.getCode();
                 String street = mStreetText.getText().toString();
-
-                Log.d(TAG, String.format("onClick: 搜索网点: 从 %s %s %s",
-                    location, locationCode, street));
+                SharedPreferences preferences =
+                    PreferenceManager.getDefaultSharedPreferences(SearchNetworkActivity.this);
+                String pageSize = preferences.getString("page_size", "10");
+                Log.d(TAG, String.format("onClick: 搜索网点: 从 %s %s %s 数量 %s",
+                    location, locationCode, street, pageSize));
 
                 new FetchNetworkTask(SearchNetworkActivity.this)
-                    .execute(location, street, "0", "10");
+                    .execute(location, street, "0", pageSize);
             }
         });
         mCourierButton.setOnClickListener(new View.OnClickListener() {

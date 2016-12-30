@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_gap"
+    android:translationZ="@dimen/cardview_default_elevation"
     grid:contentPadding="@dimen/default_gap">
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,11 +15,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/default_gap"
+            android:layout_marginRight="@dimen/default_gap"
             android:contentDescription="@string/company_logo"
             android:maxWidth="200dp"
             android:minWidth="60dp"
             android:scaleType="fitCenter"
-            android:layout_marginRight="@dimen/default_gap" />
+            grid:srcCompat="@drawable/image_placeholder" />
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -37,19 +38,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:lines="1"
                     android:text="@string/company_name"
                     tools:text="@string/company_name" />
                 <TextView
-                    android:id="@+id/courier_name"
+                    android:id="@+id/price"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|end"
                     android:layout_marginLeft="4dp"
                     android:layout_marginStart="4dp"
                     android:gravity="center_vertical|end"
-                    android:text="@string/courier_name"
-                    tools:text="@string/courier_name" />
+                    android:lines="1"
+                    android:text="@string/price"
+                    tools:text="@string/price" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,11 +58,11 @@
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/area"
+                    android:id="@+id/express_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/work_area"
-                    tools:text="@string/work_area" />
+                    android:text="@string/express_type"
+                    tools:text="@string/express_type" />
                 <TextView
                     android:id="@+id/phone_number"
                     android:layout_width="fill_parent"
@@ -73,5 +74,3 @@
         </LinearLayout>
     </LinearLayout></LinearLayout>
 </android.support.v7.widget.CardView>
-
-

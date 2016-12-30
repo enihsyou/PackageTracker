@@ -2,21 +2,21 @@ package com.enihsyou.shane.packagetracker.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 public class CurrentLocationResult {
     @SerializedName("status")
     String status;
     @SerializedName("results")
-    List<Results> results;
+    ArrayList<Results> results;
 
     public String getStatus() {
         return status;
     }
 
-    public List<Results> getResults() {
+    public ArrayList<Results> getResults() {
         return results;
     }
 
@@ -27,13 +27,13 @@ public class CurrentLocationResult {
 
     public static class Results {
         @SerializedName("address_components")
-        List<AddressComponents> addresses;
+        ArrayList<AddressComponents> addresses;
         @SerializedName("formatted_address")
         String formattedAddress;
         @SerializedName("types")
-        List<String> types;
+        ArrayList<String> types;
 
-        public List<AddressComponents> getAddresses() {
+        public ArrayList<AddressComponents> getAddresses() {
             return addresses;
         }
 
@@ -41,7 +41,7 @@ public class CurrentLocationResult {
             return formattedAddress;
         }
 
-        public List<String> getTypes() {
+        public ArrayList<String> getTypes() {
             return types;
         }
 
@@ -57,9 +57,9 @@ public class CurrentLocationResult {
         @SerializedName("short_name")
         String shortName;
         @SerializedName("types")
-        List<String> types;
+        ArrayList<String> types;
 
-        public List<String> getTypes() {
+        public ArrayList<String> getTypes() {
             return types;
         }
 

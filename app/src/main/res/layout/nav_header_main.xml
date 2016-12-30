@@ -29,13 +29,15 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Username here"
-        android:textStyle="normal|bold" />
+        android:textIsSelectable="true"
+        android:textStyle="normal|bold"
+        tools:text="Username here" />
 
     <!--邮箱地址-->
     <TextView
         android:id="@+id/nav_user_email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textIsSelectable="true"
         tools:text="Email Address here" />
 </LinearLayout>

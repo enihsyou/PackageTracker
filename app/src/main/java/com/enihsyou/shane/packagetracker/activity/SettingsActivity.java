@@ -168,6 +168,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
+     * 通用设置
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
@@ -183,8 +184,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            bindPreferenceSummaryToValue(findPreference("page_size"));
+            // bindPreferenceSummaryToValue(findPreference("example_list"));
         }
 
         @Override

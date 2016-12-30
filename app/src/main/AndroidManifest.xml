@@ -55,13 +55,13 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activity.AddNewPackageActivity"
+            android:name=".activity.AddPackageActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_add_new"
             android:parentActivityName=".activity.MainActivity">
         </activity>
         <activity
-            android:name=".activity.SendNewPackageActivity"
+            android:name=".activity.SendPackageActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_send_new"
             android:parentActivityName=".activity.MainActivity">

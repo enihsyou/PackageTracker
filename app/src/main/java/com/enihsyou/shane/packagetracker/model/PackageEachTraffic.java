@@ -1,5 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,8 +12,8 @@ import java.util.regex.Pattern;
 /**
  * 一件包裹的一条运送信息
  */
-public class PackageEachTraffic {
-    private static SimpleDateFormat dateFormat =
+public class PackageEachTraffic implements Serializable {
+    private transient static SimpleDateFormat dateFormat =
             new SimpleDateFormat("yy-MM-dd\nkk:mm:ss", Locale.getDefault());
     private static Pattern REGEX_PHONE = Pattern.compile(".*(?=手机|电话|号码).*?(\\d{7,}).*");
 

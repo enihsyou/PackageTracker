@@ -10,11 +10,11 @@ import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
 
 import java.util.List;
 
-public class NetworkListViewAdapter extends BaseListViewAdapter<NetworkSearchResult.NetworkNetList>{
-    private static final String TAG = "NetworkListViewAdapter";
+public class NetworkListAdapter extends BaseListViewAdapter<NetworkSearchResult.NetworkNetList> {
+    private static final String TAG = "NetworkListAdapter";
     private List<NetworkSearchResult.NetworkNetList> items;
 
-    public NetworkListViewAdapter(Activity context, int resource, List<NetworkSearchResult.NetworkNetList> objects) {
+    public NetworkListAdapter(Activity context, int resource, List<NetworkSearchResult.NetworkNetList> objects) {
         super(context, resource);
         mActivity = context;
         mResource = resource;

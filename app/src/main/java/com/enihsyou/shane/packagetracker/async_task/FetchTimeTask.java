@@ -2,13 +2,14 @@ package com.enihsyou.shane.packagetracker.async_task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
-import com.enihsyou.shane.packagetracker.activity.SendNewPackageActivity;
+import com.enihsyou.shane.packagetracker.activity.SendPackageActivity;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.TimeSearchResult;
 import okhttp3.HttpUrl;
@@ -16,13 +17,16 @@ import okhttp3.HttpUrl;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * 获取快递时效信息
+ */
 public class FetchTimeTask extends AsyncTask<String, Void, TimeSearchResult> implements
     Kuaidi100Fetcher.SetImage {
     private static final String TAG = "FetchTimeTask";
     private final Kuaidi100Fetcher fetcher;
-    private final SendNewPackageActivity mActivity;
+    private final SendPackageActivity mActivity;
 
-    public FetchTimeTask(SendNewPackageActivity activity) {
+    public FetchTimeTask(SendPackageActivity activity) {
         mActivity = activity;
         fetcher = new Kuaidi100Fetcher();
     }
@@ -37,8 +41,8 @@ public class FetchTimeTask extends AsyncTask<String, Void, TimeSearchResult> imp
         try {
             return fetcher.timeResult(from, to);
         } catch (IOException e) {
-            Log.e(TAG, "doInBackground: 网络错误？", e);
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground: 网络错误？获取时效失败", e);
+            Snackbar.make(mActivity.getCurrentFocus(), R.string.network_error, Snackbar.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -58,7 +62,7 @@ public class FetchTimeTask extends AsyncTask<String, Void, TimeSearchResult> imp
             String time = entry.getTime();
             HttpUrl logoUrl = HttpUrl.parse(entry.getCompanyLogoUrl());
             CardView card =
-                (CardView) mActivity.getLayoutInflater().inflate(R.layout.time_card, mActivity.getGridLayout(), false);
+                (CardView) mActivity.getLayoutInflater().inflate(R.layout.card_time, mActivity.getGridLayout(), false);
             ImageView logo = (ImageView) card.findViewById(R.id.logo);
             TextView companyNameText = (TextView) card.findViewById(R.id.company_name);
             TextView timeText = (TextView) card.findViewById(R.id.time);

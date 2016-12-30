@@ -45,7 +45,7 @@ public class FetchAreaTask extends AsyncTask<String, Void, List<NetworkCityResul
                 selectedItem.nexts = nexts;
                 return results;
             } catch (IOException e) {
-                Log.e(TAG, "doInBackground: 网络错误？", e);
+                Log.e(TAG, "doInBackground: 网络错误？获取区县列表失败", e);
             }
         }
         return null;

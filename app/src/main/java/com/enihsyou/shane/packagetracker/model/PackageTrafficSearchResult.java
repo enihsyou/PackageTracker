@@ -3,19 +3,19 @@ package com.enihsyou.shane.packagetracker.model;
 import com.enihsyou.shane.packagetracker.enums.CompanyCodeString;
 import com.enihsyou.shane.packagetracker.enums.StatusString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
  * 搜索 快递跟踪进度 的结果
  */
-public class PackageTrafficSearchResult {
+public class PackageTrafficSearchResult implements Serializable {
     private String company; //公司代号
     private String number; //快递单号
     private int status; //快递状态
-    private List<PackageEachTraffic> traffics;
+    private ArrayList<PackageEachTraffic> traffics;
     private Date lastTime; //最后动态时间
 
     public PackageTrafficSearchResult() {
@@ -86,11 +86,11 @@ public class PackageTrafficSearchResult {
         this.number = number;
     }
 
-    public List<PackageEachTraffic> getTraffics() {
+    public ArrayList<PackageEachTraffic> getTraffics() {
         return traffics;
     }
 
-    public void setTraffics(List<PackageEachTraffic> traffics) {
+    public void setTraffics(ArrayList<PackageEachTraffic> traffics) {
         this.traffics = traffics;
         refreshLastSeenTime();
     }

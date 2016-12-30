@@ -1,16 +1,20 @@
 package com.enihsyou.shane.packagetracker.async_task;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.activity.SearchNetworkActivity;
-import com.enihsyou.shane.packagetracker.adapter.CourierListViewAdapter;
+import com.enihsyou.shane.packagetracker.adapter.CourierListAdapter;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.CourierSearchResult;
 
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * 获取指定区域的快递员列表
+ */
 public class FetchCourierTask extends AsyncTask<String, Void, CourierSearchResult> {
     private static final String TAG = "FetchCourierTask";
     private SearchNetworkActivity mActivity;
@@ -31,7 +35,8 @@ public class FetchCourierTask extends AsyncTask<String, Void, CourierSearchResul
         try {
             return fetcher.courierResult(area, keyword);
         } catch (IOException e) {
-            Log.e(TAG, "doInBackground: 网络错误？", e);
+            Log.e(TAG, "doInBackground: 网络错误？获取快递员列表失败", e);
+            Snackbar.make(mActivity.getCurrentFocus(), R.string.network_error, Snackbar.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -43,8 +48,8 @@ public class FetchCourierTask extends AsyncTask<String, Void, CourierSearchResul
             return;
         }
         Log.d(TAG, "onPostExecute: 成功 查询快递员 获得数量: " + courierSearchResult.getCouriers().size());
-        CourierListViewAdapter adapter =
-            new CourierListViewAdapter(mActivity, R.layout.courier_card, courierSearchResult.getCouriers());
+        CourierListAdapter adapter =
+            new CourierListAdapter(mActivity, R.layout.card_courier, courierSearchResult.getCouriers());
         mActivity.setListViewAdapter(adapter);
         adapter.setItems(courierSearchResult.getCouriers());
     }

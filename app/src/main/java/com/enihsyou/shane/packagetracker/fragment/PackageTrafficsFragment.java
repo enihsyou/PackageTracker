@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.adapter.PackageTrafficsRecyclerViewAdapter;
 import com.enihsyou.shane.packagetracker.enums.StatusString;
@@ -22,15 +23,10 @@ import com.enihsyou.shane.packagetracker.model.Packages;
 public class PackageTrafficsFragment extends Fragment {
     private static final String PACKAGE_TYPE = "PACKAGE_TYPE";
     private OnListFragmentInteractionListener mListener;
-
-
-    public PackageTrafficsRecyclerViewAdapter getAdapter() {
-        return mAdapter;
-    }
-
     private PackageTrafficsRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private StatusString mPackageType;
+    private ImageView mEmptyView;
 
     public static PackageTrafficsFragment newInstance(StatusString type) {
         PackageTrafficsFragment fragment = new PackageTrafficsFragment();
@@ -40,6 +36,10 @@ public class PackageTrafficsFragment extends Fragment {
 
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public PackageTrafficsRecyclerViewAdapter getAdapter() {
+        return mAdapter;
     }
 
     @Override
@@ -65,19 +65,18 @@ public class PackageTrafficsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_packagetraffics_list, container, false);
-
         /*设置适配器*/
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
+        Context context = view.getContext();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_package_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mEmptyView = (ImageView) view.findViewById(R.id.empty_view);
 
-            mAdapter =
-                new PackageTrafficsRecyclerViewAdapter(this,
-                    Packages.getPackages(getActivity(), mPackageType), mListener);
-            mRecyclerView.setAdapter(mAdapter);
-        }
+        mAdapter =
+            new PackageTrafficsRecyclerViewAdapter(this,
+                Packages.getPackages(getActivity(), mPackageType), mListener, mPackageType);
+        mRecyclerView.setAdapter(mAdapter);
+
         return view;
     }
 
@@ -85,6 +84,13 @@ public class PackageTrafficsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
+        if (mAdapter.getItemCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
     }
 
     @Override

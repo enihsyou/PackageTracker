@@ -1,7 +1,9 @@
 package com.enihsyou.shane.packagetracker.async_task;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.activity.NeedLocationActivity;
 import com.enihsyou.shane.packagetracker.helper.GoogleFetcher;
 import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
@@ -9,6 +11,9 @@ import com.enihsyou.shane.packagetracker.model.CurrentLocationResult;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * 反向解析地理地址
+ */
 public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationResult> {
     private static final String TAG = "FetchLocationTask";
     private NeedLocationActivity mActivity;
@@ -30,7 +35,8 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
         try {
             return fetcher.locationResult(lat, lng);
         } catch (IOException e) {
-            Log.e(TAG, "doInBackground: 网络错误？", e);
+            Log.e(TAG, "doInBackground: 网络错误？反向解析地理信息失败", e);
+            Snackbar.make(mActivity.getCurrentFocus(), R.string.network_error, Snackbar.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -38,7 +44,7 @@ public class FetchLocationTask extends AsyncTask<Double, Void, CurrentLocationRe
     @Override
     protected void onPostExecute(CurrentLocationResult currentLocationResult) {
         if (currentLocationResult == null) {
-            Log.i(TAG, "onPostExecute: 失败 地址反向解析 获得空结果");
+            Log.i(TAG, "onPostExecute: 失败 地理反向解析 获得空结果");
             return;
         }
         Log.d(TAG, "onPostExecute: Google定位返回结果 " + currentLocationResult);

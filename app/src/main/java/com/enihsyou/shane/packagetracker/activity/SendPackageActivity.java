@@ -25,9 +25,9 @@ import java.util.ArrayList;
 
 import static com.enihsyou.shane.packagetracker.model.Places.*;
 
-public class SendNewPackageActivity extends NeedLocationActivity implements
+public class SendPackageActivity extends NeedLocationActivity implements
     ChooseAreaDialog.OnChooseListener {
-    private static final String TAG = "SendNewPackageActivity";
+    private static final String TAG = "SendPackageActivity";
 
     private Button mPriceButton;
     private Button mTimeButton;
@@ -40,8 +40,8 @@ public class SendNewPackageActivity extends NeedLocationActivity implements
 
     private OnAddressButtonClickListener mCityReceiveClick;
     private OnAddressButtonClickListener mProvinceReceiveClick;
-    private OnAddressButtonClickListener mAreaReceiveClick;
 
+    private OnAddressButtonClickListener mAreaReceiveClick;
     private int provinceReceiveIndex;
     private int cityReceiveIndex;
     private int areaReceiveIndex;
@@ -50,7 +50,7 @@ public class SendNewPackageActivity extends NeedLocationActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate: 启动发送新快递");
-        setContentView(R.layout.activity_send_new_package);
+        setContentView(R.layout.activity_send_package);
         mFab = (FloatingActionButton) findViewById(R.id.fab_location);
         mPriceButton = (Button) findViewById(R.id.button_search_price);
         mTimeButton = (Button) findViewById(R.id.button_search_time);
@@ -123,7 +123,7 @@ public class SendNewPackageActivity extends NeedLocationActivity implements
                 Log.d(TAG, String.format("onClick: 搜索价格: 从 %s %s，到 %s %s，重量 %s",
                     locationSend, locationSendCode, locationReceive, locationReceiveCode, weight));
 
-                new FetchPriceTask(SendNewPackageActivity.this)
+                new FetchPriceTask(SendPackageActivity.this)
                     .execute(locationSendCode, locationReceiveCode, "", weight);
             }
         });
@@ -140,7 +140,7 @@ public class SendNewPackageActivity extends NeedLocationActivity implements
                 Log.d(TAG, String.format("onClick: 搜索时效: 从 %s %s，到 %s %s",
                     locationSend, locationSendCode, locationReceive, locationReceiveCode));
 
-                new FetchTimeTask(SendNewPackageActivity.this)
+                new FetchTimeTask(SendPackageActivity.this)
                     .execute(locationSendCode, locationReceiveCode);
             }
         });

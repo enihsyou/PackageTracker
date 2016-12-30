@@ -22,6 +22,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
              <ImageView
+                 android:id="@+id/toolbar_image"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:contentDescription="@string/company_logo"

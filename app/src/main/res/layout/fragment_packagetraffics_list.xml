@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.enihsyou.shane.packagetracker.PackageTrafficsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment"
-    tools:listitem="@layout/fragment_packagetraffics" />
+    android:orientation="vertical">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_package_list"
+        android:name="com.enihsyou.shane.packagetracker.PackageTrafficsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment"
+        tools:listitem="@layout/fragment_packagetraffics" />
+    <ImageView
+        android:id="@+id/empty_view"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/empty"
+        android:gravity="center"
+        android:visibility="gone"
+        app:srcCompat="@drawable/package_variant_opened" />
+</LinearLayout>

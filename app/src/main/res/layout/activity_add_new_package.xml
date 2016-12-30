@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity">
+    tools:context="com.enihsyou.shane.packagetracker.activity.AddPackageActivity">
     <!--提供滚动功能-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.enihsyou.shane.packagetracker.activity.AddNewPackageActivity">
+        tools:context="com.enihsyou.shane.packagetracker.activity.AddPackageActivity">
         <!--只能包含一个滚动元素，由于需要在下面添加另外的卡片，所以把东西都包起来-->
         <LinearLayout
             android:id="@+id/new_card_container"
@@ -27,6 +27,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:translationZ="@dimen/cardview_default_elevation"
                 app:cardCornerRadius="@dimen/cardview_default_radius">
                 <!--由上下两部分组成-->
                 <LinearLayout

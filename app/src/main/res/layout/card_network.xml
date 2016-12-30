@@ -39,8 +39,8 @@
             <TextView
                 android:id="@+id/address"
                 android:layout_width="0dp"
-                android:layout_weight="0.7"
                 android:layout_height="match_parent"
+                android:layout_weight="0.7"
                 android:gravity="center_vertical|start"
                 android:scrollHorizontally="false"
                 android:text="@string/address"
@@ -48,8 +48,8 @@
             <TextView
                 android:id="@+id/phone_number"
                 android:layout_width="0dp"
-                android:layout_weight="0.3"
                 android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:gravity="center_vertical|end"
                 android:lines="1"
                 android:text="@string/telephone"

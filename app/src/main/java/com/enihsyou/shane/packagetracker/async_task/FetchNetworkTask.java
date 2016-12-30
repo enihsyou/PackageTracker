@@ -1,16 +1,20 @@
 package com.enihsyou.shane.packagetracker.async_task;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.activity.SearchNetworkActivity;
-import com.enihsyou.shane.packagetracker.adapter.NetworkListViewAdapter;
+import com.enihsyou.shane.packagetracker.adapter.NetworkListAdapter;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
 
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * 获取特定地址的网点信息
+ */
 public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResult> {
     private static final String TAG = "FetchNetworkTask";
     private SearchNetworkActivity mActivity;
@@ -33,7 +37,8 @@ public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResul
         try {
             return fetcher.networkResult(area, keyword, offset, size);
         } catch (IOException e) {
-            Log.e(TAG, "doInBackground: 网络错误？", e);
+            Log.e(TAG, "doInBackground: 网络错误？获取网点失败", e);
+            Snackbar.make(mActivity.getCurrentFocus(), R.string.network_error, Snackbar.LENGTH_SHORT).show();
         }
         return null;
     }
@@ -45,8 +50,8 @@ public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResul
             return;
         }
         Log.d(TAG, "onPostExecute: 成功 查询网点 获得数量: " + networkSearchResult.getNetLists().size());
-        NetworkListViewAdapter adapter =
-            new NetworkListViewAdapter(mActivity, R.layout.network_card, networkSearchResult.getNetLists());
+        NetworkListAdapter adapter =
+            new NetworkListAdapter(mActivity, R.layout.card_network, networkSearchResult.getNetLists());
         mActivity.setListViewAdapter(adapter);
         adapter.setItems(networkSearchResult.getNetLists());
     }
