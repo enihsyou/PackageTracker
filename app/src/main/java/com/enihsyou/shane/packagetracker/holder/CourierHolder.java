@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
+import com.enihsyou.shane.packagetracker.helper.OnDownloadCallback;
 import com.enihsyou.shane.packagetracker.model.CourierSearchResult;
 import okhttp3.HttpUrl;
 
@@ -21,10 +22,10 @@ public class CourierHolder extends BaseHolder<CourierSearchResult.Courier>
     private TextView mAreaText;
     private TextView mPhoneText;
 
-    private Callback mCallback;
+    private OnDownloadCallback mOnDownloadCallback;
 
-    public CourierHolder(CardView card, Callback listener) {
-        mCallback = listener;
+    public CourierHolder(CardView card, OnDownloadCallback listener) {
+        mOnDownloadCallback = listener;
 
         mHeader = (ImageView) card.findViewById(R.id.header);
         mCourierNameText = (TextView) card.findViewById(R.id.courier_name);
@@ -68,13 +69,6 @@ public class CourierHolder extends BaseHolder<CourierSearchResult.Courier>
 
     @Override
     public void SetBitmap(final Bitmap bitmap, final ImageView view) {
-        mCallback.SetBitmapCallBack(bitmap, view);
-    }
-
-    /**
-     * 跳转到UI线程设置图片
-     */
-    public interface Callback {
-        void SetBitmapCallBack(Bitmap bitmap, ImageView view);
+        mOnDownloadCallback.SetBitmapCallBack(bitmap, view);
     }
 }

@@ -3,7 +3,7 @@ package com.enihsyou.shane.packagetracker.enums;
 /**
  * 从JSON的快件状态数字转成文字
  */
-public enum EnumStatusString {
+public enum StatusString {
     在途,
     揽件,
     疑难,
@@ -15,7 +15,7 @@ public enum EnumStatusString {
 
     // public static String getStatus(int s){
     //     String query = "s" + s;
-    //     return EnumStatusString.valueOf(query).toString();
+    //     return StatusString.valueOf(query).toString();
     // }
 
     // @Override

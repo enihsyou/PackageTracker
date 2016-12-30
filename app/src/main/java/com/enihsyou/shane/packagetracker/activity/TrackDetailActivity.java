@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.enihsyou.shane.packagetracker.R;
@@ -45,7 +46,7 @@ public class TrackDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (phoneNumber != null) {
                     makePhoneCall();
-                }else{
+                } else {
                     Toast.makeText(TrackDetailActivity.this, "没有找到电话号码", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -53,7 +54,7 @@ public class TrackDetailActivity extends AppCompatActivity {
             private void makePhoneCall() {
                 Intent makePhoneCall = new Intent(Intent.ACTION_DIAL);
                 makePhoneCall.setData(Uri.parse("tel:" + phoneNumber));
-                Log.d(TAG, "makePhoneCall: Dial "+ phoneNumber);
+                Log.d(TAG, "makePhoneCall: Dial " + phoneNumber);
                 startActivity(makePhoneCall);
             }
         });
@@ -66,25 +67,42 @@ public class TrackDetailActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             doMySearch(query);
         } else {
-            String packageNumber = intent.getStringExtra("package_number");
+            String packageNumber = intent.getStringExtra(MainActivity.PACKAGE_NUMBER);
             doMySearch(packageNumber);
         }
     }
 
     private void doMySearch(String query) {
-        List<PackageTrafficSearchResult> packages = Packages.getPackages(this);
+        List<PackageTrafficSearchResult> packages = Packages.getPackages(this, null);
         for (PackageTrafficSearchResult aPackage : packages) {
-            // if (aPackage.getNumber().startsWith(query)) {}
+            /*匹配成功*/
             if (aPackage.getNumber().equals(query)) {
                 mTraffic = aPackage;
                 LinearLayout linearLayout = (LinearLayout) LayoutInflater
-                        .from(this)
-                        .inflate(R.layout.traffic_header_card, mScrollView, false);
+                    .from(this)
+                    .inflate(R.layout.traffic_header_card, mScrollView, false);
                 mScrollView.addView(Kuaidi100Fetcher.generateCard(aPackage, linearLayout));
 
+                mFab.show();
                 setPhoneNumber();
+                return;
             }
         }
+        /*匹配失败*/
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater
+            .from(this)
+            .inflate(R.layout.traffic_not_found, mScrollView, false);
+        mScrollView.addView(linearLayout);
+        mFab.hide();
+        mToolbar.collapseActionView();
+        Button button = (Button) linearLayout.findViewById(R.id.add_new);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addNew = new Intent(getApplication(), AddNewPackageActivity.class);
+                startActivity(addNew);
+            }
+        });
     }
 
     private void setPhoneNumber() {

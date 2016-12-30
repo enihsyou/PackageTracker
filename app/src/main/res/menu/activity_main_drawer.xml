@@ -6,22 +6,22 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/receive_package" />
         <item
-          android:id="@+id/nav_send_package"
-          android:icon="@drawable/ic_menu_camera"
-          android:title="@string/send_package" />
+            android:id="@+id/nav_send_package"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/send_package" />
         <item
             android:id="@+id/nav_find_network"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/find_network" />
+        <item
+            android:id="@+id/nav_open_taobao"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/launch_taobao" />
     </group>
     <group android:id="@+id/group_setting">
         <item
-          android:id="@+id/nav_settings"
-          android:icon="@drawable/ic_menu_manage"
-          android:title="@string/action_settings" />
-        <item
-          android:id="@+id/nav_share"
-          android:icon="@drawable/ic_menu_share"
-          android:title="@string/share_with_friends" />
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/action_settings" />
     </group>
 </menu>

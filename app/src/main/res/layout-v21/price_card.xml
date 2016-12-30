@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:minWidth="60dp"
             android:maxWidth="200dp"
-            grid:srcCompat="@drawable/ic_image_placeholder"
+            grid:srcCompat="@drawable/image_placeholder"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:layout_marginEnd="@dimen/default_gap"

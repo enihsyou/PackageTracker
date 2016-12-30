@@ -7,13 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.enihsyou.shane.packagetracker.helper.OnDownloadCallback;
 import com.enihsyou.shane.packagetracker.holder.CourierHolder;
 import com.enihsyou.shane.packagetracker.model.CourierSearchResult;
 
 import java.util.List;
 
 public class CourierListViewAdapter
-    extends BaseListViewAdapter<CourierSearchResult.Courier> implements CourierHolder.Callback{
+    extends BaseListViewAdapter<CourierSearchResult.Courier> implements
+    OnDownloadCallback {
     private static final String TAG = "NetworkListViewAdapter";
     private List<CourierSearchResult.Courier> items;
 

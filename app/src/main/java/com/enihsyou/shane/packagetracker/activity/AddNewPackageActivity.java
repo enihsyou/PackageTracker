@@ -17,8 +17,8 @@ import android.widget.*;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.async_task.FetchCompanyTask;
 import com.enihsyou.shane.packagetracker.async_task.FetchPackageTask;
+import com.enihsyou.shane.packagetracker.enums.CompanyCodeString;
 import com.enihsyou.shane.packagetracker.model.CompanyEachAutoSearch;
-import com.enihsyou.shane.packagetracker.enums.EnumCompanyCodeString;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.v(TAG, "onEditorAction: 点击键盘确认键");
+                    Log.v(TAG, "onEditorAction: 点击键盘上的确认键");
                     new FetchPackageTask(AddNewPackageActivity.this)
                         .execute(mNumberEdit.getText().toString(),
                             ((CompanyEachAutoSearch) mSpinner.getSelectedItem()).getCompanyCode());
@@ -93,7 +93,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
 
         /*设置下拉选项框*/
         //添加所有快递公司列表到下拉框
-        for (EnumCompanyCodeString codeToString : EnumCompanyCodeString.values()) {
+        for (CompanyCodeString codeToString : CompanyCodeString.values()) {
             CompanyEachAutoSearch e = new CompanyEachAutoSearch();
             e.setCompanyCode(codeToString.name());
             spinnerItems.add(e);
@@ -129,6 +129,7 @@ public class AddNewPackageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 intent.initiateScan();
                 // startActivityForResult(intent, 0);
+                mTakePicture.setEnabled(false); //现在不可用
             }
         });
     }

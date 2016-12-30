@@ -13,6 +13,7 @@ import com.enihsyou.shane.packagetracker.view.TrafficCardView;
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,8 +37,10 @@ public class Kuaidi100Fetcher {
     private static final String SEARCH_PRICE = "order/unlogin/price.do";
     private static final String SEARCH_TIME = "time";
     private static final String LOGO_URL = "order/images/company/";
+    private static final String LOGO_URL_144 = "images/all/144/";
 
     private static HttpUrl ENDPOINT = HttpUrl.parse("http://www.kuaidi100.com");
+    private static HttpUrl CDN_ENDPOINT = HttpUrl.parse("http://cdn.kuaidi100.com");
 
     private final Gson gson;
     private final JsonParser jsonParser;
@@ -85,7 +88,9 @@ public class Kuaidi100Fetcher {
         // 设置CardView各个部件
         detailContainer.setCompanyName(searchResult.getCompanyString());
         detailContainer.setPackageNumber(searchResult.getNumber());
-        // detailContainer.setCompanyHead(null);
+        Picasso.with(detailContainer.getContext()).load(Kuaidi100Fetcher.buildCompanyLogoUrl(searchResult.getCompanyCode()).toString())
+            .placeholder(R.drawable.package_variant_closed)
+            .into(detailContainer.getCompanyHead());
         return detailContainer;
     }
 
@@ -95,6 +100,13 @@ public class Kuaidi100Fetcher {
         return detailContainer;
     }
 
+    /**
+     * 获取公司图标，小号的那种
+     * @param companyCode 公司代码
+     * @param imageExt 图片格式
+     *
+     * @return 图片的URL
+     */
     @NonNull
     public static HttpUrl buildCompanyLogoUrl(String companyCode, String imageExt) {
         return ENDPOINT.newBuilder()
@@ -103,6 +115,20 @@ public class Kuaidi100Fetcher {
             .build();
     }
 
+    /**
+     * 获取公司图标，大号的那种 144px
+     *
+     * @param companyCode 公司代码
+     *
+     * @return 图片的URL
+     */
+    @NonNull
+    public static HttpUrl buildCompanyLogoUrl(String companyCode) {
+        return CDN_ENDPOINT.newBuilder()
+            .addPathSegments(LOGO_URL_144)
+            .addPathSegment(companyCode + ".png")
+            .build();
+    }
     public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, int currentPage) throws
         IOException {
         HttpUrl request = buildPriceSearchUrl(String.valueOf(currentPage), String.valueOf(15));

@@ -1,6 +1,6 @@
 package com.enihsyou.shane.packagetracker.model;
 
-import com.enihsyou.shane.packagetracker.enums.EnumCompanyCodeString;
+import com.enihsyou.shane.packagetracker.enums.CompanyCodeString;
 
 /**
  * 从API获取的由快递单号推测的快递公司信息
@@ -38,7 +38,7 @@ public class CompanyEachAutoSearch {
     public String toString() {
         String name;
         try {
-            name = Enum.valueOf(EnumCompanyCodeString.class, companyCode).toString();
+            name = Enum.valueOf(CompanyCodeString.class, companyCode).toString();
         } catch (IllegalArgumentException e) {
             name = companyCode;
         }

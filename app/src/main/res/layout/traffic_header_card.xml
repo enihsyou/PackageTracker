@@ -33,6 +33,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:contentDescription="@string/company_logo"
+                    android:clickable="false"
                     app:srcCompat="@drawable/ic_info_black_24dp" />
                 <!--单号-->
                 <LinearLayout
@@ -47,6 +48,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lines="1"
+                        android:clickable="false"
                         android:textIsSelectable="true"
                         tools:text="快递单号" />
                     <!--快递公司名字-->
@@ -56,6 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lines="1"
+                        android:clickable="false"
                         android:textIsSelectable="true"
                         tools:text="快递公司" />
                 </LinearLayout>

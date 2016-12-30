@@ -51,6 +51,10 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
                 .getResources().getString(R.string.wrong_package_number));
             return;
         }
+        Log.d(TAG, String.format("onPostExecute: 成功解析快递信息 %s,有%d条记录",
+            searchResult.getNumber(),
+            searchResult.getTraffics().size()));
+
         /*先收起键盘*/
         mActivity.hideKeyboard();
         /*移除之前的输入错误提示*/
@@ -80,9 +84,6 @@ public class FetchPackageTask extends AsyncTask<String, Void, PackageTrafficSear
         /*创建下面的结果显示卡片*/
         Kuaidi100Fetcher.generateCard(searchResult, trafficHeader);
 
-        Log.d(TAG, String.format("onPostExecute: 成功解析快递信息 %s,有%d条记录",
-            searchResult.getNumber(),
-            searchResult.getTraffics().size()));
         /*将卡片添加到适合的位置*/
         attachRoot.addView(trafficHeader);
         /*将结果添加到跟踪列表*/

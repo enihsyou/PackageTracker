@@ -8,8 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.enihsyou.shane.packagetracker.adapter.PackageTrafficsRecyclerViewAdapter;
 import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.adapter.PackageTrafficsRecyclerViewAdapter;
+import com.enihsyou.shane.packagetracker.enums.StatusString;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
 
@@ -19,50 +20,62 @@ import com.enihsyou.shane.packagetracker.model.Packages;
  * 包含这个fragment的Activity必须实现{@link OnListFragmentInteractionListener}接口
  */
 public class PackageTrafficsFragment extends Fragment {
+    private static final String PACKAGE_TYPE = "PACKAGE_TYPE";
     private OnListFragmentInteractionListener mListener;
-    private PackageTrafficsRecyclerViewAdapter mAdapter;
-    private RecyclerView mRecyclerView;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public PackageTrafficsFragment() {
+
+    public PackageTrafficsRecyclerViewAdapter getAdapter() {
+        return mAdapter;
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static PackageTrafficsFragment newInstance() {
+    private PackageTrafficsRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private StatusString mPackageType;
+
+    public static PackageTrafficsFragment newInstance(StatusString type) {
         PackageTrafficsFragment fragment = new PackageTrafficsFragment();
         Bundle args = new Bundle();
+
+        args.putSerializable(PACKAGE_TYPE, type);
 
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnListFragmentInteractionListener) {
+            mListener = (OnListFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
-            // get arguments
+            mPackageType = (StatusString) getArguments().getSerializable(PACKAGE_TYPE);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+        Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_packagetraffics_list, container, false);
 
-        // Set the adapter
+        /*设置适配器*/
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            mAdapter = new PackageTrafficsRecyclerViewAdapter(Packages.getPackages(getActivity()),
-                    mListener);
+            mAdapter =
+                new PackageTrafficsRecyclerViewAdapter(this,
+                    Packages.getPackages(getActivity(), mPackageType), mListener);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -75,17 +88,6 @@ public class PackageTrafficsFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -94,13 +96,10 @@ public class PackageTrafficsFragment extends Fragment {
     /**
      * 这个接口必须被包含这个Fragment的Activity给实现，
      * 这样才能让这个Fragment和他的Activity或者其他Fragment进行交流。
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(PackageTrafficSearchResult item);
+        void onItemClicked(PackageTrafficSearchResult item);
+
+        void onItemLongPressed(PackageTrafficSearchResult item);
     }
 }

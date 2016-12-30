@@ -1,7 +1,7 @@
 package com.enihsyou.shane.packagetracker.model;
 
-import com.enihsyou.shane.packagetracker.enums.EnumCompanyCodeString;
-import com.enihsyou.shane.packagetracker.enums.EnumStatusString;
+import com.enihsyou.shane.packagetracker.enums.CompanyCodeString;
+import com.enihsyou.shane.packagetracker.enums.StatusString;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +56,7 @@ public class PackageTrafficSearchResult {
 
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "单号: %s，公司: %s，状态: %d",
+        return String.format(Locale.getDefault(), "单号: %s，公司: %s，状态: %s",
             getNumber(), getCompanyString(), getStatus());
     }
 
@@ -67,15 +67,15 @@ public class PackageTrafficSearchResult {
     public String getCompanyString() {
         String name;
         try {
-            name = Enum.valueOf(EnumCompanyCodeString.class, company).toString();
+            name = Enum.valueOf(CompanyCodeString.class, company).toString();
         } catch (IllegalArgumentException e) {
             name = company;
         }
         return name;
     }
 
-    public int getStatus() {
-        return status;
+    public StatusString getStatus() {
+        return StatusString.values()[status];
     }
 
     public void setStatus(int status) {
@@ -84,16 +84,6 @@ public class PackageTrafficSearchResult {
 
     public void setNumber(String number) {
         this.number = number;
-    }
-
-    public String getStatusString() {
-        String name;
-        try {
-            name = EnumStatusString.values()[status].toString();
-        } catch (IllegalArgumentException e) {
-            name = String.valueOf(status);
-        }
-        return name;
     }
 
     public List<PackageEachTraffic> getTraffics() {

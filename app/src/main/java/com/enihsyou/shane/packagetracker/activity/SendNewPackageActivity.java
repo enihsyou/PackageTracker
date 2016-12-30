@@ -62,6 +62,7 @@ public class SendNewPackageActivity extends NeedLocationActivity implements
         mAreaReceiveButton = (Button) findViewById(R.id.btn_area_receive);
         mWeight = (EditText) findViewById(R.id.package_weight_input);
         mGridLayout = (GridLayout) findViewById(R.id.list_container);
+
         /*FAB设置点击强制更新位置信息*/
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override

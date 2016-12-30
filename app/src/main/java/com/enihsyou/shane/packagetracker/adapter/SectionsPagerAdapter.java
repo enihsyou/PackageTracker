@@ -3,8 +3,8 @@ package com.enihsyou.shane.packagetracker.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import com.enihsyou.shane.packagetracker.enums.StatusString;
 import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment;
-import com.enihsyou.shane.packagetracker.fragment.PlaceholderFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -13,25 +13,33 @@ import com.enihsyou.shane.packagetracker.fragment.PlaceholderFragment;
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+    private PackageTrafficsFragment Fragment1;
+    private PackageTrafficsFragment Fragment2;
+    private PackageTrafficsFragment Fragment3;
+
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
+        Fragment1 = PackageTrafficsFragment.newInstance(null);
+        Fragment2 = PackageTrafficsFragment.newInstance(StatusString.在途);
+        Fragment3 = PackageTrafficsFragment.newInstance(StatusString.签收);
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return PackageTrafficsFragment.newInstance();
+                return Fragment1;
             case 1:
+                return Fragment2;
             case 2:
+                return Fragment3;
             default:
-                return PlaceholderFragment.newInstance(position + 1);
+                return null;
         }
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 3;
     }
 
@@ -44,7 +52,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return "在途中";
             case 2:
                 return "已签收";
+            default:
+                return null;
         }
-        return null;
     }
 }

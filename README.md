@@ -52,10 +52,11 @@
 ##Thanks
 * [OkHttp](https://github.com/square/okhttp) 发送HTTP请求
 * [Gson](https://github.com/google/gson) JSON解析
-* [ZXing](https://github.com/zxing/zxing) 扫描二维码
+* ~~[ZXing](https://github.com/zxing/zxing) 扫描二维码~~
 * [fab-speed-dial](https://github.com/yavski/fab-speed-dial) FAB with speed dial
 * [jsoup](https://github.com/jhy/jsoup) HTML解析
 * [TapTargetView](https://github.com/KeepSafe/TapTargetView) 新手教程 引导界面
+* [Picasso](https://square.github.io/picasso/) 部分图片的载入
 * ~~[ToggleExpandLayout](https://github.com/fenjuly/ToggleExpandLayout) Toggle Expand Layout~~
 * ~~[android-Ultra-Pull-To-Refresh](https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh) Ultra Pull To Refresh~~
 * ~~[AndroidSwipeLayout](https://github.com/daimajia/AndroidSwipeLayout) Android Swipe Layout~~

@@ -2,6 +2,7 @@ package com.enihsyou.shane.packagetracker.model;
 
 import android.content.Context;
 import android.widget.LinearLayout;
+import com.enihsyou.shane.packagetracker.enums.StatusString;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 
 import java.util.ArrayList;
@@ -17,8 +18,15 @@ public class Packages {
         packages = new ArrayList<>();
     }
 
-    public static List<PackageTrafficSearchResult> getPackages(Context context) {
+    public static List<PackageTrafficSearchResult> getPackages(Context context, StatusString type) {
         if (packages == null) new Packages();
+        if (type != null) {
+            ArrayList<PackageTrafficSearchResult> result = new ArrayList<>();
+            for (PackageTrafficSearchResult aPackage : packages) {
+                if (aPackage.getStatus().equals(type)) { result.add(aPackage); }
+            }
+            return result;
+        }
         return packages;
     }
 
@@ -54,9 +62,13 @@ public class Packages {
             if (result.equals(aPackage)) return true;
             if (aPackage.getNumber().equals(result.getNumber())
                 && aPackage.getCompanyCode().equals(result.getCompanyCode())) {
-                if (result.getLastTime().after(aPackage.getLastTime())) { return false; }
+                return !result.getLastTime().after(aPackage.getLastTime());
             }
         }
         return false;
+    }
+
+    public static void addTraffic(PackageTrafficSearchResult item, int position) {
+        getPackages().add(position, item);
     }
 }

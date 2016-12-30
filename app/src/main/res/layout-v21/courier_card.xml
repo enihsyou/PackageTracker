@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/default_gap"
             android:contentDescription="@string/courier_header"
-            app:srcCompat="@drawable/ic_image_placeholder"
+            app:srcCompat="@drawable/image_placeholder"
             android:maxWidth="200dp"
             android:minWidth="60dp"
             android:scaleType="fitCenter" />

@@ -80,14 +80,13 @@
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_detail">Track Detail</string>
-    <string name="title_activity_package_state">PackageStateActivity</string>
+    <string name="title_activity_package_state">Package state</string>
     <string name="section_format">It\'s EMPTY here now </string>
-    <string name="buy_buy_buy">BUY! BUY! BUY!</string>
     <string name="package_number">Package number</string>
-    <string name="button_take_picture">Take Picture</string>
+    <string name="button_take_picture">Scan QR code</string>
     <string name="button_add">Add</string>
-    <string name="title_activity_add_new">Add New Package Track</string>
-    <string name="title_activity_send_new">Send New Package Activity</string>
+    <string name="title_activity_add_new">Add new track</string>
+    <string name="title_activity_send_new">Send New Package</string>
     <string name="company_logo">Company logo</string>
     <string name="separator">separator</string>
     <string name="wrong_package_number">Invalid package number</string>
@@ -98,6 +97,6 @@
     <string name="receive_address">Receive address</string>
     <string name="send_weight">Package weight (default set to 1kg)</string>
     <string name="button_confirm">Confirm</string>
-    <string name="search_price">查价格</string>
-    <string name="search_time">查时效</string><string name="go_setting">Setting</string><string name="please_choose">Please choose</string><string name="send_province">Send Province</string><string name="send_city">Send City</string><string name="send_area">Send Area</string><string name="receive_area">Receive Area</string><string name="receive_city">Receive City</string><string name="receive_province">Receive Province</string><string name="price">价格</string><string name="company_name">公司名字</string><string name="express_type">快递类型</string><string name="telephone">联系电话</string><string name="time">时间</string><string name="search_courier">找小哥</string><string name="search_network">找网点</string><string name="hint_street">输入街道名、小区名或大厦名</string><string name="province">省份</string><string name="city">城区</string><string name="area">县区</string><string name="title_activity_network_search">搜索附近</string><string name="address">地址</string><string name="site_name">网点名字</string><string name="courier_name">快递员名字</string><string name="work_area">所属区域</string><string name="courier_header">快递员头像</string>
+    <string name="search_price">Search price</string>
+    <string name="search_time">Search time</string><string name="go_setting">Setting</string><string name="please_choose">Please choose</string><string name="send_province">Send Province</string><string name="send_city">Send City</string><string name="send_area">Send Area</string><string name="receive_area">Receive area</string><string name="receive_city">Receive city</string><string name="receive_province">Receive province</string><string name="company_name">Company name</string><string name="express_type">Express type</string><string name="search_courier">Search courier</string><string name="area">Area</string><string name="title_activity_network_search">Search around</string><string name="work_area">Working area</string><string name="courier_header">Courier photo</string><string name="courier_name">Name</string><string name="undo">Undo</string><string name="item_has_been_removed">%1$s has benn removed</string><string name="item_not_found">404 not Found</string><string name="add_new">Add new one</string><string name="time">Time</string><string name="telephone">Phone numebr</string><string name="site_name">Site name</string><string name="search_network">Search network</string><string name="province">Province</string><string name="price">Price</string><string name="launch_taobao">Launch Taobao</string><string name="hint_street">Type street name etc.</string><string name="city">City</string><string name="buy_buy_buy">Launch Taobao</string><string name="address">Address</string>
 </resources>
