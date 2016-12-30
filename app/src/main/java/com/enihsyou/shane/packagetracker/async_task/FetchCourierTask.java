@@ -2,7 +2,9 @@ package com.enihsyou.shane.packagetracker.async_task;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.activity.SearchNetworkActivity;
+import com.enihsyou.shane.packagetracker.adapter.CourierListViewAdapter;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.CourierSearchResult;
 
@@ -41,5 +43,9 @@ public class FetchCourierTask extends AsyncTask<String, Void, CourierSearchResul
             return;
         }
         Log.d(TAG, "onPostExecute: 成功 查询快递员 获得数量: " + courierSearchResult.getCouriers().size());
+        CourierListViewAdapter adapter =
+            new CourierListViewAdapter(mActivity, R.layout.courier_card, courierSearchResult.getCouriers());
+        mActivity.setListViewAdapter(adapter);
+        adapter.setItems(courierSearchResult.getCouriers());
     }
 }

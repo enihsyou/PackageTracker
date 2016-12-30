@@ -7,9 +7,9 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import com.enihsyou.shane.packagetracker.R;
+import com.enihsyou.shane.packagetracker.adapter.BaseListViewAdapter;
 import com.enihsyou.shane.packagetracker.adapter.NetworkListViewAdapter;
 import com.enihsyou.shane.packagetracker.async_task.FetchCourierTask;
 import com.enihsyou.shane.packagetracker.async_task.FetchNetworkTask;
@@ -31,15 +31,13 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
     private Button mCourierButton;
 
     private ListView mListView;
-    private ExpandableListView mDetailView;
-    private NetworkListViewAdapter mListViewAdapter;
+    // private ExpandableListView mDetailView;
+    private BaseListViewAdapter mListViewAdapter;
 
-    public NetworkListViewAdapter getListViewAdapter() {
-        return mListViewAdapter;
-    }
 
-    public void setListViewAdapter(NetworkListViewAdapter listViewAdapter) {
+    public void setListViewAdapter(BaseListViewAdapter listViewAdapter) {
         mListViewAdapter = listViewAdapter;
+        mListView.setAdapter(listViewAdapter);
     }
 
     @Override
@@ -55,11 +53,10 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         mNetworkButton = (Button) findViewById(R.id.btn_search_network);
         mCourierButton = (Button) findViewById(R.id.btn_search_courier);
         mListView = (ListView) findViewById(R.id.entry_list);
-        mDetailView = (ExpandableListView) findViewById(R.id.sub_list);
+        // mDetailView = (ExpandableListView) findViewById(R.id.sub_list);
         mListViewAdapter =
             new NetworkListViewAdapter(this, R.layout.network_card, new ArrayList<NetworkSearchResult.NetworkNetList>());
         mListView.setAdapter(mListViewAdapter);
-
         /*设置按钮监听器*/
         mProvinceSendClick =
             new OnAddressButtonClickListener(
@@ -137,9 +134,9 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         return street;
     }
 
-    public ExpandableListView getDetailView() {
-        return mDetailView;
-    }
+    // public ExpandableListView getDetailView() {
+    //     return mDetailView;
+    // }
 
     @Override
     public void OnItemClick(DialogFragment dialog, DialogType type, int which, Place place) {

@@ -2,7 +2,9 @@ package com.enihsyou.shane.packagetracker.async_task;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.activity.SearchNetworkActivity;
+import com.enihsyou.shane.packagetracker.adapter.NetworkListViewAdapter;
 import com.enihsyou.shane.packagetracker.helper.Kuaidi100Fetcher;
 import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
 
@@ -43,8 +45,9 @@ public class FetchNetworkTask extends AsyncTask<String, Void, NetworkSearchResul
             return;
         }
         Log.d(TAG, "onPostExecute: 成功 查询网点 获得数量: " + networkSearchResult.getNetLists().size());
-
-        mActivity.getListViewAdapter().setItems(networkSearchResult.getNetLists());
-        // mActivity.setListViewAdapter(new NetworkListViewAdapter(mActivity, R.layout.network_card, networkSearchResult.getNetLists()));
+        NetworkListViewAdapter adapter =
+            new NetworkListViewAdapter(mActivity, R.layout.network_card, networkSearchResult.getNetLists());
+        mActivity.setListViewAdapter(adapter);
+        adapter.setItems(networkSearchResult.getNetLists());
     }
 }

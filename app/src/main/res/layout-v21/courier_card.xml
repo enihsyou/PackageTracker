@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:grid="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:translationZ="@dimen/cardview_default_elevation"
-    android:layout_margin="@dimen/default_gap"
-    grid:contentPadding="@dimen/default_gap">
+    android:layout_margin="@dimen/default_gap">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <ImageView
-            android:id="@+id/logo"
+            android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/default_gap"
-            android:contentDescription="@string/company_logo"
+            android:contentDescription="@string/courier_header"
+            app:srcCompat="@drawable/ic_image_placeholder"
             android:maxWidth="200dp"
             android:minWidth="60dp"
             android:scaleType="fitCenter" />

@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.enihsyou.shane.packagetracker.R;
 import com.enihsyou.shane.packagetracker.model.NetworkSearchResult;
 
-public class NetworkHolder {
+public class NetworkHolder extends BaseHolder<NetworkSearchResult.NetworkNetList>{
     private static final String TAG = "NetworkHolder";
     private TextView mSiteNameText;
     private TextView mCompanyNameText;

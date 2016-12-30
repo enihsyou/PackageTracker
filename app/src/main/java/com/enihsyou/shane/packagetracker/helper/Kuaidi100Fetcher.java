@@ -55,6 +55,10 @@ public class Kuaidi100Fetcher {
             .build();
     }
 
+    public static HttpUrl resolveRelativeUrl(String URL) {
+        return ENDPOINT.resolve(URL);
+    }
+
     /**
      * 从packageTrafficSearchResult中获取信息，生成一张卡片，添加到cardContainer上，如果成功 关闭键盘
      *
@@ -378,6 +382,7 @@ public class Kuaidi100Fetcher {
     public void DownloadImage(SetImage callback, final HttpUrl url, final ImageView view) {
         if (url == null) return;
         final Request request = new Request.Builder().url(url).build();
+        Log.d(TAG, "DownloadImage: 发送下载图片请求 " + url);
         client.newCall(request).enqueue(new DownLoad(callback, view));
     }
 
@@ -415,9 +420,6 @@ public class Kuaidi100Fetcher {
         return parseCourierJson(response);
     }
 
-    private CourierSearchResult parseCourierJson(Response response) {
-        return gson.fromJson(response.body().charStream(), CourierSearchResult.class);
-    }
     @Nullable
     private static HttpUrl buildCourierSearchUrl() {
         return ENDPOINT.newBuilder()
@@ -425,6 +427,13 @@ public class Kuaidi100Fetcher {
             .build();
     }
 
+    private CourierSearchResult parseCourierJson(Response response) {
+        return gson.fromJson(response.body().charStream(), CourierSearchResult.class);
+    }
+
+    /**
+     * 设置ImageView的图片
+     */
     public interface SetImage {
         void SetBitmap(Bitmap bitmap, ImageView view);
     }
@@ -462,6 +471,5 @@ public class Kuaidi100Fetcher {
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             listener.SetBitmap(bitmap, image);
         }
-
     }
 }

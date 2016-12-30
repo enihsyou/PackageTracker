@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> implements
-    Kuaidi100Fetcher.SetImage {
+    Kuaidi100Fetcher.SetImage{
     private static final String TAG = "FetchPriceTask";
     private Kuaidi100Fetcher fetcher;
     private SendNewPackageActivity mActivity;
