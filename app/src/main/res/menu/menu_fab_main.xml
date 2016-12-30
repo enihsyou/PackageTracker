@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_chop_hands"
-        android:icon="@android:drawable/ic_menu_add"
+        android:id="@+id/action_launch_taobao"
+        android:icon="@drawable/currency_usd_off"
         android:title="@string/buy_buy_buy" />
     <item
         android:id="@+id/action_network_search"
-        android:icon="@android:drawable/ic_menu_call"
+        android:icon="@drawable/store_24_hour"
         android:title="@string/find_network" />
     <item
         android:id="@+id/action_send_package"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/wallet_giftcard"
         android:title="@string/send_package" />
     <item
         android:id="@+id/action_receive_package"
-        android:icon="@android:drawable/ic_delete"
+        android:icon="@drawable/shape_polygon_puls"
         android:title="@string/receive_package" />
 </menu>

@@ -1,8 +1,11 @@
 package com.enihsyou.shane.packagetracker.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.GridLayout;
 import android.util.Log;
@@ -20,6 +23,8 @@ import com.enihsyou.shane.packagetracker.model.Area;
 import com.enihsyou.shane.packagetracker.model.City;
 import com.enihsyou.shane.packagetracker.model.Place;
 import com.enihsyou.shane.packagetracker.model.Province;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 
 import java.util.ArrayList;
 
@@ -111,7 +116,10 @@ public class SendPackageActivity extends NeedLocationActivity implements
         mPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendChoose == null || receiveChoose == null) return;
+                if (sendChoose == null || receiveChoose == null) {
+                    Snackbar.make(mPriceButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT);
+                    return;
+                }
                 Area itemFrom = sendChoose;
                 Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();
@@ -144,6 +152,32 @@ public class SendPackageActivity extends NeedLocationActivity implements
                     .execute(locationSendCode, locationReceiveCode);
             }
         });
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final String send_tutorial_switch = getString(R.string.send_tutorial_switch);
+        boolean showTutorial = sharedPref.getBoolean(send_tutorial_switch, true);
+        if (showTutorial) {
+            final TapTargetSequence sequence = new TapTargetSequence(this)
+                .targets(
+                    TapTarget.forView(mFab, getString(R.string.help_tutorial_fab),
+                        getString(R.string.help_desc_tutorial_fab)).transparentTarget(true),
+                    TapTarget.forView(mPriceButton, getString(R.string.help_send_tutorial_price), getString(R.string.help_desc_send_tutorial_price)),
+                    TapTarget.forView(mTimeButton, getString(R.string.help_send_tutorial_time), getString(R.string.help_desc_send_tutorial_time))
+                ).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        Snackbar.make(mGridLayout, R.string.help_finish_send_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(send_tutorial_switch, false).apply();
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        Snackbar.make(mGridLayout, R.string.help_skip_send_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(send_tutorial_switch, false).apply();
+                    }
+                });
+            sequence.start();
+        }
+
         /*启动的时候 获取地点信息*/
         requestUpdateLocation(false);
     }

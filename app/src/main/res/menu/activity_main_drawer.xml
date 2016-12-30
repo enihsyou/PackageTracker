@@ -3,19 +3,19 @@
     <group android:id="@+id/group_function">
         <item
             android:id="@+id/nav_receive_package"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/emoticon_happy"
             android:title="@string/receive_package" />
         <item
             android:id="@+id/nav_send_package"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/emoticon_excited"
             android:title="@string/send_package" />
         <item
             android:id="@+id/nav_find_network"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/emoticon_cool"
             android:title="@string/find_network" />
         <item
             android:id="@+id/nav_open_taobao"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/emoticon_tongue"
             android:title="@string/launch_taobao" />
     </group>
     <group android:id="@+id/group_setting">

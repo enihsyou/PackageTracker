@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                     case R.id.action_network_search:
                         startActivity(new Intent(MainActivity.this, SearchNetworkActivity.class));
                         break;
-                    case R.id.action_chop_hands:
+                    case R.id.action_launch_taobao:
                         launchTaobao();
                         break;
                     default:
@@ -112,23 +112,24 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean showTutorial = sharedPref.getBoolean("main_tutorial_switch", true);
+        final String main_tutorial_switch = getString(R.string.main_tutorial_switch);
+        boolean showTutorial = sharedPref.getBoolean(main_tutorial_switch, true);
         if (showTutorial) {
             final TapTargetSequence sequence = new TapTargetSequence(this)
                 .targets(
-                    TapTarget.forToolbarNavigationIcon(mToolbar, getString(R.string.help_main_tutorial_drawer)),
+                    TapTarget.forToolbarNavigationIcon(mToolbar, getString(R.string.help_main_tutorial_drawer), getString(R.string.help_desc_main_tutorial_drawer)),
                     TapTarget.forView(mFab, getString(R.string.help_main_tutorial_fab)).transparentTarget(true)
                 ).listener(new TapTargetSequence.Listener() {
                     @Override
                     public void onSequenceFinish() {
-                        Snackbar.make(mViewPager, "完成主页教程", Snackbar.LENGTH_SHORT).show();
-                        sharedPref.edit().putBoolean("main_tutorial_switch", false).apply();
+                        Snackbar.make(mViewPager, R.string.help_finish_main_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(main_tutorial_switch, false).apply();
                     }
 
                     @Override
                     public void onSequenceCanceled(TapTarget lastTarget) {
-                        Snackbar.make(mViewPager, "跳过主页教程", Snackbar.LENGTH_SHORT).show();
-                        sharedPref.edit().putBoolean("main_tutorial_switch", false).apply();
+                        Snackbar.make(mViewPager, R.string.help_skip_main_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(main_tutorial_switch, false).apply();
                     }
                 });
             sequence.start();
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity
     private void launchTaobao() {
         Intent taobao = new Intent(Intent.ACTION_VIEW);
         taobao.setClassName("com.taobao.taobao", "com.taobao.tao.welcome.Welcome");
-                        /*检查是否安装了淘宝*/
+        /*检查是否安装了淘宝*/
         List<ResolveInfo> activities =
             getPackageManager().queryIntentActivities(taobao, PackageManager.GET_ACTIVITIES);
         if (activities.size() > 0) {

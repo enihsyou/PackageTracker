@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/item_not_found"
         android:textAlignment="center"
-        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:textAppearance="@android:style/TextAppearance.Material.Display1"
         tools:text="@string/item_not_found" />
     <Button
         android:id="@+id/add_new"

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.enihsyou.shane.packagetracker.dialog.ChooseAreaDialog;
 import com.enihsyou.shane.packagetracker.enums.DialogType;
 import com.enihsyou.shane.packagetracker.listener.OnAddressButtonClickListener;
 import com.enihsyou.shane.packagetracker.model.*;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 
 import java.util.ArrayList;
 
@@ -120,6 +123,32 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
                     .execute(location, street);
             }
         });
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final String search_tutorial_switch = getString(R.string.search_tutorial_switch);
+        boolean showTutorial = sharedPref.getBoolean(search_tutorial_switch, true);
+        if (showTutorial) {
+            final TapTargetSequence sequence = new TapTargetSequence(this)
+                .targets(
+                    TapTarget.forView(mFab, getString(R.string.help_tutorial_fab),
+                        getString(R.string.help_desc_tutorial_fab)).transparentTarget(true),
+                    TapTarget.forView(mNetworkButton, getString(R.string.help_search_tutorial_network), getString(R.string.help_desc_search_tutorial_network)),
+                    TapTarget.forView(mCourierButton, getString(R.string.help_search_tutorial_courier), getString(R.string.help_desc_search_tutorial_courier))
+                ).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        Snackbar.make(mListView, R.string.help_finish_send_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(search_tutorial_switch, false).apply();
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        Snackbar.make(mListView, R.string.help_skip_send_tutorial, Snackbar.LENGTH_SHORT).show();
+                        sharedPref.edit().putBoolean(search_tutorial_switch, false).apply();
+                    }
+                });
+            sequence.start();
+        }
+
         /*启动的时候 获取地点信息*/
         requestUpdateLocation(false);
     }
