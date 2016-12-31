@@ -34,6 +34,7 @@ import com.enihsyou.shane.packagetracker.adapter.SectionsPagerAdapter;
 import com.enihsyou.shane.packagetracker.fragment.PackageTrafficsFragment;
 import com.enihsyou.shane.packagetracker.model.PackageTrafficSearchResult;
 import com.enihsyou.shane.packagetracker.model.Packages;
+import com.enihsyou.shane.packagetracker.model.UserData;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import io.github.yavski.fabspeeddial.FabSpeedDial;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView mLoginHeader;
     private TextView mLoginUsername;
     private TextView mLoginEmail;
-
+    private static final int LOGIN = 779;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +124,9 @@ public class MainActivity extends AppCompatActivity
         mLoginHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+
+                startActivityForResult(intent, LOGIN);
             }
         });
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -148,6 +151,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
             sequence.start();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UserData data1 = (UserData) data.getSerializableExtra("data");
+        if (requestCode == LOGIN) {
+            mLoginUsername.setText(data1.getUsername());
+            mLoginEmail.setText(data1.getUsermail());
         }
     }
 
