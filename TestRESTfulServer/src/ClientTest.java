@@ -10,17 +10,17 @@ import java.net.Socket;
 public class ClientTest {
     public static void main(String[] args) {
         try {
-            Socket server = new Socket("127.0.0.1", 6666);
+            Socket server = new Socket("0.0.0.0", 6666);
             PrintWriter os = new PrintWriter(server.getOutputStream());
             BufferedReader is = new BufferedReader(new InputStreamReader(server.getInputStream()));
             String inputString;
 
             UserData data = new UserData();
-            data.setHead(2);
+            data.setHead(0);
             data.setUsermail("465484@qq.com");
             data.setPassword("1235");
-            data.addPackage(new KUAIDI("2","43"));
-            data.addPackage(new KUAIDI("3","266"));
+            // data.addPackage(new KUAIDI("2","43"));
+            // data.addPackage(new KUAIDI("3","266"));
 
             Gson gson = new GsonBuilder().create();
             inputString = gson.toJson(data, UserData.class);
