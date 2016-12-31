@@ -138,7 +138,10 @@ public class SendPackageActivity extends NeedLocationActivity implements
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendChoose == null || receiveChoose == null) return;
+                if (sendChoose == null || receiveChoose == null) {
+                    Snackbar.make(mPriceButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT);
+                    return;
+                }
                 Area itemFrom = sendChoose;
                 Area itemTo = receiveChoose;
                 String locationSend = itemFrom.getFullName();

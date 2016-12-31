@@ -92,7 +92,10 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         mNetworkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendChoose == null) return;
+                if (sendChoose == null) {
+                    Snackbar.make(mNetworkButton, "选择地区", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
                 String location = sendChoose.getFullName();
                 String locationCode = sendChoose.getCode();
                 String street = mStreetText.getText().toString();
@@ -109,7 +112,10 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         mCourierButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sendChoose == null) return;
+                if (sendChoose == null) {
+                    Snackbar.make(mNetworkButton, "选择地区", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
                 String location = sendChoose.getFullName();
                 String street = mStreetText.getText().toString();
                 if (street.isEmpty() && mCurrentLocation != null) {
@@ -157,8 +163,14 @@ public class SearchNetworkActivity extends NeedLocationActivity implements
         String street = null;
         try {
             String area1 = mCurrentLocation.getResults().get(0).getFormattedAddress();
-            String area2 = mCurrentLocation.getResults().get(1).getFormattedAddress();
-            street = area1.substring(area2.length());
+            for (CurrentLocationResult.Results results : mCurrentLocation.getResults()) {
+                if (results.getTypes().contains("sublocality_level_1")) {
+                    String area2 = results.getFormattedAddress();
+                    street = area1.replace(area2, "");
+                    break;
+                }
+            }
+
         } catch (Exception e) {
             Log.e(TAG, "onClick: 处理地区字符串时错误", e);
 
