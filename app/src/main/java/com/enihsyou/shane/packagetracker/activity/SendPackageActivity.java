@@ -68,6 +68,9 @@ public class SendPackageActivity extends NeedLocationActivity implements
         mWeight = (EditText) findViewById(R.id.package_weight_input);
         mGridLayout = (GridLayout) findViewById(R.id.list_container);
 
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final String send_tutorial_switch = getString(R.string.send_tutorial_switch);
+        final String page_size = getString(R.string.page_size);
         /*FAB设置点击强制更新位置信息*/
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +120,7 @@ public class SendPackageActivity extends NeedLocationActivity implements
             @Override
             public void onClick(View v) {
                 if (sendChoose == null || receiveChoose == null) {
-                    Snackbar.make(mPriceButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT);
+                    Snackbar.make(mPriceButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT).show();
                     return;
                 }
                 Area itemFrom = sendChoose;
@@ -128,18 +131,19 @@ public class SendPackageActivity extends NeedLocationActivity implements
                 String locationReceiveCode = itemTo.getCode();
                 String weight = mWeight.getText().toString();
                 weight = weight.isEmpty() ? "1" : weight;
-                Log.d(TAG, String.format("onClick: 搜索价格: 从 %s %s，到 %s %s，重量 %s",
-                    locationSend, locationSendCode, locationReceive, locationReceiveCode, weight));
+                String pageSize = sharedPref.getString(page_size, "20");
+                Log.d(TAG, String.format("onClick: 搜索价格: 从 %s %s，到 %s %s，重量 %s, 数量 %s",
+                    locationSend, locationSendCode, locationReceive, locationReceiveCode, weight, pageSize));
 
                 new FetchPriceTask(SendPackageActivity.this)
-                    .execute(locationSendCode, locationReceiveCode, "", weight);
+                    .execute(locationSendCode, locationReceiveCode, "", weight, "1", pageSize);
             }
         });
         mTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sendChoose == null || receiveChoose == null) {
-                    Snackbar.make(mPriceButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT);
+                    Snackbar.make(mTimeButton, R.string.error_need_receive_address, Snackbar.LENGTH_SHORT).show();
                     return;
                 }
                 Area itemFrom = sendChoose;
@@ -155,8 +159,7 @@ public class SendPackageActivity extends NeedLocationActivity implements
                     .execute(locationSendCode, locationReceiveCode);
             }
         });
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        final String send_tutorial_switch = getString(R.string.send_tutorial_switch);
+
         boolean showTutorial = sharedPref.getBoolean(send_tutorial_switch, true);
         if (showTutorial) {
             final TapTargetSequence sequence = new TapTargetSequence(this)

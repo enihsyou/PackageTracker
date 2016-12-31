@@ -139,9 +139,9 @@ public class Kuaidi100Fetcher {
             .build();
     }
 
-    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, int currentPage) throws
+    public PriceSearchResult priceResult(String startPlaceCode, String endPlaceCode, String street, String weight, String  currentPage, String pageSize) throws
         IOException {
-        HttpUrl request = buildPriceSearchUrl(String.valueOf(currentPage), String.valueOf(15));
+        HttpUrl request = buildPriceSearchUrl(currentPage, pageSize);
         RequestBody requestBody = new FormBody.Builder()
             .addEncoded("startPlace", startPlaceCode)
             .addEncoded("endPlace", endPlaceCode)

@@ -30,7 +30,7 @@ import java.util.Arrays;
  * 获取包裹运费信息
  */
 public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> implements
-    Kuaidi100Fetcher.SetImage{
+    Kuaidi100Fetcher.SetImage {
     private static final String TAG = "FetchPriceTask";
     private final Kuaidi100Fetcher fetcher;
     private final SendPackageActivity mActivity;
@@ -42,15 +42,17 @@ public class FetchPriceTask extends AsyncTask<String, Void, PriceSearchResult> i
 
     @Override
     protected PriceSearchResult doInBackground(String... params) {
-        if (params.length != 4) {
-            throw new IllegalArgumentException("参数有四个 " + Arrays.toString(params));
+        if (params.length != 6) {
+            throw new IllegalArgumentException("参数有六个 " + Arrays.toString(params));
         }
         String locationSendCode = params[0];
         String locationReceiveCode = params[1];
         String street = params[2];
         String weight = params[3];
+        String currentPage = params[4];
+        String pageSize = params[5];
         try {
-            return fetcher.priceResult(locationSendCode, locationReceiveCode, street, weight, 1);
+            return fetcher.priceResult(locationSendCode, locationReceiveCode, street, weight, currentPage, pageSize);
         } catch (IOException e) {
             Log.e(TAG, "doInBackground: 网络错误？获取价格失败", e);
             Snackbar.make(mActivity.getCurrentFocus(), R.string.network_error, Snackbar.LENGTH_SHORT).show();

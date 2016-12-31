@@ -20,7 +20,7 @@
     <string name="pref_description_main_tutorial">Show a tutorial at activity start</string>
 
     <string name="pref_title_page_size">Page size</string>
-    <string name="pref_page_size" translatable="false">10</string>
+    <string name="pref_default_page_size" translatable="false">20</string>
 
     <string name="pref_title_add_friends_to_messages" translatable="false">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
@@ -108,5 +108,5 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string><string name="username">Username</string><string name="email_address">Email Address</string><string name="action_about">关于</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string><string name="username">Username</string><string name="email_address">Email Address</string><string name="action_about">关于</string><string name="page_size">page_size</string>
 </resources>

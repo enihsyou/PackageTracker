@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onClick(View v) {
                         requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
                     }
-                });
+                }).show();
         } else {
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
         }
