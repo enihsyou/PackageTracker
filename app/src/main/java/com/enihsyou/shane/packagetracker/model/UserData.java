@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserData  implements Serializable{
+public class UserData implements Serializable{
     @SerializedName("head")
     private int head = -1;
     @SerializedName("id")

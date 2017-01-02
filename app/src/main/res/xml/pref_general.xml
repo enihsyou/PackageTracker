@@ -27,6 +27,15 @@
         android:singleLine="true"
         android:summary="@string/pref_description_page_size"
         android:title="@string/pref_title_page_size" />
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_login_server"
+            android:key="@string/login_server"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="@string/pref_description_login_server"
+            android:title="@string/pref_title_login_server" />
+
 
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
            dismiss it. -->

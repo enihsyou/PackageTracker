@@ -184,7 +184,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("page_size"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.page_size)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.login_server)));
             // bindPreferenceSummaryToValue(findPreference("example_list"));
         }
 

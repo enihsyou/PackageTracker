@@ -108,5 +108,5 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string><string name="username">Username</string><string name="email_address">Email Address</string><string name="action_about">About</string><string name="page_size">page_size</string><string name="action_sign_up">Sign up</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string><string name="username">Username</string><string name="email_address">Email Address</string><string name="action_about">About</string><string name="page_size">page_size</string><string name="action_sign_up">Sign up</string><string name="pref_default_login_server">192.168.1.100</string><string name="login_server">登录服务器</string><string name="pref_description_login_server">登入服务器IP地址</string><string name="pref_title_login_server">登入服务器</string>
 </resources>

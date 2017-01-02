@@ -4,15 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.CursorLoader;
-import android.content.Intent;
-import android.content.Loader;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -173,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(this, email, password);
             mAuthTask.execute((Integer) func);
         }
     }
@@ -323,9 +322,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private static final String TAG = "UserLoginTask";
         private final String mEmail;
         private final String mPassword;
+        private Context mContext;
         private UserData mResult;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(Context context, String email, String password) {
+            mContext = context;
             mEmail = email;
             mPassword = password;
         }
@@ -335,7 +336,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
             int func = params[0];
             try {
-                Socket server = new Socket("192.168.1.100", 6666);
+                SharedPreferences preferences =
+                    PreferenceManager.getDefaultSharedPreferences(mContext);
+                String serverIp =
+                    preferences.getString(getString(R.string.login_server), "192.168.1.100");
+                Socket server = new Socket(serverIp, 6666);
                 PrintWriter os = new PrintWriter(server.getOutputStream());
                 BufferedReader is =
                     new BufferedReader(new InputStreamReader(server.getInputStream()));
